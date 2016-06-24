@@ -398,7 +398,7 @@
                 });
 
                 instance.registerConnectionType("basic", {
-                  anchor:"Continuous",
+                  anchors: ["Right", "Left"],
                   connector: "Bezier"
                 });
 
@@ -469,7 +469,7 @@
                 var instance = this.props.instance;
 
                 instance.makeSource(el, {
-                    anchor: "Continuous",
+                    anchors: ["Right", "Left"],
                     connectorStyle: {
                         strokeStyle: "black",
                         lineWidth: 2,
@@ -477,18 +477,18 @@
                         outlineWidth: 4
                     },
                     maxConnections: 1,
-                    connectionType:"basic",
+                    connectionType: "basic",
                     onMaxConnections: function (info, e) {
                         console.error("Maximum connections (" + info.maxConnections + ") reached");
                     },
-                    extract:{
+                    extract: {
                         "action": "the-action"
                     }
                 });
 
                 instance.makeTarget(el, {
                     dropOptions: { hoverClass: "dragHover" },
-                    anchor: "Continuous",
+                    anchors: ["Right", "Left"],
                     allowLoopback: false
                 });
             },
