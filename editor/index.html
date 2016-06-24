@@ -381,7 +381,7 @@
                 // setup some defaults for jsPlumb.
                 var instance = jsPlumb.getInstance({
                     Endpoint: ["Dot", {radius: 0.00001}],
-                    Connector:"StateMachine",
+                    Connector: "Bezier",
                     HoverPaintStyle: {
                       strokeStyle: "#ddd",
                       lineWidth: 2
@@ -399,7 +399,7 @@
 
                 instance.registerConnectionType("basic", {
                   anchor:"Continuous",
-                  connector:"StateMachine"
+                  connector: "Bezier"
                 });
 
                 function getConnectionInfo(info){
