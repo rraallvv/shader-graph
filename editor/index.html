@@ -359,7 +359,7 @@
             updateShader: function(){
                 if(this.entity){
                     var shaderDef = this.props.shader.buildShader();
-                    console.log(shaderDef.fshader())
+                    //console.log(shaderDef.fshader())
                     var material = new goo.Material(shaderDef);
                     if(this.sampleTexture){
                         for(var key in shaderDef.uniforms){
@@ -399,6 +399,8 @@
                     ],
                     Container: "canvas"
                 });
+
+				window.jsPlumbInstance = instance;
 
                 instance.registerConnectionType("basic", {
                   anchors: ["Right", "Left"],
