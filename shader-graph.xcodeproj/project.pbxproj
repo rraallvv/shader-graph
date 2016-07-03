@@ -12,6 +12,7 @@
 		E41C5AC11D1CE08A00B5143F /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = "<group>"; };
 		E4EE05731D29BADF00964AFA /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
 		E4EE05741D29BC3E00964AFA /* server.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = server.js; sourceTree = "<group>"; };
+		E4EE05751D29BFA700964AFA /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -23,6 +24,7 @@
 				E41C5ABF1D1CE07000B5143F /* src */,
 				E4EE05731D29BADF00964AFA /* package.json */,
 				E4EE05741D29BC3E00964AFA /* server.js */,
+				E4EE05751D29BFA700964AFA /* index.html */,
 			);
 			sourceTree = "<group>";
 		};
