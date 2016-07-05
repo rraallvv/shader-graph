@@ -30,8 +30,10 @@
 
 	<!--
 	<script src="js/jsplumb.js"></script>
+	-->
 	<script src="js/react.js"></script>
 	<script src="js/react-dom.js"></script>
+	<!--
 	<script src="js/browser.min.js"></script>
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -48,13 +50,35 @@
 
 		Editor.polymerElement({
 			ready: function(){
-				console.log("!");
 				/*
 				ReactDOM.render(
 					<App />,
 					document.getElementById('content')
 				);
 				*/
+
+				/*React*/
+				var App = React.createClass({
+					displayName: 'App',
+					getInitialState: function() {
+						return {secondsElapsed: 0};
+					},
+					tick: function() {
+						this.setState({secondsElapsed: this.state.secondsElapsed + 1});
+					},
+					componentDidMount: function() {
+						this.interval = setInterval(this.tick, 1000);
+					},
+					componentWillUnmount: function() {
+						clearInterval(this.interval);
+					},
+					render: function() {
+						return React.createElement("div", null, "Seconds Elapsed: " + this.state.secondsElapsed);
+					}
+				});
+
+				/*Mount to Shadow DOM*/
+				ReactDOM.render(React.createElement(App), this.$.content);
 			}
 		});
 	</script>
