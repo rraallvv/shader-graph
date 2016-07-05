@@ -306,7 +306,7 @@ var Preview = React.createClass({
 		world.createEntity(new goo.PointLight(), [-100, 100, 100]).addToWorld();
 
 		// Load example texture
-		new goo.TextureCreator().loadTexture2D('images/chesterfield.png').then(function (texture) {
+		new goo.TextureCreator().loadTexture2D(shaderGraph.resolveUrl('images/chesterfield.png')).then(function (texture) {
 			this.sampleTexture = texture;
 			this.updateShader();
 		}.bind(this), function () {

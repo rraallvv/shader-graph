@@ -22,8 +22,11 @@
 			window.Editor = { polymerElement: Polymer, log: console.log };
 		}
 
+		var shaderGraph;
+
 		Editor.polymerElement({
 			ready: function(){
+				shaderGraph = this;
 				/* Mount React into shadow DOM */
 				ReactDOM.render(React.createElement(App), this.$.content);
 			}
