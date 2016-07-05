@@ -415,7 +415,7 @@ var NodeEditor = React.createClass({
 		<div id="canvas">
 			{nodes.map(function(node) {
 			return (
-				<Node
+				<SGNode
 					updateShader={this.props.updateShader}
 					onClickRemove={node.type !== 'fragColor' ? this.props.onClickRemoveNode : undefined }
 					updateNodeData={this.props.updateNodeData}
@@ -473,7 +473,7 @@ var Port = React.createClass({
 	}
 });
 
-var Node = React.createClass({
+var SGNode = React.createClass({
 	componentDidMount: function(){
 		var el = ReactDOM.findDOMNode(this);
 		var instance = this.props.instance;
