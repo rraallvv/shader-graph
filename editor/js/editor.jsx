@@ -14,16 +14,16 @@ var App = React.createClass({
 			return type !== 'fragColor' && type !== 'position'
 		});
 		return (
-			<div className="row">
-				<div className="col-xs-3">
-					<div className="row">
+			<div className="row style-scope shader-graph">
+				<div className="col-xs-3 style-scope shader-graph">
+					<div className="row style-scope shader-graph">
 						<Preview shader={this.shader}/>
 					</div>
 					<NodeSelectList
 						nodeTypes={nodeTypes}
 						addNode={this.addNode} />
 				</div>
-				<div className="col-xs-9">
+				<div className="col-xs-9 style-scope shader-graph">
 					<NodeEditor
 						updateShader={this.updateShader}
 						instance={this.instance}
@@ -266,7 +266,7 @@ var NodeSelectList = React.createClass({
 		);
 		}, this);
 		return (
-		<div className="list-group">
+		<div className="list-group style-scope shader-graph">
 			{items}
 		</div>
 		);
@@ -276,7 +276,7 @@ var NodeSelectList = React.createClass({
 var AddNodeButton = React.createClass({
 	render: function() {
 		return (
-		<a className="list-group-item add-node-button" onClick={this.handleClick}>{this.props.type}</a>
+		<a className="list-group-item add-node-button style-scope shader-graph" onClick={this.handleClick}>{this.props.type}</a>
 		);
 	},
 	handleClick: function(){
@@ -315,7 +315,7 @@ var Preview = React.createClass({
 	render: function() {
 		this.updateShader();
 		return (
-			<div className="preview col-xs-12"></div>
+			<div className="preview col-xs-12 style-scope shader-graph"></div>
 		);
 	},
 	updateShader: function(){
@@ -468,7 +468,7 @@ var Port = React.createClass({
 	},
 	render: function(){
 		return (
-			<div className={this.props.type} key={this.props.portKey} id={this.props.portKey + this.props.id}>{this.props.portKey}</div>
+			<div className={this.props.type + " style-scope shader-graph"} key={this.props.portKey} id={this.props.portKey + this.props.id}>{this.props.portKey}</div>
 		);
 	}
 });
@@ -504,7 +504,7 @@ var SGNode = React.createClass({
 		}, this) : undefined;
 
 		var removeButton = this.props.onClickRemove ? (
-			<span className="glyphicon glyphicon-remove remove-button pull-right" onClick={this.handleClickRemove}></span>
+			<span className="glyphicon glyphicon-remove remove-button pull-right style-scope shader-graph" onClick={this.handleClickRemove}></span>
 		) : undefined;
 
 		var extra;
@@ -575,15 +575,15 @@ var SGNode = React.createClass({
 		};
 
 		return (
-			<div className={"w node-type-" + this.props.data.type} data-node-id={this.props.data.id}>
-				<div className="title">
+			<div className={"w node-type-" + this.props.data.type + " style-scope shader-graph"} data-node-id={this.props.data.id}>
+				<div className="title style-scope shader-graph">
 					{this.props.data.type}
 					{removeButton}
 				</div>
-				<div className="inputs">
+				<div className="inputs style-scope shader-graph">
 					{inputs}
 				</div>
-				<div className="outputs">
+				<div className="outputs style-scope shader-graph">
 					{outputs}
 				</div>
 				{extra}
