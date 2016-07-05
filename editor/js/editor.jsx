@@ -363,7 +363,7 @@ var NodeEditor = React.createClass({
 			Container: "canvas"
 		});
 
-		window.jsPlumbInstance = instance;
+		shaderGraph.jsPlumbInstance = instance;
 
 		instance.registerConnectionType("basic", {
 			anchors: ["Right", "Left"],
