@@ -25,8 +25,17 @@
 		Editor.polymerElement({
 			ready: function(){
 				shaderGraph = this;
-				/* Mount React into shadow DOM */
-				ReactDOM.render(React.createElement(App), this.$.content);
+				setTimeout(function(){
+					ReactDOM.render(React.createElement(App), shaderGraph.$.content);
+				}, 1000);
+			},
+			setTransform: function( s, r, n, t ){
+				// s = 1, r = 1, n = 0, t = 0;
+				this.style.transform = "matrix(" +
+					s + ", 0, 0, " +
+					r + ", " +
+					Math.round(n + 0.5 * this.offsetWidth * (s - 1)) + ", " +
+					Math.round(t + 0.5 * this.offsetHeight * (r - 1)) + ")";
 			}
 		});
 	</script>
