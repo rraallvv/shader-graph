@@ -515,6 +515,7 @@ var SGNode = React.createClass({
 			extra = (
 				<input
 					type="number"
+					className="style-scope shader-graph"
 					value={this.props.data.value}
 					onChange={this.onChangeValue} />
 			);
@@ -524,10 +525,12 @@ var SGNode = React.createClass({
 				<div>
 					<input
 						type="number"
+						className="style-scope shader-graph"
 						value={this.props.data.value[0]}
 						onChange={this.onChangeVec2Value} />
 					<input
 						type="number"
+						className="style-scope shader-graph"
 						value={this.props.data.value[1]}
 						onChange={this.onChangeVec2Value} />
 				</div>
@@ -538,14 +541,17 @@ var SGNode = React.createClass({
 				<div>
 					<input
 						type="number"
+						className="style-scope shader-graph"
 						value={this.props.data.value[0]}
 						onChange={this.onChangeVec3Value} />
 					<input
 						type="number"
+						className="style-scope shader-graph"
 						value={this.props.data.value[1]}
 						onChange={this.onChangeVec3Value} />
 					<input
 						type="number"
+						className="style-scope shader-graph"
 						value={this.props.data.value[2]}
 						onChange={this.onChangeVec3Value} />
 				</div>
@@ -556,18 +562,22 @@ var SGNode = React.createClass({
 				<div>
 					<input
 						type="number"
+						className="style-scope shader-graph"
 						value={this.props.data.value[0]}
 						onChange={this.onChangeVec4Value} />
 					<input
 						type="number"
+						className="style-scope shader-graph"
 						value={this.props.data.value[1]}
 						onChange={this.onChangeVec4Value} />
 					<input
 						type="number"
+						className="style-scope shader-graph"
 						value={this.props.data.value[2]}
 						onChange={this.onChangeVec4Value} />
 					<input
 						type="number"
+						className="style-scope shader-graph"
 						value={this.props.data.value[3]}
 						onChange={this.onChangeVec4Value} />
 				</div>
