@@ -292,6 +292,7 @@ var Preview = React.createClass({
 		});
 		gooRunner.renderer.setClearColor(0, 0, 0, 1);
 		gooRunner.renderer.domElement.id = 'goo';
+		gooRunner.renderer.domElement.className = 'style-scope shader-graph';
 		ReactDOM.findDOMNode(this).appendChild(gooRunner.renderer.domElement);
 
 		var world = gooRunner.world;
@@ -412,7 +413,7 @@ var NodeEditor = React.createClass({
 	render: function() {
 		var nodes = this.props.nodes;
 		return (
-		<div id="canvas">
+		<div id="canvas" className="style-scope shader-graph">
 			{nodes.map(function(node) {
 			return (
 				<SGNode
