@@ -599,8 +599,13 @@ var SGNode = React.createClass({
 			break;
 		};
 
+		var nodeStyle = {
+			left: this.props.data.pos[0],
+			top: this.props.data.pos[1]
+		};
+
 		return (
-			<div className={"w node-type-" + this.props.data.type + " style-scope shader-graph"} data-node-id={this.props.data.id}>
+			<div className={"w node-type-" + this.props.data.type + " style-scope shader-graph"} style={nodeStyle} data-node-id={this.props.data.id}>
 				<div className="title style-scope shader-graph">
 					{this.props.data.type}
 					{removeButton}
