@@ -205,7 +205,25 @@ var App = React.createClass({
 			this.setState(this.state);
 		}
 	},
+	_splitPort: function(port) {
+		var string = port.toString();
+		if (string.indexOf('.') === -1) {
+			return [port, 0];
+		}
+		var split = string.split('.');
+		return [parseInt(split[0]), parseInt(split[1])];
+	},
 	connect: function(nodeA, outputA, nodeB, inputB){
+		if(arguments.length === 2) {
+			var portA = this._splitPort(nodeA);
+			nodeA = portA[0];
+			outputA = portA[1];
+
+			var portB = this._splitPort(outputA);
+			nodeB = portB[0];
+			inputB = portB[1];
+		}
+
 		var nA = this.shader.fragmentGraph.getNodeById(nodeA);
 		var nB = this.shader.fragmentGraph.getNodeById(nodeB);
 		if(!nA) throw new Error('couldnt find node ' + nodeA);

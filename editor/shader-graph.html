@@ -37,17 +37,17 @@
 					appInstance.addNode({type:"sin", pos:[350, 150]});
 					appInstance.addNode({type:"append", pos:[500, 100]});
 					appInstance.addNode({type:"value", pos:[300, 300], value: 1});
-					appInstance.connect(2, 0, 6, 0);
-					appInstance.connect(3, 1, 6, 1);
-					appInstance.connect(3, 2, 7, 0);
-					appInstance.connect(4, 0, 7, 2);
-					appInstance.connect(6, 0, 8, 0);
-					appInstance.connect(7, 0, 9, 0);
-					appInstance.connect(8, 0, 10, 0);
-					appInstance.connect(9, 0, 10, 1);
-					appInstance.connect(5, 0, 10, 2);
-					appInstance.connect(11, 0, 10, 3);
-					appInstance.connect(10, 0, 1, 0);
+					appInstance.connect(2, 6);
+					appInstance.connect(3.1, 6.1);
+					appInstance.connect(3.2, 7);
+					appInstance.connect(4, 7.1);
+					appInstance.connect(6, 8);
+					appInstance.connect(7, 9);
+					appInstance.connect(8, 10);
+					appInstance.connect(9, 10.1);
+					appInstance.connect(5, 10.2);
+					appInstance.connect(11, 10.3);
+					appInstance.connect(10, 1);
 				}, 1000);
 			},
 			setTransform: function( s, r, n, t ){
