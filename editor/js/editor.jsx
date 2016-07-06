@@ -394,8 +394,36 @@ var NodeEditor = React.createClass({
 		// setup some defaults for jsPlumb.
 		var instance = jsPlumb.getInstance({
 			Endpoint: ["Dot", {radius: 0.00001}],
-			Connector: ["Bezier", {curviness: function(src, dst){
-				return 150;
+			Connector: ["Bezier", {curviness: function(a, b){
+				// connection going forward
+				var df = 100;
+				const sf = 2;
+				// connection going backwards
+				var db = 600;
+				const sb = 4;
+				// transition threshold
+				const th = 300;
+				// distance percentage
+				const c = 0.25;
+
+				var d0 = a[0] - b[0];
+				var d1 = a[1] - b[1];
+				var d = Math.sqrt( d0 * d0 + d1 * d1 );
+				// var d = b[0] - a[0];
+
+				// fix distance
+				df = df + (d - df) / sf;
+				db = db + (d - db) / sb;
+
+				if ( a[ 0 ] < b[ 0 ] ) { // forward
+					d = df;
+				} else if ( a[ 0 ] > b[ 0 ] + th ) { // backwards
+					d = db;
+				} else { // transition
+					var t = (a[ 0 ] - b[ 0 ]) / th;
+					d = (1 - t) * df + t * db;
+				}
+				return c * d;
 			}, snapThreshold: 0.00001}],
 			HoverPaintStyle: {
 				strokeStyle: "#ddd",
