@@ -215,11 +215,12 @@ var App = React.createClass({
 	},
 	connect: function(nodeA, outputA, nodeB, inputB){
 		if(arguments.length === 2) {
-			var portA = this._splitPort(nodeA);
+			var portA = this._splitPort(arguments[0]);
+			var portB = this._splitPort(arguments[1]);
+
 			nodeA = portA[0];
 			outputA = portA[1];
 
-			var portB = this._splitPort(outputA);
 			nodeB = portB[0];
 			inputB = portB[1];
 		}
