@@ -211,6 +211,22 @@ var App = React.createClass({
 		if(!nA) throw new Error('couldnt find node ' + nodeA);
 		if(!nB) throw new Error('couldnt find node ' + nodeB);
 
+		if(typeof outputA === "number") {
+			outputA = nA.getOutputPorts()[outputA];
+			if(typeof outputA === "undefined") {
+				console.warn("Output port A undefined");
+				return false;
+			}
+		}
+
+		if(typeof inputB === "number") {
+			inputB = nB.getInputPorts()[inputB];
+			if(typeof inputB === "undefined") {
+				console.warn("Input port B undefined");
+				return false;
+			}
+		}
+
 		if(!nB.canConnect(inputB, nA, outputA)){
 			console.warn(nB.errorMessage);
 			return false;
