@@ -100,7 +100,8 @@ var App = React.createClass({
 
 		// Add the main node
 		this.addNode({
-			type: ShaderGraph.FragColorNode.type
+			type: ShaderGraph.FragColorNode.type,
+			pos: [600, 300]
 		});
 
 		this.setState(this.state);
