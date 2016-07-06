@@ -26,7 +26,8 @@
 			ready: function(){
 				shaderGraph = this;
 				setTimeout(function(){
-					ReactDOM.render(React.createElement(App), shaderGraph.$.content);
+					var appInstance = ReactDOM.render(React.createElement(App), shaderGraph.$.content);
+					appInstance.addNode({type:"vec4", pos:[100, 100], value:[1, 0.5, 0, 0.75]});
 				}, 1000);
 			},
 			setTransform: function( s, r, n, t ){
