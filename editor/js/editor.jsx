@@ -139,11 +139,12 @@ var App = React.createClass({
 			console.warn("Couldn't create node with options='" + options + "' and extra='" + extra + "'");
 			return;
 		}
-		var state = this.state;
 		if (typeof data.id === "undefined") {
 			data.id = this.generateId();
 		}
-		state.nodes.push(data);
+		if (typeof data.pos === "undefined") {
+			data.pos = [0, 0];
+		}
 		if (typeof data.value === "undefined") {
 			switch(data.type){
 			case 'value':
@@ -160,6 +161,8 @@ var App = React.createClass({
 				break;
 			}
 		}
+		var state = this.state;
+		state.nodes.push(data);
 		this.setState(state);
 		return node.id;
 	},
