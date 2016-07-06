@@ -11,4 +11,4 @@ function SineNode(options){
 SineNode.prototype = Object.create(MathFunctionNode.prototype);
 SineNode.prototype.constructor = SineNode;
 
-Node.registerClass('sine', SineNode);
+Node.registerClass('sin', SineNode);
