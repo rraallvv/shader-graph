@@ -144,19 +144,21 @@ var App = React.createClass({
 			data.id = this.generateId();
 		}
 		state.nodes.push(data);
-		switch(data.type){
-		case 'value':
-			data.value = 0;
-			break;
-		case 'vec2':
-			data.value = [0,0];
-			break;
-		case 'vec3':
-			data.value = [0,0,0];
-			break;
-		case 'vec4':
-			data.value = [0,0,0,1];
-			break;
+		if (typeof data.value === "undefined") {
+			switch(data.type){
+			case 'value':
+				data.value = 0;
+				break;
+			case 'vec2':
+				data.value = [0,0];
+				break;
+			case 'vec3':
+				data.value = [0,0,0];
+				break;
+			case 'vec4':
+				data.value = [0,0,0,1];
+				break;
+			}
 		}
 		this.setState(state);
 		return node.id;
