@@ -12620,8 +12620,8 @@
         this.type = "Bezier";
 
         var _super = _jp.Connectors.AbstractBezierConnector.apply(this, arguments),
-            majorAnchor = params.curviness || 150,
-            minorAnchor = 10;
+            majorAnchor = params.curviness || function(){return 150;},
+            minorAnchor = params.snapThreshold || 10;
 
         this.getCurviness = function () {
             return majorAnchor;
@@ -12636,20 +12636,20 @@
             if (!perpendicular) {
                 if (soo[0] === 0) // X
                     p.push(sourceAnchorPosition[0] < targetAnchorPosition[0] ? point[0] + minorAnchor : point[0] - minorAnchor);
-                else p.push(point[0] - (majorAnchor * soo[0]));
+                else p.push(point[0] - (majorAnchor(sourceAnchorPosition, targetAnchorPosition) * soo[0]));
 
                 if (soo[1] === 0) // Y
                     p.push(sourceAnchorPosition[1] < targetAnchorPosition[1] ? point[1] + minorAnchor : point[1] - minorAnchor);
-                else p.push(point[1] + (majorAnchor * too[1]));
+                else p.push(point[1] + (majorAnchor(sourceAnchorPosition, targetAnchorPosition) * too[1]));
             }
             else {
                 if (too[0] === 0) // X
                     p.push(targetAnchorPosition[0] < sourceAnchorPosition[0] ? point[0] + minorAnchor : point[0] - minorAnchor);
-                else p.push(point[0] + (majorAnchor * too[0]));
+                else p.push(point[0] + (majorAnchor(sourceAnchorPosition, targetAnchorPosition) * too[0]));
 
                 if (too[1] === 0) // Y
                     p.push(targetAnchorPosition[1] < sourceAnchorPosition[1] ? point[1] + minorAnchor : point[1] - minorAnchor);
-                else p.push(point[1] + (majorAnchor * soo[1]));
+                else p.push(point[1] + (majorAnchor(sourceAnchorPosition, targetAnchorPosition) * soo[1]));
             }
 
             return p;
