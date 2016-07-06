@@ -27,7 +27,16 @@
 				shaderGraph = this;
 				setTimeout(function(){
 					var appInstance = ReactDOM.render(React.createElement(App), shaderGraph.$.content);
-					appInstance.addNode({type:"vec4", pos:[100, 100], value:[1, 0.5, 0, 0.75]});
+					appInstance.addNode({type:"value", pos:[0, 0], value:70});
+					appInstance.addNode({type:"uv", pos:[0, 100]});
+					appInstance.addNode({type:"value", pos:[0, 220], value:35});
+					appInstance.addNode({type:"value", pos:[0, 320], value:0.5});
+					appInstance.addNode({type:"multiply", pos:[200, 50]});
+					appInstance.addNode({type:"multiply", pos:[200, 150]});
+					appInstance.addNode({type:"cos", pos:[350, 50]});
+					appInstance.addNode({type:"sine", pos:[350, 150]});
+					appInstance.addNode({type:"append", pos:[500, 100]});
+					appInstance.addNode({type:"value", pos:[300, 300], value: 1});
 				}, 1000);
 			},
 			setTransform: function( s, r, n, t ){
