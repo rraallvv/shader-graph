@@ -127,14 +127,24 @@ var App = React.createClass({
 		}
 		return this.idCounter++;
 	},
-	addNode: function(type){
+	addNode: function(options, extra){
+		var data = extra || {};
+		if (typeof options === "string") {
+			data.type = options;
+		} else if (typeof options === "object") {
+			for(var i in options) {
+				data[i] = options[i];
+			}
+		} else {
+			console.warn("Couldn't create node with options='" + options + "' and extra='" + extra + "'");
+			return;
+		}
 		var state = this.state;
-		var data = {
-			id: this.generateId(),
-			type: type
-		};
+		if (typeof data.id === "undefined") {
+			data.id = this.generateId();
+		}
 		state.nodes.push(data);
-		switch(type){
+		switch(data.type){
 		case 'value':
 			data.value = 0;
 			break;
