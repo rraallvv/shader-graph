@@ -99,8 +99,7 @@ var App = React.createClass({
 		this.instance = instance;
 
 		// Add the main node
-		this.state.nodes.push({
-			id: this.generateId(),
+		this.addNode({
 			type: ShaderGraph.FragColorNode.type
 		});
 
