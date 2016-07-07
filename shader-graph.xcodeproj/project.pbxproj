@@ -12,7 +12,7 @@
 		E41C5AC11D1CE08A00B5143F /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = "<group>"; };
 		E42640AB1D2C71FE0022702E /* index.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
 		E436111F1D2DFAA900B6F5CA /* cocos2d-js.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "cocos2d-js.js"; sourceTree = "<group>"; };
-		E43611201D2DFAA900B6F5CA /* main.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
+		E43611201D2DFAA900B6F5CA /* preview.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = preview.js; sourceTree = "<group>"; };
 		E43611211D2DFAA900B6F5CA /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		E43611221D2DFAA900B6F5CA /* style-desktop.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "style-desktop.css"; sourceTree = "<group>"; };
 		E43611231D2DFAB700B6F5CA /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; path = res; sourceTree = "<group>"; };
@@ -34,7 +34,7 @@
 				E4EE05751D29BFA700964AFA /* index.html */,
 				E42640AB1D2C71FE0022702E /* index.js */,
 				E436111F1D2DFAA900B6F5CA /* cocos2d-js.js */,
-				E43611201D2DFAA900B6F5CA /* main.js */,
+				E43611201D2DFAA900B6F5CA /* preview.js */,
 				E43611211D2DFAA900B6F5CA /* splash.png */,
 				E43611221D2DFAA900B6F5CA /* style-desktop.css */,
 			);
