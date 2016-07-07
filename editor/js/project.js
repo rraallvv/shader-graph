@@ -32,7 +32,7 @@ require = (function e(t, n, r) {
 
         var _default_vert = require("../Shaders/ccShader_Default_Vert.js");
         var _default_vert_no_mvp = require("../Shaders/ccShader_Default_Vert_noMVP.js");
-        var _black_white_frag = require("../Shaders/ccShader_Avg_Black_White_Frag.js");
+        var _black_white_frag = require("../Shaders/ccShader_Default_Frag.js");
 
         var EffectBlackWhite = cc.Class({
             "extends": cc.Component,
@@ -85,14 +85,14 @@ require = (function e(t, n, r) {
 
         cc._RFpop();
 }, {
-        "../Shaders/ccShader_Avg_Black_White_Frag.js": "ccShader_Avg_Black_White_Frag"
+        "../Shaders/ccShader_Default_Frag.js": "ccShader_Default_Frag"
         , "../Shaders/ccShader_Default_Vert.js": "ccShader_Default_Vert"
         , "../Shaders/ccShader_Default_Vert_noMVP.js": "ccShader_Default_Vert_noMVP"
     }]
-    , "ccShader_Avg_Black_White_Frag": [function (require, module, exports) {
+    , "ccShader_Default_Frag": [function (require, module, exports) {
         "use strict";
-        cc._RFpush(module, '1a2e0lgfLVJ2Z1JCdcFAr8X', 'ccShader_Avg_Black_White_Frag');
-        // Shaders/ccShader_Avg_Black_White_Frag.js
+        cc._RFpush(module, '1a2e0lgfLVJ2Z1JCdcFAr8X', 'ccShader_Default_Frag');
+        // Shaders/ccShader_Default_Frag.js
 
         /* 平均值黑白 */
         module.exports = "\n#ifdef GL_ES\nprecision mediump float;\n#endif\nvarying vec2 v_texCoord;\nvoid main()\n{\n    vec4 v = texture2D(CC_Texture0, v_texCoord).rgba;\n    float f = (v.r + v.g + v.b) / 3.0;\n    gl_FragColor = vec4(f, f, f, v.a);\n}\n";
