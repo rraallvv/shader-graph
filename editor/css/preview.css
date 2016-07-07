@@ -55,11 +55,10 @@ p.footer {
     background-color: #1a1a1a;
     position: absolute;
     left: 50%;
-    top: 80%;
-    height: 26px;
-    padding: 5px;
-    width: 350px;
-    margin: 0 -175px;         
+    top: 85%;
+    height: 15px;
+    width: 80%;
+	margin-left: -40%;
     border-radius: 5px;
     box-shadow: 0 1px 5px #000 inset, 0 1px 0 #444;           
 }
