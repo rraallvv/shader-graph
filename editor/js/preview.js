@@ -30,6 +30,14 @@ Editor.polymerElement({
 					"resources/EffectPreview.fs.glsl",
 					"cc.RawAsset"
 				],
+				"2fdfd899-b375-46c6-ac69-fdefaf994017": [
+					"resources/EffectPreview_noMVP.vs.glsl",
+					"cc.RawAsset"
+				],
+				"0bf9ac5e-ff33-4a0a-9de7-83bff3b29a40": [
+					"resources/EffectPreview.vs.glsl",
+					"cc.RawAsset"
+				]
 			},
 			"internal": {
 			}
