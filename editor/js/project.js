@@ -34,7 +34,7 @@ require = (function e(t, n, r) {
         var _default_vert_no_mvp = require("../Shaders/ccShader_Default_Vert_noMVP.js");
         var _black_white_frag = require("../Shaders/ccShader_Default_Frag.js");
 
-        var EffectBlackWhite = cc.Class({
+        var EffectPreview = cc.Class({
             "extends": cc.Component,
 
             properties: {
@@ -81,7 +81,7 @@ require = (function e(t, n, r) {
 
         });
 
-        cc.BlackWhite = module.exports = EffectBlackWhite;
+        cc.EffectPreview = module.exports = EffectPreview;
 
         cc._RFpop();
 }, {

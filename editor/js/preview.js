@@ -30,10 +30,10 @@ Editor.polymerElement({
 			"internal": {
 			}
 		},
-		"launchScene": "db://assets/Scene/Effect00.fire",
+		"launchScene": "db://assets/Scene/EffectPreview.fire",
 		"scenes": [
 			{
-				"url": "db://assets/Scene/Effect00.fire",
+				"url": "db://assets/Scene/EffectPreview.fire",
 				"uuid": "0c0e54e8-a57a-4811-af7d-e0106440f9f2"
 			}
 		],

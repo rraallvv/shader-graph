@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.SceneAsset",
-    "_name": "Effect00",
+    "_name": "EffectPreview",
     "scene": {
       "__id__": 1
     }
