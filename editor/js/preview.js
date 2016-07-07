@@ -5,16 +5,78 @@ if ( typeof Editor === "undefined" ) {
 var preview;
 
 Editor.polymerElement({
+	_CCSettings: {
+		"platform": "web-desktop",
+		"groupList": [
+			"default"
+		],
+		"collisionMatrix": [
+			[
+				true
+			]
+		],
+		"rawAssets": {
+			"assets": {
+				"cd0305b4-c877-43af-8ed8-27d38478c262": [
+					"Image/monkey",
+					"cc.SpriteFrame",
+					1
+				],
+				"1d955528-ab82-4be4-a727-d864908c2b74": [
+					"Image/monkey.png",
+					"cc.Texture2D"
+				]
+			},
+			"internal": {
+				"f0048c10-f03e-4c97-b9d3-3506e1d58952": [
+					"image/default_btn_normal",
+					"cc.SpriteFrame",
+					1
+				],
+				"e9ec654c-97a2-4787-9325-e6a10375219a": [
+					"image/default_btn_pressed",
+					"cc.SpriteFrame",
+					1
+				],
+				"29158224-f8dd-4661-a796-1ffab537140e": [
+					"image/default_btn_disabled",
+					"cc.SpriteFrame",
+					1
+				],
+				"e851e89b-faa2-4484-bea6-5c01dd9f06e2": [
+					"image/default_btn_normal.png",
+					"cc.Texture2D"
+				],
+				"b43ff3c2-02bb-4874-81f7-f2dea6970f18": [
+					"image/default_btn_pressed.png",
+					"cc.Texture2D"
+				],
+				"71561142-4c83-4933-afca-cb7a17f67053": [
+					"image/default_btn_disabled.png",
+					"cc.Texture2D"
+				]
+			}
+		},
+		"launchScene": "db://assets/Scene/Effect00.fire",
+		"scenes": [
+			{
+				"url": "db://assets/Scene/Effect00.fire",
+				"uuid": "0c0e54e8-a57a-4811-af7d-e0106440f9f2"
+			}
+		],
+		"orientation": "",
+		"debug": false
+	},
 	ready: function(){
 		preview = this;
 		setTimeout(function(){
 
 			function boot () {
 
-				if ( !_CCSettings.debug ) {
+				if ( !preview._CCSettings.debug ) {
 					// retrieve minified raw assets
-					var rawAssets = _CCSettings.rawAssets;
-					var assetTypes = _CCSettings.assetTypes;
+					var rawAssets = preview._CCSettings.rawAssets;
+					var assetTypes = preview._CCSettings.assetTypes;
 					for (var mount in rawAssets) {
 						var entries = rawAssets[mount];
 						for (var uuid in entries) {
@@ -63,16 +125,16 @@ Editor.polymerElement({
 					if (cc.sys.os !== cc.sys.OS_ANDROID || cc.sys.browserType !== cc.sys.BROWSER_TYPE_UC) {
 						cc.view.enableRetina(true);
 					}
-					//cc.view.setDesignResolutionSize(_CCSettings.designWidth, _CCSettings.designHeight, cc.ResolutionPolicy.SHOW_ALL);
+					//cc.view.setDesignResolutionSize(preview._CCSettings.designWidth, preview._CCSettings.designHeight, cc.ResolutionPolicy.SHOW_ALL);
 				
 					if (cc.sys.isBrowser) {
 						setLoadingDisplay();
 					}
 
-					if (_CCSettings.orientation === 'landscape') {
+					if (preview._CCSettings.orientation === 'landscape') {
 						cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
 					}
-					else if (_CCSettings.orientation === 'portrait') {
+					else if (preview._CCSettings.orientation === 'portrait') {
 						cc.view.setOrientation(cc.macro.ORIENTATION_PORTRAIT);
 					}
 
@@ -80,10 +142,10 @@ Editor.polymerElement({
 					cc.AssetLibrary.init({
 						libraryPath: preview.resolveUrl('res/import'),
 						rawAssetsBase: preview.resolveUrl('res/raw-'),
-						rawAssets: _CCSettings.rawAssets
+						rawAssets: preview._CCSettings.rawAssets
 					});
 
-					var launchScene = _CCSettings.launchScene;
+					var launchScene = preview._CCSettings.launchScene;
 
 					// load scene
 					cc.director.loadScene(launchScene, null,
@@ -106,22 +168,22 @@ Editor.polymerElement({
 
 					// purge
 					//noinspection JSUndeclaredVariable
-					_CCSettings = undefined;
+					preview._CCSettings = undefined;
 				};
 
 				var option = {
 					//width: width,
 					//height: height,
 					id: 'GameCanvas',
-					scenes: _CCSettings.scenes,
-					debugMode: _CCSettings.debug ? cc.DebugMode.INFO : cc.DebugMode.ERROR,
-					showFPS: _CCSettings.debug,
+					scenes: preview._CCSettings.scenes,
+					debugMode: preview._CCSettings.debug ? cc.DebugMode.INFO : cc.DebugMode.ERROR,
+					showFPS: preview._CCSettings.debug,
 					frameRate: 60,
 					jsList: [
-						preview.resolveUrl(_CCSettings.debug ? 'js/project.dev.js' : 'js/project.js')
+						preview.resolveUrl(preview._CCSettings.debug ? 'js/project.dev.js' : 'js/project.js')
 					],
-					groupList: _CCSettings.groupList,
-					collisionMatrix: _CCSettings.collisionMatrix
+					groupList: preview._CCSettings.groupList,
+					collisionMatrix: preview._CCSettings.collisionMatrix
 				};
 
 				cc.game.run(option, onStart);

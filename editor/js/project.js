@@ -118,4 +118,3 @@ require = (function e(t, n, r) {
         cc._RFpop();
 }, {}]
 }, {}, ["Avg_Black_White"])
-
