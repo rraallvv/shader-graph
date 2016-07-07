@@ -12631,25 +12631,31 @@
             // determine if the two anchors are perpendicular to each other in their orientation.  we swap the control
             // points around if so (code could be tightened up)
             var perpendicular = soo[0] != too[0] || soo[1] == too[1],
-                p = [];
+                p = [],
+				t = too[0] + too[1],
+				s = soo[0] + soo[1],
+				d = [
+					sourceAnchorPosition[0] * t + targetAnchorPosition[0] * s,
+					sourceAnchorPosition[1] * t + targetAnchorPosition[1] * s
+				];
 
             if (!perpendicular) {
                 if (soo[0] === 0) // X
                     p.push(sourceAnchorPosition[0] < targetAnchorPosition[0] ? point[0] + minorAnchor : point[0] - minorAnchor);
-                else p.push(point[0] - (majorAnchor(sourceAnchorPosition, targetAnchorPosition) * soo[0]));
+                else p.push(point[0] - (majorAnchor(d) * soo[0]));
 
                 if (soo[1] === 0) // Y
                     p.push(sourceAnchorPosition[1] < targetAnchorPosition[1] ? point[1] + minorAnchor : point[1] - minorAnchor);
-                else p.push(point[1] + (majorAnchor(sourceAnchorPosition, targetAnchorPosition) * too[1]));
+                else p.push(point[1] + (majorAnchor(d) * too[1]));
             }
             else {
                 if (too[0] === 0) // X
                     p.push(targetAnchorPosition[0] < sourceAnchorPosition[0] ? point[0] + minorAnchor : point[0] - minorAnchor);
-                else p.push(point[0] + (majorAnchor(sourceAnchorPosition, targetAnchorPosition) * too[0]));
+                else p.push(point[0] + (majorAnchor(d) * too[0]));
 
                 if (too[1] === 0) // Y
                     p.push(targetAnchorPosition[1] < sourceAnchorPosition[1] ? point[1] + minorAnchor : point[1] - minorAnchor);
-                else p.push(point[1] + (majorAnchor(sourceAnchorPosition, targetAnchorPosition) * soo[1]));
+                else p.push(point[1] + (majorAnchor(d) * soo[1]));
             }
 
             return p;
