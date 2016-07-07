@@ -165,7 +165,7 @@ Editor.polymerElement({
 					showFPS: preview._CCSettings.debug,
 					frameRate: 60,
 					jsList: [
-						preview.resolveUrl(preview._CCSettings.debug ? 'js/project.dev.js' : 'js/project.js')
+						preview.resolveUrl('js/project.js')
 					],
 					groupList: preview._CCSettings.groupList,
 					collisionMatrix: preview._CCSettings.collisionMatrix
