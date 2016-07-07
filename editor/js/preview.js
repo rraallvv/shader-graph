@@ -78,8 +78,8 @@ Editor.polymerElement({
 
 					// init assets
 					cc.AssetLibrary.init({
-						libraryPath: 'res/import',
-						rawAssetsBase: 'res/raw-',
+						libraryPath: preview.resolveUrl('res/import'),
+						rawAssetsBase: preview.resolveUrl('res/raw-'),
 						rawAssets: _CCSettings.rawAssets
 					});
 
@@ -118,7 +118,7 @@ Editor.polymerElement({
 					showFPS: _CCSettings.debug,
 					frameRate: 60,
 					jsList: [
-						_CCSettings.debug ? 'js/project.dev.js' : 'js/project.js'
+						preview.resolveUrl(_CCSettings.debug ? 'js/project.dev.js' : 'js/project.js')
 					],
 					groupList: _CCSettings.groupList,
 					collisionMatrix: _CCSettings.collisionMatrix
