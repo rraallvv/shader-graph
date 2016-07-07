@@ -25,10 +25,10 @@ require = (function e(t, n, r) {
         s(r[o]);
     return s;
 })({
-    "Avg_Black_White": [function (require, module, exports) {
+    "Effect_Preview": [function (require, module, exports) {
         "use strict";
-        cc._RFpush(module, '414458STphLF75+aFmYFzfh', 'Avg_Black_White');
-        // Script/Avg_Black_White.js
+        cc._RFpush(module, '414458STphLF75+aFmYFzfh', 'Effect_Preview');
+        // Script/Effect_Preview.js
 
         var _default_vert = require("../Shaders/ccShader_Default_Vert.js");
         var _default_vert_no_mvp = require("../Shaders/ccShader_Default_Vert_noMVP.js");
@@ -117,4 +117,4 @@ require = (function e(t, n, r) {
 
         cc._RFpop();
 }, {}]
-}, {}, ["Avg_Black_White"])
+}, {}, ["Effect_Preview"])
