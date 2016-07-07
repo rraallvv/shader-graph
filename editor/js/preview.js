@@ -18,14 +18,18 @@ Editor.polymerElement({
 		"rawAssets": {
 			"assets": {
 				"cd0305b4-c877-43af-8ed8-27d38478c262": [
-					"Image/monkey",
+					"Images/monkey",
 					"cc.SpriteFrame",
 					1
 				],
 				"1d955528-ab82-4be4-a727-d864908c2b74": [
-					"Image/monkey.png",
+					"Images/monkey.png",
 					"cc.Texture2D"
-				]
+				],
+				"ecbfd2e4-3595-4b9e-94e1-ad307f36bfab": [
+					"resources/EffectPreview.fs.glsl",
+					"cc.RawAsset"
+				],
 			},
 			"internal": {
 			}
