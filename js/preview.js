@@ -109,7 +109,7 @@
             showFPS: _CCSettings.debug,
             frameRate: 60,
             jsList: [
-                _CCSettings.debug ? 'src/project.dev.js' : 'src/project.js'
+                _CCSettings.debug ? 'js/project.dev.js' : 'js/project.js'
             ],
             groupList: _CCSettings.groupList,
             collisionMatrix: _CCSettings.collisionMatrix
@@ -122,8 +122,8 @@
         window.onload = boot;
     }
     else if (cc.sys.isNative) {
-        require('src/settings.js');
-        require('src/jsb_polyfill.js');
+        require('js/settings.js');
+        require('js/jsb_polyfill.js');
 
         boot();
     }

@@ -11,11 +11,10 @@
 		E41C5AC01D1CE08200B5143F /* editor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = editor; sourceTree = "<group>"; };
 		E41C5AC11D1CE08A00B5143F /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = "<group>"; };
 		E42640AB1D2C71FE0022702E /* index.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
-		E436111F1D2DFAA900B6F5CA /* cocos2d-js.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "cocos2d-js.js"; sourceTree = "<group>"; };
-		E43611201D2DFAA900B6F5CA /* preview.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = preview.js; sourceTree = "<group>"; };
 		E43611211D2DFAA900B6F5CA /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		E43611221D2DFAA900B6F5CA /* style-desktop.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "style-desktop.css"; sourceTree = "<group>"; };
 		E43611231D2DFAB700B6F5CA /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; path = res; sourceTree = "<group>"; };
+		E4C078181D2E222200A38F67 /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; path = js; sourceTree = "<group>"; };
 		E4EE05731D29BADF00964AFA /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
 		E4EE05741D29BC3E00964AFA /* server.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = server.js; sourceTree = "<group>"; };
 		E4EE05751D29BFA700964AFA /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
@@ -29,12 +28,11 @@
 				E41C5AC11D1CE08A00B5143F /* examples */,
 				E41C5ABF1D1CE07000B5143F /* src */,
 				E43611231D2DFAB700B6F5CA /* res */,
+				E4C078181D2E222200A38F67 /* js */,
 				E4EE05731D29BADF00964AFA /* package.json */,
 				E4EE05741D29BC3E00964AFA /* server.js */,
 				E4EE05751D29BFA700964AFA /* index.html */,
 				E42640AB1D2C71FE0022702E /* index.js */,
-				E436111F1D2DFAA900B6F5CA /* cocos2d-js.js */,
-				E43611201D2DFAA900B6F5CA /* preview.js */,
 				E43611211D2DFAA900B6F5CA /* splash.png */,
 				E43611221D2DFAA900B6F5CA /* style-desktop.css */,
 			);
