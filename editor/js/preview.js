@@ -1,131 +1,142 @@
-(function () {
+if ( typeof Editor === "undefined" ) {
+	window.Editor = { polymerElement: Polymer, log: console.log };
+}
 
-    function boot () {
+var preview;
 
-        if ( !_CCSettings.debug ) {
-            // retrieve minified raw assets
-            var rawAssets = _CCSettings.rawAssets;
-            var assetTypes = _CCSettings.assetTypes;
-            for (var mount in rawAssets) {
-                var entries = rawAssets[mount];
-                for (var uuid in entries) {
-                    var entry = entries[uuid];
-                    var type = entry[1];
-                    if (typeof type === 'number') {
-                        entry[1] = assetTypes[type];
-                    }
-                }
-            }
-        }
+Editor.polymerElement({
+	ready: function(){
+		preview = this;
+		setTimeout(function(){
 
-        // init engine
-        var canvas, div;
-        //var width = 640, height = 480;
+			function boot () {
 
-        if (cc.sys.isBrowser) {
-            canvas = document.getElementById('GameCanvas');
-            div = document.getElementById('GameDiv');
+				if ( !_CCSettings.debug ) {
+					// retrieve minified raw assets
+					var rawAssets = _CCSettings.rawAssets;
+					var assetTypes = _CCSettings.assetTypes;
+					for (var mount in rawAssets) {
+						var entries = rawAssets[mount];
+						for (var uuid in entries) {
+							var entry = entries[uuid];
+							var type = entry[1];
+							if (typeof type === 'number') {
+								entry[1] = assetTypes[type];
+							}
+						}
+					}
+				}
 
-            //width = div.clientWidth;
-            //height = div.clientHeight;
-        }
+				// init engine
+				var canvas, div;
+				//var width = 640, height = 480;
 
-        function setLoadingDisplay () {
-            // Loading splash scene
-            var splash = document.getElementById('splash');
-            var progressBar = splash.querySelector('.progress-bar span');
-            var currentResCount = cc.loader.getResCount();
-            cc.loader.onProgress = function (completedCount, totalCount, item) {
-                var percent = 100 * (completedCount - currentResCount) / (totalCount - currentResCount);
-                if (progressBar) {
-                    progressBar.style.width = percent.toFixed(2) + '%';
-                }
-            };
-            splash.style.display = 'block';
+				if (cc.sys.isBrowser) {
+					canvas = document.getElementById('GameCanvas');
+					div = document.getElementById('GameDiv');
 
-            cc.director.once(cc.Director.EVENT_AFTER_SCENE_LAUNCH, function () {
-                splash.style.display = 'none';
-            });
-        }
+					//width = div.clientWidth;
+					//height = div.clientHeight;
+				}
 
-        var onStart = function () {
-            cc.view.resizeWithBrowserSize(true);
-            // UC browser on many android devices have performance issue with retina display
-            if (cc.sys.os !== cc.sys.OS_ANDROID || cc.sys.browserType !== cc.sys.BROWSER_TYPE_UC) {
-                cc.view.enableRetina(true);
-            }
-            //cc.view.setDesignResolutionSize(_CCSettings.designWidth, _CCSettings.designHeight, cc.ResolutionPolicy.SHOW_ALL);
-        
-            if (cc.sys.isBrowser) {
-                setLoadingDisplay();
-            }
+				function setLoadingDisplay () {
+					// Loading splash scene
+					var splash = document.getElementById('splash');
+					var progressBar = splash.querySelector('.progress-bar span');
+					var currentResCount = cc.loader.getResCount();
+					cc.loader.onProgress = function (completedCount, totalCount, item) {
+						var percent = 100 * (completedCount - currentResCount) / (totalCount - currentResCount);
+						if (progressBar) {
+							progressBar.style.width = percent.toFixed(2) + '%';
+						}
+					};
+					splash.style.display = 'block';
 
-            if (_CCSettings.orientation === 'landscape') {
-                cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
-            }
-            else if (_CCSettings.orientation === 'portrait') {
-                cc.view.setOrientation(cc.macro.ORIENTATION_PORTRAIT);
-            }
+					cc.director.once(cc.Director.EVENT_AFTER_SCENE_LAUNCH, function () {
+						splash.style.display = 'none';
+					});
+				}
 
-            // init assets
-            cc.AssetLibrary.init({
-                libraryPath: 'res/import',
-                rawAssetsBase: 'res/raw-',
-                rawAssets: _CCSettings.rawAssets
-            });
+				var onStart = function () {
+					cc.view.resizeWithBrowserSize(true);
+					// UC browser on many android devices have performance issue with retina display
+					if (cc.sys.os !== cc.sys.OS_ANDROID || cc.sys.browserType !== cc.sys.BROWSER_TYPE_UC) {
+						cc.view.enableRetina(true);
+					}
+					//cc.view.setDesignResolutionSize(_CCSettings.designWidth, _CCSettings.designHeight, cc.ResolutionPolicy.SHOW_ALL);
+				
+					if (cc.sys.isBrowser) {
+						setLoadingDisplay();
+					}
 
-            var launchScene = _CCSettings.launchScene;
+					if (_CCSettings.orientation === 'landscape') {
+						cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
+					}
+					else if (_CCSettings.orientation === 'portrait') {
+						cc.view.setOrientation(cc.macro.ORIENTATION_PORTRAIT);
+					}
 
-            // load scene
-            cc.director.loadScene(launchScene, null,
-                function () {
-                    if (cc.sys.isBrowser) {
-                        // show canvas
-                        canvas.style.visibility = '';
-                        var div = document.getElementById('GameDiv');
-                        if (div) {
-                            div.style.backgroundImage = '';
-                        }
-                    }
+					// init assets
+					cc.AssetLibrary.init({
+						libraryPath: 'res/import',
+						rawAssetsBase: 'res/raw-',
+						rawAssets: _CCSettings.rawAssets
+					});
 
-                    // play game
-                    // cc.game.resume();
+					var launchScene = _CCSettings.launchScene;
 
-                    console.log('Success to load scene: ' + launchScene);
-                }
-            );
+					// load scene
+					cc.director.loadScene(launchScene, null,
+						function () {
+							if (cc.sys.isBrowser) {
+								// show canvas
+								canvas.style.visibility = '';
+								var div = document.getElementById('GameDiv');
+								if (div) {
+									div.style.backgroundImage = '';
+								}
+							}
 
-            // purge
-            //noinspection JSUndeclaredVariable
-            _CCSettings = undefined;
-        };
+							// play game
+							// cc.game.resume();
 
-        var option = {
-            //width: width,
-            //height: height,
-            id: 'GameCanvas',
-            scenes: _CCSettings.scenes,
-            debugMode: _CCSettings.debug ? cc.DebugMode.INFO : cc.DebugMode.ERROR,
-            showFPS: _CCSettings.debug,
-            frameRate: 60,
-            jsList: [
-                _CCSettings.debug ? 'js/project.dev.js' : 'js/project.js'
-            ],
-            groupList: _CCSettings.groupList,
-            collisionMatrix: _CCSettings.collisionMatrix
-        };
+							console.log('Success to load scene: ' + launchScene);
+						}
+					);
 
-        cc.game.run(option, onStart);
-    }
+					// purge
+					//noinspection JSUndeclaredVariable
+					_CCSettings = undefined;
+				};
 
-    if (cc.sys.isBrowser) {
-        window.onload = boot;
-    }
-    else if (cc.sys.isNative) {
-        require('js/settings.js');
-        require('js/jsb_polyfill.js');
+				var option = {
+					//width: width,
+					//height: height,
+					id: 'GameCanvas',
+					scenes: _CCSettings.scenes,
+					debugMode: _CCSettings.debug ? cc.DebugMode.INFO : cc.DebugMode.ERROR,
+					showFPS: _CCSettings.debug,
+					frameRate: 60,
+					jsList: [
+						_CCSettings.debug ? 'js/project.dev.js' : 'js/project.js'
+					],
+					groupList: _CCSettings.groupList,
+					collisionMatrix: _CCSettings.collisionMatrix
+				};
 
-        boot();
-    }
+				cc.game.run(option, onStart);
+			}
 
-})();
+			if (cc.sys.isBrowser) {
+				boot();
+			}
+			else if (cc.sys.isNative) {
+				require('js/settings.js');
+				require('js/jsb_polyfill.js');
+
+				boot();
+			}
+
+		}, 1000);
+	}
+});
