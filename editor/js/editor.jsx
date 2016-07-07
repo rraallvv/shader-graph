@@ -365,8 +365,9 @@ var Preview = React.createClass({
 	},
 	render: function() {
 		this.updateShader();
-		return (
-			<div className="preview col-xs-12 style-scope shader-graph"></div>
+		return React.createElement("div", null,
+			React.createElement("div", {className: "preview col-xs-12 style-scope shader-graph"}),
+			React.createElement("preview-view", null)
 		);
 	},
 	updateShader: function(){
