@@ -2,8 +2,6 @@ if ( typeof Editor === "undefined" ) {
 	window.Editor = { polymerElement: Polymer, log: console.log };
 }
 
-var preview;
-
 Editor.polymerElement({
 	_CCSettings: {
 		"platform": "web-desktop",
@@ -53,15 +51,15 @@ Editor.polymerElement({
 		"debug": false
 	},
 	ready: function(){
-		preview = this;
+		var self = this;
 		setTimeout(function(){
 
 			function boot () {
 
-				if ( !preview._CCSettings.debug ) {
+				if ( !self._CCSettings.debug ) {
 					// retrieve minified raw assets
-					var rawAssets = preview._CCSettings.rawAssets;
-					var assetTypes = preview._CCSettings.assetTypes;
+					var rawAssets = self._CCSettings.rawAssets;
+					var assetTypes = self._CCSettings.assetTypes;
 					for (var mount in rawAssets) {
 						var entries = rawAssets[mount];
 						for (var uuid in entries) {
@@ -110,27 +108,27 @@ Editor.polymerElement({
 					if (cc.sys.os !== cc.sys.OS_ANDROID || cc.sys.browserType !== cc.sys.BROWSER_TYPE_UC) {
 						cc.view.enableRetina(true);
 					}
-					//cc.view.setDesignResolutionSize(preview._CCSettings.designWidth, preview._CCSettings.designHeight, cc.ResolutionPolicy.SHOW_ALL);
+					//cc.view.setDesignResolutionSize(self._CCSettings.designWidth, self._CCSettings.designHeight, cc.ResolutionPolicy.SHOW_ALL);
 				
 					if (cc.sys.isBrowser) {
 						setLoadingDisplay();
 					}
 
-					if (preview._CCSettings.orientation === 'landscape') {
+					if (self._CCSettings.orientation === 'landscape') {
 						cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
 					}
-					else if (preview._CCSettings.orientation === 'portrait') {
+					else if (self._CCSettings.orientation === 'portrait') {
 						cc.view.setOrientation(cc.macro.ORIENTATION_PORTRAIT);
 					}
 
 					// init assets
 					cc.AssetLibrary.init({
-						libraryPath: preview.resolveUrl('res/import'),
-						rawAssetsBase: preview.resolveUrl('res/raw-'),
-						rawAssets: preview._CCSettings.rawAssets
+						libraryPath: self.resolveUrl('res/import'),
+						rawAssetsBase: self.resolveUrl('res/raw-'),
+						rawAssets: self._CCSettings.rawAssets
 					});
 
-					var launchScene = preview._CCSettings.launchScene;
+					var launchScene = self._CCSettings.launchScene;
 
 					// load scene
 					cc.director.loadScene(launchScene, null,
@@ -153,22 +151,22 @@ Editor.polymerElement({
 
 					// purge
 					//noinspection JSUndeclaredVariable
-					preview._CCSettings = undefined;
+					self._CCSettings = undefined;
 				};
 
 				var option = {
 					//width: width,
 					//height: height,
 					id: 'GameCanvas',
-					scenes: preview._CCSettings.scenes,
-					debugMode: preview._CCSettings.debug ? cc.DebugMode.INFO : cc.DebugMode.ERROR,
-					showFPS: preview._CCSettings.debug,
+					scenes: self._CCSettings.scenes,
+					debugMode: self._CCSettings.debug ? cc.DebugMode.INFO : cc.DebugMode.ERROR,
+					showFPS: self._CCSettings.debug,
 					frameRate: 60,
 					jsList: [
-						preview.resolveUrl('js/project.js')
+						self.resolveUrl('js/project.js')
 					],
-					groupList: preview._CCSettings.groupList,
-					collisionMatrix: preview._CCSettings.collisionMatrix
+					groupList: self._CCSettings.groupList,
+					collisionMatrix: self._CCSettings.collisionMatrix
 				};
 
 				cc.game.run(option, onStart);
