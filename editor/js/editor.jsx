@@ -139,6 +139,18 @@ var App = React.createClass({
 			console.warn("Couldn't create node with options='" + options + "' and extra='" + extra + "'");
 			return;
 		}
+		if (data.type === 'fragColor' || data.type === 'position') {
+			// Find the main node
+			var mainNode = this.state.nodes.find(function(node){
+				return node.type === 'fragColor' || node.type === 'position';
+			});
+			// Only update its data
+			if (mainNode) {
+				data.id = 1;
+				this.updateNodeData(1, data);
+				return data.id;
+			}
+		}
 		if (typeof data.id === "undefined") {
 			data.id = this.generateId();
 		}
