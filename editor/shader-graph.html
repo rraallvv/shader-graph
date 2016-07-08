@@ -29,6 +29,7 @@
 				shaderGraph = this;
 				setTimeout(function(){
 					var appInstance = ReactDOM.render(React.createElement(App), shaderGraph.$.content);
+					/*
 					appInstance.addNode({type:"value", pos:[0, 0], value:70});
 					appInstance.addNode({type:"uv", pos:[0, 100]});
 					appInstance.addNode({type:"value", pos:[0, 220], value:35});
@@ -50,6 +51,29 @@
 					appInstance.connect(5, 10.2);
 					appInstance.connect(11, 10.3);
 					appInstance.connect(10, 1);
+					*/
+					appInstance.addNode({type:"uv", pos:[0,0]});
+					appInstance.addNode({type:"texture", pos:[120, 0]});
+					appInstance.addNode({type:"split", pos:[120, 220]});
+					appInstance.addNode({type:"add", pos:[270, 140]});
+					appInstance.addNode({type:"add", pos:[400, 140]});
+					appInstance.addNode({type:"divide", pos:[520, 140]});
+					appInstance.addNode({type:"value", pos:[380, 235], value:3});
+					appInstance.addNode({type:"join", pos:[650, 230]});
+					appInstance.connect(2, 3);
+					appInstance.connect(3, 4);
+					appInstance.connect(4, 5);
+					appInstance.connect(4.1, 5.1);
+					appInstance.connect(5, 6);
+					appInstance.connect(4.2, 6.1);
+					appInstance.connect(6, 7);
+					appInstance.connect(8, 7.1);
+					appInstance.connect(7, 9);
+					appInstance.connect(7, 9.1);
+					appInstance.connect(7, 9.2);
+					appInstance.connect(4.3, 9.3);
+					appInstance.connect(9, 1);
+
 				}, 1000);
 			},
 			setTransform: function( s, r, n, t ){
