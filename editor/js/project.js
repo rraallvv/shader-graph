@@ -1,11 +1,8 @@
-var module = { exports: {} };
+cc._RFpush({ exports: {} }, '414458STphLF75+aFmYFzfh', 'EffectPreview');
 
-cc._RFpush(module, '414458STphLF75+aFmYFzfh', 'EffectPreview');
-
-// Script/EffectPreview.js
 "use strict";
 
-module.exports = cc.Class({
+cc.Class({
 	"extends": cc.Component,
 	properties: {
 		isAllChildrenUser: false,
