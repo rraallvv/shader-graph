@@ -533,7 +533,7 @@ var Preview = React.createClass({
 				showFPS: self._CCSettings.debug,
 				frameRate: 60,
 				jsList: [
-					shaderGraph.resolveUrl('js/project.js')
+					shaderGraph.resolveUrl('js/preview.js')
 				],
 				groupList: self._CCSettings.groupList,
 				collisionMatrix: self._CCSettings.collisionMatrix
