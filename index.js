@@ -2,7 +2,7 @@ module.exports = {
 
 	AbsNode: require('./src/nodes/AbsNode'),
 	AddNode: require('./src/nodes/AddNode'),
-	AppendNode: require('./src/nodes/AppendNode'),
+	JoinComponentsNode: require('./src/nodes/JoinComponentsNode'),
 	Attribute: require('./src/Attribute'),
 	CeilNode: require('./src/nodes/CeilNode'),
 	Clamp01Node: require('./src/nodes/Clamp01Node'),

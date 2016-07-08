@@ -1,26 +1,26 @@
 var Node = require('./Node');
 var Uniform = require('../Uniform');
 
-module.exports = AppendNode;
+module.exports = JoinComponentsNode;
 
 // A vector with four components/values.
-function AppendNode(options){
+function JoinComponentsNode(options){
 	options = options || {};
 	Node.call(this, options);
 }
-AppendNode.prototype = Object.create(Node.prototype);
-AppendNode.prototype.constructor = AppendNode;
+JoinComponentsNode.prototype = Object.create(Node.prototype);
+JoinComponentsNode.prototype.constructor = JoinComponentsNode;
 
-Node.registerClass('append', AppendNode);
+Node.registerClass('join', JoinComponentsNode);
 
-AppendNode.supportedTypes = [
+JoinComponentsNode.supportedTypes = [
 	'float',
 	'vec2',
 	'vec3',
 	'vec4'
 ];
 
-AppendNode.prototype.getInputPorts = function(){
+JoinComponentsNode.prototype.getInputPorts = function(){
 	// var sum = this.getComponentSum();
 
 	// var a = this.inputPortIsConnected('a');
@@ -40,24 +40,24 @@ AppendNode.prototype.getInputPorts = function(){
 	return ['a', 'b', 'c', 'd'];
 };
 
-AppendNode.prototype.getOutputPorts = function(){
+JoinComponentsNode.prototype.getOutputPorts = function(){
 	return ['out'];
 };
 
-AppendNode.prototype.getInputTypes = function(key){
+JoinComponentsNode.prototype.getInputTypes = function(key){
 	var types;
 	switch(key){
 	case 'a':
 	case 'b':
 	case 'c':
 	case 'd':
-		types = AppendNode.supportedTypes.slice(0/*, 4 - sum*/);
+		types = JoinComponentsNode.supportedTypes.slice(0/*, 4 - sum*/);
 		break;
 	}
 	return types;
 };
 
-AppendNode.prototype.getComponentSum = function(){
+JoinComponentsNode.prototype.getComponentSum = function(){
 	var ports = 'abcd';
 	var weights = {
 		'float': 1,
@@ -76,11 +76,11 @@ AppendNode.prototype.getComponentSum = function(){
 	return sum;
 };
 
-AppendNode.prototype.getOutputTypes = function(key){
-	return key === 'out' ? [AppendNode.supportedTypes[this.getComponentSum() - 1]] : [];
+JoinComponentsNode.prototype.getOutputTypes = function(key){
+	return key === 'out' ? [JoinComponentsNode.supportedTypes[this.getComponentSum() - 1]] : [];
 };
 
-AppendNode.prototype.render = function(){
+JoinComponentsNode.prototype.render = function(){
 	var a = this.getInputVariableName('a');
 	var b = this.getInputVariableName('b');
 	var c = this.getInputVariableName('c');
