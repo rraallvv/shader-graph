@@ -1,8 +1,8 @@
 var module = { exports: {} };
 
-cc._RFpush(module, '414458STphLF75+aFmYFzfh', 'Effect_Preview');
+cc._RFpush(module, '414458STphLF75+aFmYFzfh', 'EffectPreview');
 
-// Script/Effect_Preview.js
+// Script/EffectPreview.js
 "use strict";
 
 module.exports = cc.Class({

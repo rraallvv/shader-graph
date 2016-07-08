@@ -3,6 +3,7 @@ attribute vec2 a_texCoord;
 attribute vec4 a_color;
 varying vec2 v_texCoord;
 varying vec4 v_fragmentColor;
+
 void main()
 {
 	gl_Position = ( CC_PMatrix * CC_MVMatrix ) * a_position;
