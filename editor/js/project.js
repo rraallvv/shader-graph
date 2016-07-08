@@ -23,7 +23,7 @@ module.exports = cc.Class({
 		}
 	},
 	onLoad: function onLoad() {
-		var self = this;
+		var self = cc.EffectPreview = this;
 		cc.loader.loadRes(self.frag_glsl, function(err, txt) {
 			if (err) {
 				cc.log(err);

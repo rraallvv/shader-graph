@@ -373,7 +373,16 @@ var Preview = React.createClass({
 	updateShader: function(){
 		if(this.entity){
 			var shaderDef = this.props.shader.buildShader();
-			//console.log(shaderDef.fshader())
+			// console.log(shaderDef.fshader());
+			if (cc.EffectPreview) {
+				var fs = shaderDef.fshader();
+				fs = fs.split("texCoord0").join("v_texCoord");
+				fs = fs.split("uniform sampler2D texture12;").join("");
+				fs = fs.split("texture12").join("CC_Texture0");
+				// console.log(fs);
+				cc.EffectPreview.frag_glsl = fs;
+				cc.EffectPreview._use();
+			}
 			var material = new goo.Material(shaderDef);
 			if(this.sampleTexture){
 				for(var key in shaderDef.uniforms){
