@@ -55,6 +55,7 @@ module.exports = {
 	Vector2Node: require('./src/nodes/Vector2Node'),
 	Vector3Node: require('./src/nodes/Vector3Node'),
 	Vector4Node: require('./src/nodes/Vector4Node'),
+	SplitComponentsNode: require('./src/nodes/SplitComponentsNode'),
 
 };
 
