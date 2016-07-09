@@ -504,7 +504,6 @@ var Preview = React.createClass({
 					// cc.game.resume();
 
 					cc.eventManager.addCustomListener("preview_did_load", function(event){
-						console.log("Preview did load!");
 						cc.eventManager.removeCustomListeners("preview_did_load");
 						setTimeout(function(){ self.updateShader(); }, 1000);
 					});

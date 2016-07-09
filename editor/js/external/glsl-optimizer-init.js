@@ -51,7 +51,7 @@ var Module = {
 		}
 		else
 		{
-			console.error(text);
+			// console.error(text);
 		}
 	},
 	setStatus: function(text)
