@@ -148,7 +148,7 @@ UberVertNode.prototype.buildShader = function(){
 					'	color = vertexColor;',
 					'#endif',
 					'#ifdef TEXCOORD0',
-					'	texCoord0 = vertexUV0 * offsetRepeat.zw + offsetRepeat.xy;',
+					'	v_texCoord = vertexUV0 * offsetRepeat.zw + offsetRepeat.xy;',
 					'#endif',
 					'#ifdef TEXCOORD1',
 					'	texCoord1 = vertexUV1;',

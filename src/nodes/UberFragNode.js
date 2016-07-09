@@ -119,7 +119,7 @@ UberFragNode.prototype.buildShader = function(){
 					'vec4 final_color = vec4(1.0);',
 
 					'#if defined(DIFFUSE_MAP) && defined(TEXCOORD0)',
-						'final_color *= texture2D(diffuseMap, texCoord0, lodBias);',
+						'final_color *= texture2D(diffuseMap, v_texCoord, lodBias);',
 					'#endif',
 
 					'#ifdef COLOR',
@@ -128,9 +128,9 @@ UberFragNode.prototype.buildShader = function(){
 
 					'#if defined(TRANSPARENCY_MAP) && defined(TEXCOORD0)',
 						'#ifdef TRANSPARENCY_BW',
-							'final_color.a = texture2D(transparencyMap, texCoord0).r;',
+							'final_color.a = texture2D(transparencyMap, v_texCoord).r;',
 						'#else',
-							'final_color.a = texture2D(transparencyMap, texCoord0).a;',
+							'final_color.a = texture2D(transparencyMap, v_texCoord).a;',
 						'#endif',
 					'#endif',
 					'#ifdef OPACITY',
@@ -145,7 +145,7 @@ UberFragNode.prototype.buildShader = function(){
 						'#ifdef TEXCOORD1',
 							'final_color.rgb *= texture2D(aoMap, texCoord1).rgb;',
 						'#elif defined(TEXCOORD0)',
-							'final_color.rgb *= texture2D(aoMap, texCoord0).rgb;',
+							'final_color.rgb *= texture2D(aoMap, v_texCoord).rgb;',
 						'#endif',
 					'#endif',
 
@@ -153,7 +153,7 @@ UberFragNode.prototype.buildShader = function(){
 						'#ifdef TEXCOORD1',
 							'final_color.rgb *= texture2D(lightMap, texCoord1).rgb * 2.0;',
 						'#elif defined(TEXCOORD0)',
-							'final_color.rgb *= texture2D(lightMap, texCoord0).rgb * 2.0;',
+							'final_color.rgb *= texture2D(lightMap, v_texCoord).rgb * 2.0;',
 						'#endif',
 					'#else',
 						'vec3 N = vec3(0.0, 1.0, 0.0);',
@@ -162,7 +162,7 @@ UberFragNode.prototype.buildShader = function(){
 						'#endif',
 						'#if defined(TANGENT) && defined(NORMAL_MAP) && defined(TEXCOORD0)',
 							'mat3 tangentToWorld = mat3(tangent, binormal, normal);',
-							'vec3 tangentNormal = texture2D(normalMap, texCoord0, lodBias).xyz * vec3(2.0) - vec3(1.0);',
+							'vec3 tangentNormal = texture2D(normalMap, v_texCoord, lodBias).xyz * vec3(2.0) - vec3(1.0);',
 							'tangentNormal.xy *= normalMultiplier;',
 							'vec3 worldNormal = (tangentToWorld * tangentNormal);',
 							'N = normalize(worldNormal);',
@@ -209,7 +209,7 @@ UberFragNode.prototype.buildShader = function(){
 
 							'float reflectionAmount = reflectivity;',
 							'#if defined(REFLECTION_MAP) && defined(TEXCOORD0)',
-								'reflectionAmount *= texture2D(reflectionMap, texCoord0).r;',
+								'reflectionAmount *= texture2D(reflectionMap, v_texCoord).r;',
 							'#endif',
 
 							'float fresnelVal = pow(1.0 - abs(dot(normalize(viewPosition), N)), fresnel * 4.0);',

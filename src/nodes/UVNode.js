@@ -37,7 +37,7 @@ UVNode.prototype.getVaryings = function(){
 	return [
 		new Varying({
 			type: 'vec2',
-			name: 'texCoord0',
+			name: 'v_texCoord',
 			attributeKey: 'TEXCOORD0'
 		})
 	];
@@ -62,17 +62,17 @@ UVNode.prototype.render = function(){
 
 	var uvVarName = this.getOutputVariableNames('uv')[0];
 	if(uvVarName){
-		source.push(uvVarName + ' = texCoord0;');
+		source.push(uvVarName + ' = v_texCoord;');
 	}
 
 	var uVarName = this.getOutputVariableNames('u')[0];
 	if(uVarName){
-		source.push(uVarName + ' = texCoord0.x;');
+		source.push(uVarName + ' = v_texCoord.x;');
 	}
 
 	var vVarName = this.getOutputVariableNames('v')[0];
 	if(vVarName){
-		source.push(vVarName + ' = texCoord0.y;');
+		source.push(vVarName + ' = v_texCoord.y;');
 	}
 
 	return source.join('\n');
