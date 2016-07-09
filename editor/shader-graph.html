@@ -52,15 +52,15 @@
 					appInstance.connect(11, 10.3);
 					appInstance.connect(10, 1);
 					*/
-					appInstance.addNode({type:"fragColor", pos:[780, 302]});
+					appInstance.addNode({type:"fragColor", pos:[780, 250]});
 					appInstance.addNode({type:"uv", pos:[0,0]});
 					appInstance.addNode({type:"texture", pos:[120, 0]});
 					appInstance.addNode({type:"split", pos:[120, 220]});
 					appInstance.addNode({type:"add", pos:[255, 140]});
 					appInstance.addNode({type:"add", pos:[387, 140]});
 					appInstance.addNode({type:"divide", pos:[520, 140]});
-					appInstance.addNode({type:"value", pos:[370, 235], value:3});
-					appInstance.addNode({type:"join", pos:[650, 230]});
+					appInstance.addNode({type:"value", pos:[370, 225], value:3});
+					appInstance.addNode({type:"join", pos:[650, 220]});
 					appInstance.connect(2, 3);
 					appInstance.connect(3, 4);
 					appInstance.connect(4, 5);

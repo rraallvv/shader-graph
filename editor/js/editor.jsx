@@ -881,13 +881,15 @@ var SGNode = React.createClass({
 					{this.props.data.type}
 					{removeButton}
 				</div>
-				<div className="inputs style-scope shader-graph">
-					{inputs}
-				</div>
-				<div className="outputs style-scope shader-graph">
-					{outputs}
-				</div>
 				{extra}
+				<div>
+					<div className="inputs style-scope shader-graph">
+						{inputs}
+					</div>
+					<div className="outputs style-scope shader-graph">
+						{outputs}
+					</div>
+				</div>
 			</div>
 		);
 	},

@@ -7,6 +7,14 @@
 	border-color: red;
 	border-style: solid;
 }
+.inputs {
+	width: 50%;
+	float: left;
+}
+.outputs {
+	width: 50%;
+	float: right;
+}
 .list-group-item {
 	padding: 3px 9px;
 }
