@@ -409,7 +409,7 @@ var Preview = React.createClass({
 		gooRunner.renderer.setClearColor(0, 0, 0, 1);
 		gooRunner.renderer.domElement.id = 'goo';
 		gooRunner.renderer.domElement.className = 'preview style-scope shader-graph';
-		ReactDOM.findDOMNode(this).appendChild(gooRunner.renderer.domElement);
+		// ReactDOM.findDOMNode(this).appendChild(gooRunner.renderer.domElement);
 
 		var world = gooRunner.world;
 		var material = new goo.Material();
