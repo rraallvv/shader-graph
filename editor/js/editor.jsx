@@ -401,13 +401,14 @@ var Preview = React.createClass({
 		"debug": false
 	},
 	componentDidMount: function(){
+
 		var gooRunner = new goo.GooRunner({
 			logo: false,
 			useDevicePixelRatio: true
 		});
 		gooRunner.renderer.setClearColor(0, 0, 0, 1);
 		gooRunner.renderer.domElement.id = 'goo';
-		gooRunner.renderer.domElement.className = 'style-scope shader-graph';
+		gooRunner.renderer.domElement.className = 'preview style-scope shader-graph';
 		ReactDOM.findDOMNode(this).appendChild(gooRunner.renderer.domElement);
 
 		var world = gooRunner.world;
@@ -566,7 +567,6 @@ var Preview = React.createClass({
 		this.updateShader();
 		return (
 			<div>
-				<div className="preview col-xs-12 style-scope shader-graph"></div>
 				<div id="GameDiv" style={{width: "226px", height: "226px"}} className="style-scope shader-graph">
 					<canvas id="GameCanvas" width={"226"} height={"226"} className="style-scope shader-graph"></canvas>
 					<div id="splash" className="style-scope shader-graph">
