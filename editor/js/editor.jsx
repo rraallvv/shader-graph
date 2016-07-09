@@ -679,16 +679,38 @@ var NodeEditor = React.createClass({
 		});
 
 		instance.bind("beforeDrop", function (c) {
-			var reg = /([^\d]+)(\d+)/;
-			var m = c.sourceId.match(reg);
-			var outputA = m[1];
-			var nodeA = m[2];
+			function getInfo(info) {
+				var reg = /([^\d]+)(\d+)/;
+				var m = info.sourceId.match(reg);
+				var n = info.targetId.match(reg);
+				return {
+					nodeA: m[2],
+					outputA: m[1],
+					nodeB: n[2],
+					inputB: n[1]
+				};
+			}
 
-			m = c.targetId.match(reg);
-			var inputB = m[1];
-			var nodeB = m[2];
+			var dst = c.targetId;
+			var con = instance.getConnections({target:dst});
 
-			if(!ignoreConnectionEvents && !component.props.connect(nodeA, outputA, nodeB, inputB)){
+			var existing = [];
+			if (con.length!=0 && document.getElementById(dst).classList.contains("in")) {
+				for (var i = 0; i < con.length; i++) {
+					existing.push(getInfo(con[i]));
+				}
+			}
+
+			var info = getInfo(c);
+
+			if (!ignoreConnectionEvents) {
+				if (component.props.connect(info.nodeA, info.outputA, info.nodeB, info.inputB)) {
+					// disconnect existing connections if is input
+					for (var i = 0; i < existing.length; i++) {
+						info = existing[i];
+						component.props.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
+					}
+				}
 			}
 		});
 
