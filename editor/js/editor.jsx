@@ -401,26 +401,6 @@ var Preview = React.createClass({
 		"debug": false
 	},
 	componentDidMount: function(){
-
-		var gooRunner = new goo.GooRunner({
-			logo: false,
-			useDevicePixelRatio: true
-		});
-		gooRunner.renderer.setClearColor(0, 0, 0, 1);
-		gooRunner.renderer.domElement.id = 'goo';
-		gooRunner.renderer.domElement.className = 'preview style-scope shader-graph';
-		// ReactDOM.findDOMNode(this).appendChild(gooRunner.renderer.domElement);
-
-		var world = gooRunner.world;
-		var material = new goo.Material();
-		this.entity = world.createEntity(new goo.Sphere(32,32,1), material, function (entity){
-			entity.setRotation(0, -world.time * 0.1, 0);
-		}).addToWorld();
-
-		var camera = new goo.Camera();
-		var entity = gooRunner.world.createEntity(camera, [0,0,3]).addToWorld();
-		world.createEntity(new goo.PointLight(), [-100, 100, 100]).addToWorld();
-
 		if (cc.sys.isBrowser) {
 			this._initEngine();
 		}
@@ -593,18 +573,6 @@ var Preview = React.createClass({
 			*/
 			cc.EffectPreview.frag_glsl = fs;
 			cc.EffectPreview.updateShader();
-		}
-
-		if(this.entity){
-			var material = new goo.Material(shaderDef);
-			if(this.sampleTexture){
-				for(var key in shaderDef.uniforms){
-					if(shaderDef.uniforms[key].indexOf('TEXTURE') !== -1){ // todo: make nicer
-						material.setTexture(shaderDef.uniforms[key], this.sampleTexture);
-					}
-				}
-			}
-			this.entity.meshRendererComponent.materials[0] = material;
 		}
 	}
 });
