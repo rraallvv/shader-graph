@@ -54,17 +54,16 @@ cc.Class({
 			cc.log("use native GLProgram");
 			this._program.initWithString(this.vert_glsl_no_mvp, this.frag_glsl);
 			linked = this._program.link();
-			this._program.updateUniforms();
 		} else {
 			this._program.initWithVertexShaderByteArray(this.vert_glsl, this.frag_glsl);
 			this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_POSITION, cc.macro.VERTEX_ATTRIB_POSITION);
 			this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_COLOR, cc.macro.VERTEX_ATTRIB_COLOR);
 			// this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_TEX_COORD, cc.macro.VERTEX_ATTRIB_TEX_COORDS);
 			linked = this._program.link();
-			this._program.updateUniforms();
 		}
 
 		if (linked) {
+			this._program.updateUniforms();
 			this.setProgram(this.node._sgNode, this._program);
 		} else {
 			this.setProgram(this.node._sgNode, cc.shaderCache.programForKey("ShaderPositionTextureColor"));
