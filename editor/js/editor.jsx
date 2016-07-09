@@ -662,12 +662,25 @@ var NodeEditor = React.createClass({
 		});
 
 		function getConnectionInfo(info){
-			return {
-				nodeA: info.source.parentNode.parentNode.parentNode.attributes['data-node-id'].value,
-				nodeB: info.target.parentNode.parentNode.parentNode.attributes['data-node-id'].value,
-				outputA: info.source.innerHTML,
-				inputB: info.target.innerHTML
-			};
+			var result = {};
+			var reg = /([^\d]+)(\d+)/;
+			if (typeof info.source !== "undefined") {
+				result.nodeA = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
+				result.outputA = info.source.innerHTML;
+			} else {
+				var m = info.sourceId.match(reg);
+				result.nodeA = m[2];
+				result.outputA = m[1];
+			}
+			if (typeof info.target !== "undefined") {
+				result.nodeB = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
+				result.inputB = info.target.innerHTML;
+			} else {
+				var m = info.targetId.match(reg);
+				result.nodeB = m[2];
+				result.inputB = m[1];
+			}
+			return result;
 		}
 
 		instance.bind("click", function (c) {
@@ -679,29 +692,17 @@ var NodeEditor = React.createClass({
 		});
 
 		instance.bind("beforeDrop", function (c) {
-			function getInfo(info) {
-				var reg = /([^\d]+)(\d+)/;
-				var m = info.sourceId.match(reg);
-				var n = info.targetId.match(reg);
-				return {
-					nodeA: m[2],
-					outputA: m[1],
-					nodeB: n[2],
-					inputB: n[1]
-				};
-			}
-
 			var dst = c.targetId;
 			var con = instance.getConnections({target:dst});
 
 			var existing = [];
 			if (con.length!=0 && document.getElementById(dst).classList.contains("in")) {
 				for (var i = 0; i < con.length; i++) {
-					existing.push(getInfo(con[i]));
+					existing.push(getConnectionInfo(con[i]));
 				}
 			}
 
-			var info = getInfo(c);
+			var info = getConnectionInfo(c);
 
 			if (!ignoreConnectionEvents) {
 				if (component.props.connect(info.nodeA, info.outputA, info.nodeB, info.inputB)) {
