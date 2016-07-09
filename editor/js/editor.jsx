@@ -587,7 +587,16 @@ var Preview = React.createClass({
 				fs = fs.split("texCoord0").join("v_texCoord");
 				//fs = fs.split("uniform sampler2D texture12;").join("");
 				fs = fs.split("texture12").join("CC_Texture0");
-				console.log(fs);
+				console.log(ShaderGraph.Beautify(
+					fs,
+					{
+						"indent_size": 1,
+						"indent_char": '\t',
+						"max_preserve_newlines": -1,
+						"brace_style": "expand",
+						"wrap_line_length": 0
+					}
+				));
 				cc.EffectPreview.frag_glsl = fs;
 				cc.EffectPreview.updateShader();
 			}
