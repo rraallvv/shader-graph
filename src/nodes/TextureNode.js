@@ -14,6 +14,16 @@ TextureNode.prototype.constructor = TextureNode;
 
 Node.registerClass('texture', TextureNode);
 
+TextureNode.prototype.getVaryings = function(){
+	return [
+		new Varying({
+			type: 'vec2',
+			name: 'v_texCoord',
+			attributeKey: 'TEXCOORD0'
+		})
+	];
+};
+
 TextureNode.prototype.getInputPorts = function(key){
 	return ['uv'];
 };
@@ -59,7 +69,7 @@ TextureNode.prototype.render = function(){
 	if(outName && inName){
 		source.push(outName + ' = texture2D(texture' + this.id + ', vec2(' + inName + '));');
 	} else if(outName){
-		source.push(outName + ' = vec4(0,0,0,1);');
+		source.push(outName + ' = texture2D(texture' + this.id + ', v_texCoord);');
 	}
 
 	return source.join('\n');
