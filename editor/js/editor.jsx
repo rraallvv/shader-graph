@@ -421,14 +421,6 @@ var Preview = React.createClass({
 		var entity = gooRunner.world.createEntity(camera, [0,0,3]).addToWorld();
 		world.createEntity(new goo.PointLight(), [-100, 100, 100]).addToWorld();
 
-		// Load example texture
-		new goo.TextureCreator().loadTexture2D(shaderGraph.resolveUrl('images/chesterfield.png')).then(function (texture) {
-			this.sampleTexture = texture;
-			this.updateShader();
-		}.bind(this), function () {
-			console.error('Error loading image.');
-		});
-
 		if (cc.sys.isBrowser) {
 			this._initEngine();
 		}
