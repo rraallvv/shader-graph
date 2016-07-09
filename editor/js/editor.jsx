@@ -588,7 +588,7 @@ var Preview = React.createClass({
 				fs = fs.split("texture12").join("CC_Texture0");
 				// console.log(fs);
 				cc.EffectPreview.frag_glsl = fs;
-				cc.EffectPreview._use();
+				cc.EffectPreview.updateShader();
 			}
 			var material = new goo.Material(shaderDef);
 			if(this.sampleTexture){

@@ -7,37 +7,37 @@ cc.Class({
 	properties: {
 		isAllChildrenUser: false,
 		frag_glsl: {
-			"default": "EffectPreview.fs.glsl",
+			"default": null,
 			visible: false
 		},
 		vert_glsl_no_mvp: {
-			"default": "EffectPreview_noMVP.vs",
+			"default": null,
 			visible: false
 		},
 		vert_glsl: {
-			"default": "EffectPreview.vs",
+			"default": null,
 			visible: false
 		}
 	},
 	onLoad: function onLoad() {
 		var self = cc.EffectPreview = this;
 
-		cc.loader.loadRes(self.frag_glsl, function(err, txt) {
+		cc.loader.loadRes("EffectPreview.fs.glsl", function(err, txt) {
 			if (err) {
 				cc.log(err);
 			} else {
 				self.frag_glsl = txt;
-				cc.loader.loadRes(self.vert_glsl_no_mvp, function(err, txt) {
+				cc.loader.loadRes("EffectPreview_noMVP.vs", function(err, txt) {
 					if (err) {
 						cc.log(err);
 					} else {
 						self.vert_glsl_no_mvp = txt;
-						cc.loader.loadRes(self.vert_glsl, function(err, txt) {
+						cc.loader.loadRes("EffectPreview.vs", function(err, txt) {
 							if (err) {
 								cc.log(err);
 							} else {
 								self.vert_glsl = txt;
-								self._use();
+								self.updateShader();
 							}
 						});
 					}
@@ -47,7 +47,7 @@ cc.Class({
 
 		cc.eventManager.dispatchCustomEvent("preview_did_load");
 	},
-	_use: function _use() {
+	updateShader: function updateShader() {
 		this._program = new cc.GLProgram();
 		if (cc.sys.isNative) {
 			cc.log("use native GLProgram");
