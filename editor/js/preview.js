@@ -21,6 +21,7 @@ cc.Class({
 	},
 	onLoad: function onLoad() {
 		var self = cc.EffectPreview = this;
+
 		cc.loader.loadRes(self.frag_glsl, function(err, txt) {
 			if (err) {
 				cc.log(err);
@@ -43,6 +44,8 @@ cc.Class({
 				});
 			}
 		});
+
+		cc.eventManager.dispatchCustomEvent("preview_did_load");
 	},
 	_use: function _use() {
 		this._program = new cc.GLProgram();

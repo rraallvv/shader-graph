@@ -513,6 +513,8 @@ var Preview = React.createClass({
 
 			var launchScene = this._CCSettings.launchScene;
 
+			var self = this;
+
 			// load scene
 			cc.director.loadScene(launchScene, null,
 				function () {
@@ -527,6 +529,11 @@ var Preview = React.createClass({
 
 					// play game
 					// cc.game.resume();
+
+					cc.eventManager.addCustomListener("preview_did_load", function(event){
+						console.log("Preview did load!");
+						setTimeout(function(){ self.updateShader(); }, 1000);
+					});
 
 					console.log('Success to load scene: ' + launchScene);
 				}
