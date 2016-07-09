@@ -585,9 +585,9 @@ var Preview = React.createClass({
 			if (cc.EffectPreview) {
 				var fs = shaderDef.fshader();
 				fs = fs.split("texCoord0").join("v_texCoord");
-				fs = fs.split("uniform sampler2D texture12;").join("");
+				//fs = fs.split("uniform sampler2D texture12;").join("");
 				fs = fs.split("texture12").join("CC_Texture0");
-				// console.log(fs);
+				console.log(fs);
 				cc.EffectPreview.frag_glsl = fs;
 				cc.EffectPreview.updateShader();
 			}
