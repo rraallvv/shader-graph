@@ -235,6 +235,9 @@ var App = React.createClass({
 
 			nodeB = portB[0];
 			inputB = portB[1];
+		} else {
+			nodeA = Number(nodeA);
+			nodeB = Number(nodeB);
 		}
 
 		var nA = this.shader.fragmentGraph.getNodeById(nodeA);
@@ -276,6 +279,9 @@ var App = React.createClass({
 		return true;
 	},
 	disconnect: function(nodeA, outputA, nodeB, inputB){
+		nodeA = Number(nodeA);
+		nodeB = Number(nodeB);
+
 		var state = this.state;
 		var connToRemove = state.connections.find(function(conn){
 			return (
@@ -657,8 +663,8 @@ var NodeEditor = React.createClass({
 
 		function getConnectionInfo(info){
 			return {
-				nodeA: info.source.parentNode.parentNode.attributes['data-node-id'].value,
-				nodeB: info.target.parentNode.parentNode.attributes['data-node-id'].value,
+				nodeA: info.source.parentNode.parentNode.parentNode.attributes['data-node-id'].value,
+				nodeB: info.target.parentNode.parentNode.parentNode.attributes['data-node-id'].value,
 				outputA: info.source.innerHTML,
 				inputB: info.target.innerHTML
 			};
