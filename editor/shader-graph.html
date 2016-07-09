@@ -54,28 +54,38 @@
 					appInstance.connect(11, 10.3);
 					appInstance.connect(10, 1);
 					*/
-					appInstance.addNode({type:"fragColor", pos:[780, 250]});
-					appInstance.addNode({type:"uv", pos:[0,0]});
-					appInstance.addNode({type:"texture", pos:[120, 0]});
-					appInstance.addNode({type:"split", pos:[120, 220]});
-					appInstance.addNode({type:"add", pos:[255, 140]});
-					appInstance.addNode({type:"add", pos:[387, 140]});
-					appInstance.addNode({type:"divide", pos:[520, 140]});
-					appInstance.addNode({type:"value", pos:[370, 225], value:3});
-					appInstance.addNode({type:"join", pos:[650, 220]});
-					appInstance.connect(2, 3);
-					appInstance.connect(3, 4);
-					appInstance.connect(4, 5);
-					appInstance.connect(4.1, 5.1);
-					appInstance.connect(5, 6);
-					appInstance.connect(4.2, 6.1);
-					appInstance.connect(6, 7);
-					appInstance.connect(8, 7.1);
-					appInstance.connect(7, 9);
-					appInstance.connect(7, 9.1);
-					appInstance.connect(7, 9.2);
-					appInstance.connect(4.3, 9.3);
-					appInstance.connect(9, 1);
+					var nodes = [
+						{type:"fragColor", pos:[780, 250]},
+						{type:"uv", pos:[0,0]},
+						{type:"texture", pos:[120, 0]},
+						{type:"split", pos:[120, 220]},
+						{type:"add", pos:[255, 140]},
+						{type:"add", pos:[387, 140]},
+						{type:"divide", pos:[520, 140]},
+						{type:"value", pos:[370, 225], value:3},
+						{type:"join", pos:[650, 220]}
+					];
+					var links = [
+						[2, 3],
+						[3, 4],
+						[4, 5],
+						[4.1, 5.1],
+						[5, 6],
+						[4.2, 6.1],
+						[6, 7],
+						[8, 7.1],
+						[7, 9],
+						[7, 9.1],
+						[7, 9.2],
+						[4.3, 9.3],
+						[9, 1]
+					];
+					for (var i = 0; i < nodes.length; i++) {
+						appInstance.addNode(nodes[i]);
+					}
+					for (var i = 0; i < links.length; i++) {
+						appInstance.connect(links[i][0], links[i][1]);
+					}
 
 				}, 1000);
 			},
