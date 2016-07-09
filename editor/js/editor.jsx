@@ -579,29 +579,31 @@ var Preview = React.createClass({
 		);
 	},
 	updateShader: function(){
+		var shaderDef = this.props.shader.buildShader();
+
+		// console.log(shaderDef.fshader());
+		if (cc.EffectPreview) {
+			var fs = shaderDef.fshader();
+			fs = fs.split("texCoord0").join("v_texCoord");
+			//fs = fs.split("uniform sampler2D texture12;").join("");
+			fs = fs.split("texture12").join("CC_Texture0");
+			/*
+			console.log(ShaderGraph.Beautify(
+				optimize_glsl(fs, "2", "fs"),
+				{
+					"indent_size": 1,
+					"indent_char": '\t',
+					"max_preserve_newlines": -1,
+					"brace_style": "expand",
+					"wrap_line_length": 0
+				}
+			));
+			*/
+			cc.EffectPreview.frag_glsl = fs;
+			cc.EffectPreview.updateShader();
+		}
+
 		if(this.entity){
-			var shaderDef = this.props.shader.buildShader();
-			// console.log(shaderDef.fshader());
-			if (cc.EffectPreview) {
-				var fs = shaderDef.fshader();
-				fs = fs.split("texCoord0").join("v_texCoord");
-				//fs = fs.split("uniform sampler2D texture12;").join("");
-				fs = fs.split("texture12").join("CC_Texture0");
-				/*
-				console.log(ShaderGraph.Beautify(
-					optimize_glsl(fs, "2", "fs"),
-					{
-						"indent_size": 1,
-						"indent_char": '\t',
-						"max_preserve_newlines": -1,
-						"brace_style": "expand",
-						"wrap_line_length": 0
-					}
-				));
-				*/
-				cc.EffectPreview.frag_glsl = fs;
-				cc.EffectPreview.updateShader();
-			}
 			var material = new goo.Material(shaderDef);
 			if(this.sampleTexture){
 				for(var key in shaderDef.uniforms){
