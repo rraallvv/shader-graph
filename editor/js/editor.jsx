@@ -176,7 +176,7 @@ var App = React.createClass({
 		var state = this.state;
 		state.nodes.push(data);
 		this.setState(state);
-		return node.id;
+		return data.id;
 	},
 	removeNode: function(id){
 		var state = this.state;
