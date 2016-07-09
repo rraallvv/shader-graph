@@ -56,7 +56,7 @@ var Module = {
 	},
 	setStatus: function(text)
 	{
-		console.log('::status::', text)
+		// console.log('::status::', text)
 		// statusLabel.textContent = text;
 	},
 	totalDependencies: 0,
