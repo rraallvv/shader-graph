@@ -31,30 +31,34 @@
 
 				setTimeout(function(){
 					var appInstance = ReactDOM.render(React.createElement(App), shaderGraph.$.content);
-
 					/*
-					appInstance.addNode({type:"value", pos:[0, 0], value:70});
-					appInstance.addNode({type:"uv", pos:[0, 100]});
-					appInstance.addNode({type:"value", pos:[0, 220], value:35});
-					appInstance.addNode({type:"value", pos:[0, 320], value:0.5});
-					appInstance.addNode({type:"multiply", pos:[200, 50]});
-					appInstance.addNode({type:"multiply", pos:[200, 150]});
-					appInstance.addNode({type:"cos", pos:[350, 50]});
-					appInstance.addNode({type:"sin", pos:[350, 150]});
-					appInstance.addNode({type:"join", pos:[500, 100]});
-					appInstance.addNode({type:"value", pos:[300, 300], value: 1});
-					appInstance.connect(2, 6);
-					appInstance.connect(3.1, 6.1);
-					appInstance.connect(3.2, 7);
-					appInstance.connect(4, 7.1);
-					appInstance.connect(6, 8);
-					appInstance.connect(7, 9);
-					appInstance.connect(8, 10);
-					appInstance.connect(9, 10.1);
-					appInstance.connect(5, 10.2);
-					appInstance.connect(11, 10.3);
-					appInstance.connect(10, 1);
+					var nodes = [
+						{type:"value", pos:[0, 0], value:70},
+						{type:"uv", pos:[0, 100]},
+						{type:"value", pos:[0, 220], value:35},
+						{type:"value", pos:[0, 320], value:0.5},
+						{type:"multiply", pos:[200, 50]},
+						{type:"multiply", pos:[200, 150]},
+						{type:"cos", pos:[350, 50]},
+						{type:"sin", pos:[350, 150]},
+						{type:"join", pos:[500, 100]},
+						{type:"value", pos:[300, 300], value: 1}
+					];
+					var links = [
+						[2, 6],
+						[3.1, 6.1],
+						[3.2, 7],
+						[4, 7.1],
+						[6, 8],
+						[7, 9],
+						[8, 10],
+						[9, 10.1],
+						[5, 10.2],
+						[11, 10.3],
+						[10, 1]
+					];
 					*/
+					//*
 					var nodes = [
 						{type:"fragColor", pos:[660, 200]},
 						{type:"texture", pos:[0, 0]},
@@ -79,9 +83,12 @@
 						[3.3, 8.3],
 						[8, 1]
 					];
+					//*/
+
 					for (var i = 0; i < nodes.length; i++) {
 						appInstance.addNode(nodes[i]);
 					}
+
 					for (var i = 0; i < links.length; i++) {
 						appInstance.connect(links[i][0], links[i][1]);
 					}
