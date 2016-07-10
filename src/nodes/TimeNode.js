@@ -24,7 +24,7 @@ TimeNode.prototype.getOutputTypes = function(key){
 TimeNode.prototype.getUniforms = function(){
 	var uniforms = [
 		new Uniform({
-			name: 'uTime' + this.id,
+			name: 'time',
 			defaultValue: 'TIME',
 			type: 'float'
 		})
