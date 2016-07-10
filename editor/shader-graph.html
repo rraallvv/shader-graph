@@ -30,8 +30,20 @@
 				shaderGraph = this;
 
 				setTimeout(function(){
-					var appInstance = ReactDOM.render(React.createElement(App), shaderGraph.$.content);
+					shaderGraph._appInstance = ReactDOM.render(React.createElement(App), shaderGraph.$.content);
+
 					/*
+					// build the list of nodes
+					var sidebar = Polymer.dom(document.getElementById("sidebar"));
+					var items = shaderGraph.nodeList();
+					for (var i = 0; i < items.length; i++) {
+						var item = items[i];
+						item.className = "list-group-item add-node-button";
+						sidebar.appendChild(item);
+					}
+					*/
+
+					//*
 					var nodes = [
 						{type:"value", pos:[0, 0], value:70},
 						{type:"uv", pos:[0, 100]},
@@ -57,8 +69,8 @@
 						[11, 10.3],
 						[10, 1]
 					];
-					*/
-					//*
+					//*/
+					/*
 					var nodes = [
 						{type:"fragColor", pos:[660, 200]},
 						{type:"texture", pos:[0, 0]},
@@ -86,14 +98,29 @@
 					//*/
 
 					for (var i = 0; i < nodes.length; i++) {
-						appInstance.addNode(nodes[i]);
+						shaderGraph._appInstance.addNode(nodes[i]);
 					}
 
 					for (var i = 0; i < links.length; i++) {
-						appInstance.connect(links[i][0], links[i][1]);
+						shaderGraph._appInstance.connect(links[i][0], links[i][1]);
 					}
 				}, 1000);
 
+			},
+			nodeList: function() {
+				return shaderGraph._appInstance.nodeTypes().map(function (type) {
+					var item = document.createElement("a");
+					item.type = item.innerHTML = type;
+					return item;
+				});
+			},
+			addNode: function(e) {
+				var b = graph.querySelector("#canvas").getBoundingClientRect();
+				var pos = e.pos || [0, 0];
+				pos[0] -= b.left;
+				pos[1] -= b.top;
+				e.pos = pos;
+				shaderGraph._appInstance.addNode(e);
 			},
 			setTransform: function( s, r, n, t ){
 				// s = 1, r = 1, n = 0, t = 0;

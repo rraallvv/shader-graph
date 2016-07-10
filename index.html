@@ -1,34 +1,22 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<style>
-			.pace {
-				-webkit-pointer-events: none;
-				pointer-events: none;
-
-				-webkit-user-select: none;
-				-moz-user-select: none;
-				user-select: none;
-			}
-			.pace-inactive {
-				display: none;
-			}
-			.pace .pace-progress {
-				background: #29d;
-				position: fixed;
-				z-index: 2000;
-				top: 0;
-				right: 100%;
-				width: 100%;
-				height: 2px;
-			}
-		</style>
+		<link rel="stylesheet" href="reset.css">
+		<link rel="stylesheet" href="style.css">
 		<script src="pace.min.js"></script>
 		<script src="../webcomponents.js/webcomponents-lite.min.js"></script>
 		<link rel="import" href="../polymer/polymer.html">
 		<link rel="import" href="editor/shader-graph.html">
+
 	</head>
 <body>
-	<shader-graph></shader-graph>
+	<shader-graph id="graph" class="graph"></shader-graph>
+	<nav id="context-menu" class="context-menu">
+		<form onsubmit="return false;" style="margin:0">
+			<input id="search" autofocus="" type="text" name="q" placeholder="Node name ..." style="width:100%;outline:0" autocomplete="off">
+		</form>
+		<div id="menu-items"></div>
+	</nav>
+	<script src="main.js"></script>
 </body>
 </html>

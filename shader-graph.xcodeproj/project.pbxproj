@@ -10,6 +10,9 @@
 		E41C5ABF1D1CE07000B5143F /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
 		E41C5AC01D1CE08200B5143F /* editor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = editor; sourceTree = "<group>"; };
 		E42640AB1D2C71FE0022702E /* index.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
+		E457510F1D33001000E93372 /* main.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
+		E45751101D33001000E93372 /* reset.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = reset.css; sourceTree = "<group>"; };
+		E45751111D33001000E93372 /* style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		E4EE05731D29BADF00964AFA /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
 		E4EE05741D29BC3E00964AFA /* server.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = server.js; sourceTree = "<group>"; };
 		E4EE05751D29BFA700964AFA /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
@@ -25,23 +28,26 @@
 				E4EE05741D29BC3E00964AFA /* server.js */,
 				E4EE05751D29BFA700964AFA /* index.html */,
 				E42640AB1D2C71FE0022702E /* index.js */,
+				E457510F1D33001000E93372 /* main.js */,
+				E45751101D33001000E93372 /* reset.css */,
+				E45751111D33001000E93372 /* style.css */,
 			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
-		E457C6971CEB9E0E00BFBE0D /* Demo */ = {
+		E457C6971CEB9E0E00BFBE0D /* shader-graph */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "run build";
-			buildConfigurationList = E457C6981CEB9E0E00BFBE0D /* Build configuration list for PBXLegacyTarget "Demo" */;
+			buildConfigurationList = E457C6981CEB9E0E00BFBE0D /* Build configuration list for PBXLegacyTarget "shader-graph" */;
 			buildPhases = (
 			);
 			buildToolPath = npm;
 			buildWorkingDirectory = "$(SRCROOT)";
 			dependencies = (
 			);
-			name = Demo;
+			name = "shader-graph";
 			passBuildSettingsInEnvironment = 0;
 			productName = Demo;
 		};
@@ -69,7 +75,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E457C6971CEB9E0E00BFBE0D /* Demo */,
+				E457C6971CEB9E0E00BFBE0D /* shader-graph */,
 			);
 		};
 /* End PBXProject section */
@@ -182,7 +188,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E457C6981CEB9E0E00BFBE0D /* Build configuration list for PBXLegacyTarget "Demo" */ = {
+		E457C6981CEB9E0E00BFBE0D /* Build configuration list for PBXLegacyTarget "shader-graph" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E457C6991CEB9E0E00BFBE0D /* Debug */,

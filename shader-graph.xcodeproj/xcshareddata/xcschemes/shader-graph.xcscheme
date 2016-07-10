@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E457C6971CEB9E0E00BFBE0D"
-               BuildableName = "Demo"
-               BlueprintName = "Demo"
+               BuildableName = "shader-graph"
+               BlueprintName = "shader-graph"
                ReferencedContainer = "container:shader-graph.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -50,8 +50,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E457C6971CEB9E0E00BFBE0D"
-            BuildableName = "Demo"
-            BlueprintName = "Demo"
+            BuildableName = "shader-graph"
+            BlueprintName = "shader-graph"
             ReferencedContainer = "container:shader-graph.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -74,8 +74,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E457C6971CEB9E0E00BFBE0D"
-            BuildableName = "Demo"
-            BlueprintName = "Demo"
+            BuildableName = "shader-graph"
+            BlueprintName = "shader-graph"
             ReferencedContainer = "container:shader-graph.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

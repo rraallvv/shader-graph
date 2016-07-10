@@ -9,19 +9,12 @@ var App = React.createClass({
 	render: function() {
 		var shader = this.updateShader();
 		this.updateConnections();
-		var nodeTypes = Object.keys(ShaderGraph.Node.classes).sort().filter(function(type){
-			// Should not list the main node
-			return type !== 'fragColor' && type !== 'position'
-		});
 		return (
 			<div className="row style-scope shader-graph">
-				<div className="col-xs-3 style-scope shader-graph">
+				<div id="sidebar" className="col-xs-3 style-scope shader-graph">
 					<div className="row style-scope shader-graph">
 						<Preview shader={this.shader}/>
 					</div>
-					<NodeSelectList
-						nodeTypes={nodeTypes}
-						addNode={this.addNode} />
 				</div>
 				<div className="col-xs-9 style-scope shader-graph">
 					<NodeEditor
@@ -38,6 +31,12 @@ var App = React.createClass({
 				</div>
 			</div>
 		);
+	},
+	nodeTypes: function(){
+		return Object.keys(ShaderGraph.Node.classes).sort().filter(function(type){
+			// Should not list the main node
+			return type !== 'fragColor' && type !== 'position';
+		});
 	},
 	updateShader: function(){
 
@@ -337,32 +336,6 @@ var App = React.createClass({
 		*/
 
 		this.setState(state);
-	}
-});
-
-var NodeSelectList = React.createClass({
-	render: function() {
-		var items = this.props.nodeTypes.map(function (type) {
-		return (
-			<AddNodeButton key={type} addNode={this.props.addNode} type={type}/>
-		);
-		}, this);
-		return (
-		<div className="list-group style-scope shader-graph">
-			{items}
-		</div>
-		);
-	}
-});
-
-var AddNodeButton = React.createClass({
-	render: function() {
-		return (
-		<a className="list-group-item add-node-button style-scope shader-graph" onClick={this.handleClick}>{this.props.type}</a>
-		);
-	},
-	handleClick: function(){
-		this.props.addNode(this.props.type);
 	}
 });
 
