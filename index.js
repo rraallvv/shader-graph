@@ -56,6 +56,8 @@ module.exports = {
 	Vector3Node: require('./src/nodes/Vector3Node'),
 	Vector4Node: require('./src/nodes/Vector4Node'),
 	SplitComponentsNode: require('./src/nodes/SplitComponentsNode'),
+	MouseTouchNode: require('./src/nodes/MouseTouchNode'),
+
 	Beautify: require('./editor/js/external/beautify').js_beautify,
 
 };

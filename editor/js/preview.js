@@ -33,6 +33,17 @@ cc.Class({
             }
 		};
 
+		this.node.on(cc.Node.EventType.MOUSE_MOVE, function (event) {
+            this.parameters.mouse.x = this.node.getContentSize().width / event.getLocationX();
+            this.parameters.mouse.y = this.node.getContentSize().height / event.getLocationY(); 
+        }, this);
+
+
+        this.node.on( cc.Node.EventType.TOUCH_MOVE, function (event) {
+            this.parameters.mouse.x = this.node.getContentSize().width / event.getLocationX();
+            this.parameters.mouse.y = this.node.getContentSize().height / event.getLocationY(); 
+        }, this);
+
 		var self = cc.EffectPreview = this;
 
 		cc.loader.loadRes("EffectPreview.fs.glsl", function(err, txt) {
