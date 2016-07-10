@@ -115,7 +115,7 @@ var App = React.createClass({
 				instance.connect({
 					source: conn.outputA + conn.nodeA,
 					target: conn.inputB + conn.nodeB,
-					type: "basic"
+					type: "basicRL"
 				});
 			}, this);
 			ignoreConnectionEvents = false;
@@ -261,19 +261,33 @@ var App = React.createClass({
 			}
 		}
 
-		if(!nB.canConnect(inputB, nA, outputA)){
-			console.warn(nB.errorMessage);
-			return false;
-		}
-		nB.connect(inputB, nA, outputA);
-
 		var state = this.state;
-		state.connections.push({
-			nodeA: nodeA,
-			nodeB: nodeB,
-			outputA: outputA,
-			inputB: inputB
-		});
+
+		if(!nB.canConnect(inputB, nA, outputA)){
+			if (!nA.canConnect(outputA, nB, inputB)) {
+				console.warn(nB.errorMessage);
+				return false;
+			} else {
+				// make the connetion in opposite direction
+				nA.connect(outputA, nB, inputB);
+				state.connections.push({
+					nodeA: nodeB,
+					nodeB: nodeA,
+					outputA: inputB,
+					inputB: outputA
+				});
+			}
+		} else {
+			// make the connetion as is
+			nB.connect(inputB, nA, outputA);
+			state.connections.push({
+				nodeA: nodeA,
+				nodeB: nodeB,
+				outputA: outputA,
+				inputB: inputB
+			});
+		}
+
 		this.setState(state);
 
 		return true;
@@ -636,8 +650,13 @@ var NodeEditor = React.createClass({
 
 		shaderGraph.jsPlumbInstance = instance;
 
-		instance.registerConnectionType("basic", {
+		instance.registerConnectionType("basicRL", {
 			anchors: ["Right", "Left"],
+			connector: "Bezier"
+		});
+
+		instance.registerConnectionType("basicLR", {
+			anchors: ["Left", "Right"],
 			connector: "Bezier"
 		});
 
@@ -731,7 +750,6 @@ var Port = React.createClass({
 		var instance = this.props.instance;
 
 		instance.makeSource(el, {
-			anchors: ["Right", "Left"],
 			connectorStyle: {
 				strokeStyle: "black",
 				lineWidth: 2,
@@ -739,7 +757,7 @@ var Port = React.createClass({
 				outlineWidth: 4
 			},
 			maxConnections: 1,
-			connectionType: "basic",
+			connectionType: this.props.type === "in" ? "basicLR" : "basicRL",
 			onMaxConnections: function (info, e) {
 				console.error("Maximum connections (" + info.maxConnections + ") reached");
 			},
@@ -750,7 +768,6 @@ var Port = React.createClass({
 
 		instance.makeTarget(el, {
 			dropOptions: { hoverClass: "dragHover" },
-			anchors: ["Right", "Left"],
 			allowLoopback: false
 		});
 	},
