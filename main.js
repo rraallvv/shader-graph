@@ -3,19 +3,17 @@
 "use strict";
 
 function clickInsideElement( e, className ) {
-	var el = e.srcElement || e.target;
-	
-	if ( el.classList.contains(className) ) {
-		return el;
-	} else {
-		while ( el = el.parentNode ) {
-			if ( el.classList && el.classList.contains(className) ) {
-				return el;
-			}
-		}
+	var el = document.getElementsByClassName(className)[0];
+
+	var pos = getPosition(e);
+
+	var bounds = el.getBoundingClientRect();
+
+	if (pos.x < bounds.left || pos.x > bounds.right || pos.y < bounds.top || pos.y > bounds.bottom) {
+		return false;
 	}
 
-	return false;
+	return true;
 }
 
 function getPosition(e) {
@@ -127,7 +125,7 @@ function contextListener() {
 
 function clickListener() {
 	document.addEventListener( "click", function(e) {
-		var clickeElIsLink = clickInsideElement( e, contextMenuItemClassName );
+		var clickeElIsLink = clickInsideElement( e, contextMenuClassName );
 
 		if ( clickeElIsLink ) {
 			e.preventDefault();
