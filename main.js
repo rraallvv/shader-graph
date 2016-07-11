@@ -391,8 +391,8 @@ window.preview = {
 				//fs = fs.split("texture12").join("CC_Texture0");
 
 				document.getElementById("source").innerHTML = ShaderGraph.Beautify(
-					//optimize_glsl(fs, "2", "fs"),
-					fs,
+					optimize_glsl(fs, "2", "fs"),
+					//fs,
 					{
 						"indent_size": 1,
 						"indent_char": '\t',
