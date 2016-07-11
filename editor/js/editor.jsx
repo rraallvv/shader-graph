@@ -523,17 +523,16 @@ var Preview = React.createClass({
 	},
 	render: function() {
 		this.updateShader();
-		return (
-			<div>
-				<div id="GameDiv" style={{width: "226px", height: "226px"}} className="style-scope shader-graph">
-					<canvas id="GameCanvas" width={"226"} height={"226"} className="style-scope shader-graph"></canvas>
-					<div id="splash" className="style-scope shader-graph">
-						<div className="progress-bar stripes style-scope shader-graph">
-							<span style={{width: "0%"}} className="style-scope shader-graph"></span>
-						</div>
-					</div>
-				</div>
-			</div>
+
+		return React.createElement('div', null,
+			React.createElement('div', {id:"GameDiv", style:{width: "226px", height: "226px"}, className:"style-scope shader-graph"},
+				React.createElement('canvas', {id:"GameCanvas", width:"226px", height:"226px", className:"style-scope shader-graph"}),
+				React.createElement('div', {id:"splash", className:"style-scope shader-graph"},
+					React.createElement('div', {className:"progress-bar stripes style-scope shader-graph"},
+						React.createElement('span', {style:{width: "0%"}, className:"style-scope shader-graph"})
+					)
+				)
+			)
 		);
 	},
 	updateShader: function(){
