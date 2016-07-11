@@ -404,7 +404,8 @@ var preview = {
 				//fs = fs.split("uniform sampler2D texture12;").join("");
 				//fs = fs.split("texture12").join("CC_Texture0");
 
-				document.getElementById("source").innerHTML = ShaderGraph.Beautify(
+				var source = document.getElementById("source");
+				source.innerHTML = ShaderGraph.Beautify(
 					optimize_glsl(fs, "2", "fs"),
 					//fs,
 					{
@@ -415,6 +416,8 @@ var preview = {
 						"wrap_line_length": 0
 					}
 				);
+
+				source.classList.remove("prettyprinted");
 
 				prettyPrint();
 

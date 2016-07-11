@@ -100,8 +100,7 @@ body {
 	height: 25px;
 }
 
-input[type="text"]
-{
+input[type="text"] {
     font-size:16px;
 	padding: 4px 10px;
 }
