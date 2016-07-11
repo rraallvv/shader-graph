@@ -152,6 +152,9 @@ var NodeEditor = React.createClass({
 		var shader = this.updateShader();
 		this.updateConnections();
 
+		//window._times = (window._times || 0) + 1, console.log(window._times);
+		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onUpdateShader === "function" && this.props.shaderGraph.onUpdateShader(shader);
+
 		return React.createElement("div", {id:"canvas", className:"style-scope shader-graph"},
 			nodes.map(function(node) {
 				return React.createElement(SGNode, {
@@ -225,8 +228,6 @@ var NodeEditor = React.createClass({
 			}
 			nB.connect(conn.inputB, nA, conn.outputA);
 		}, this);
-
-		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onUpdateShader === "function" && this.props.shaderGraph.onUpdateShader(shader);
 
 		return shader
 	},
