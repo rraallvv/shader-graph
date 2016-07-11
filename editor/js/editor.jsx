@@ -697,21 +697,18 @@ var NodeEditor = React.createClass({
 	},
 	render: function() {
 		var nodes = this.props.nodes;
-		return (
-		<div id="canvas" className="style-scope shader-graph">
-			{nodes.map(function(node) {
-			return (
-				<SGNode
-					updateShader={this.props.updateShader}
-					onClickRemove={node.type !== 'fragColor' ? this.props.onClickRemoveNode : undefined }
-					updateNodeData={this.props.updateNodeData}
-					instance={this.props.instance}
-					key={node.id}
-					data={node}
-					shader={this.props.shader} />
-			);
-			}, this)}
-		</div>
+		return React.createElement("div", {id:"canvas", className:"style-scope shader-graph"},
+			nodes.map(function(node) {
+				return React.createElement(SGNode, {
+					updateShader:this.props.updateShader,
+					onClickRemove:node.type !== 'fragColor' ? this.props.onClickRemoveNode : undefined,
+					updateNodeData:this.props.updateNodeData,
+					instance:this.props.instance,
+					key:node.id,
+					data:node,
+					shader:this.props.shader
+				});
+			}, this)
 		);
 	}
 });
