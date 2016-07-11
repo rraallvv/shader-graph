@@ -228,8 +228,6 @@
 
 					// console.log(shaderDef.fshader());
 					if (cc.EffectPreview) {
-						console.log("!");
-
 						var fs = shaderDef.fshader();
 						//fs = fs.split("uniform sampler2D texture12;").join("");
 						fs = fs.split("texture12").join("CC_Texture0");
@@ -259,9 +257,9 @@
 			ready: function(){
 				shaderGraph = this;
 				var preview = ReactDOM.render(React.createElement(Preview, {onPreviewDidLoad:function(){
-					shaderGraph._appInstance.updateShader();
+					shaderGraph._editor.updateShader();
 				}}), shaderGraph.$.preview);
-				shaderGraph._appInstance = ReactDOM.render(React.createElement(App, {onUpdateShader:function(shader){
+				shaderGraph._editor = ReactDOM.render(React.createElement(NodeEditor, {onUpdateShader:function(shader){
 					if (preview && preview.updateShader) {
 						preview.updateShader(shader);
 					}
@@ -322,15 +320,15 @@
 				//*/
 
 				for (var i = 0; i < nodes.length; i++) {
-					shaderGraph._appInstance.addNode(nodes[i]);
+					shaderGraph._editor.addNode(nodes[i]);
 				}
 
 				for (var i = 0; i < links.length; i++) {
-					shaderGraph._appInstance.connect(links[i][0], links[i][1]);
+					shaderGraph._editor.connect(links[i][0], links[i][1]);
 				}
 			},
 			nodeList: function() {
-				return shaderGraph._appInstance.nodeTypes().map(function (type) {
+				return shaderGraph._editor.nodeTypes().map(function (type) {
 					var item = document.createElement("a");
 					item.type = item.innerHTML = type;
 					return item;
@@ -342,7 +340,7 @@
 				pos[0] -= b.left;
 				pos[1] -= b.top;
 				e.pos = pos;
-				shaderGraph._appInstance.addNode(e);
+				shaderGraph._editor.addNode(e);
 			},
 			setTransform: function( s, r, n, t ){
 				// s = 1, r = 1, n = 0, t = 0;
