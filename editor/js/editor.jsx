@@ -751,9 +751,7 @@ var Port = React.createClass({
 		instance.makeTarget(el);
 	},
 	render: function(){
-		return (
-			<div className={this.props.type + " style-scope shader-graph"} key={this.props.portKey} id={this.props.portKey + this.props.id}>{this.props.portKey}</div>
-		);
+		return React.createElement("div", {className:this.props.type + " style-scope shader-graph", key:this.props.portKey, id:this.props.portKey + this.props.id}, this.props.portKey);
 	}
 });
 
