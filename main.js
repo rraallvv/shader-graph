@@ -416,6 +416,8 @@ var preview = {
 					}
 				);
 
+				prettyPrint();
+
 				cc.EffectPreview.frag_glsl = fs;
 				cc.EffectPreview.updateShader();
 			}

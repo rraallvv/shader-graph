@@ -114,7 +114,8 @@ h1 {
 	overflow-y: auto;
 	float:right;
 	font-family: monospace;
-	font-size: small;
+	font-size: medium;
+	tab-size:4;
 }
 
 #toolbar {

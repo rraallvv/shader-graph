@@ -4,6 +4,7 @@
 		<link rel="stylesheet" href="reset.css">
 		<link rel="stylesheet" href="style.css">
 		<link rel="stylesheet" href="preview.css"/>
+		<link rel="stylesheet" href="google-code-prettify/prettify.css"/>
 		<script src="pace.min.js"></script>
 		<script src="../webcomponents.js/webcomponents-lite.min.js"></script>
 		<link rel="import" href="../polymer/polymer.html">
@@ -22,7 +23,7 @@
 				</div>
 			</div>
 		</div>
-		<pre id="source"></pre>
+		<pre id="source" class="prettyprint lang-glsl"></pre>
 	</div>
 	<shader-graph id="graph" class="graph"></shader-graph>
 	<nav id="context-menu" class="context-menu">
@@ -31,6 +32,7 @@
 		</form>
 		<div id="menu-items"></div>
 	</nav>
+	<script src="google-code-prettify/prettify.js"></script>
 	<script src="main.js"></script>
 </body>
 </html>
