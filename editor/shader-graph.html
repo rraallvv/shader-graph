@@ -26,18 +26,7 @@
 			ready: function(){
 				shaderGraph = this;
 
-				var preview = window.preview;
-
-				preview.onload = function(){
-					shaderGraph._editor.updateShader();
-				};
-				preview.init();
-
-				shaderGraph._editor = ReactDOM.render(React.createElement(NodeEditor, {onUpdateShader:function(shader){
-					if (preview && preview.updateShader) {
-						preview.updateShader(shader);
-					}
-				}}), shaderGraph.$.content);
+				shaderGraph._editor = ReactDOM.render(React.createElement(NodeEditor), shaderGraph.$.content);
 
 				//*
 				var data = {
@@ -96,6 +85,9 @@
 				//*/
 				shaderGraph._editor.loadGraph(data);
 
+			},
+			updateShader() {
+				this._editor.updateShader();
 			},
 			nodeList: function() {
 				return shaderGraph._editor.nodeTypes().map(function (type) {

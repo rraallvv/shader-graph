@@ -226,7 +226,7 @@ var NodeEditor = React.createClass({
 			nB.connect(conn.inputB, nA, conn.outputA);
 		}, this);
 
-		typeof this.props.onUpdateShader === "function" && this.props.onUpdateShader(shader);
+		typeof shaderGraph.onUpdateShader === "function" && shaderGraph.onUpdateShader(shader);
 
 		return shader
 	},

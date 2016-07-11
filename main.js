@@ -102,6 +102,17 @@ function menuReadyListerner() {
 				menu.appendChild(item);
 			}
 		}
+
+		preview.onload = function(){
+			shaderGraph.updateShader();
+		};
+		preview.init();
+		shaderGraph.onUpdateShader = function(shader){
+			if (preview && preview.updateShader) {
+				preview.updateShader(shader);
+			}
+		};
+
 	});
 }
 
@@ -199,7 +210,7 @@ function positionMenu(e) {
 	}
 }
 
-window.preview = {
+var preview = {
 	_CCSettings: {
 		"platform": "web-desktop",
 		"groupList": [
@@ -411,7 +422,6 @@ window.preview = {
 		}
 	}
 };
-
 
 init();
 
