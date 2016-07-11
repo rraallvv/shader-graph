@@ -75,10 +75,33 @@ var windowHeight;
 
 function init() {
 	searchListener();
+	menuReadyListerner();
 	contextListener();
 	clickListener();
 	keyupListener();
 	resizeListener();
+}
+
+function menuReadyListerner() {
+	window.addEventListener('WebComponentsReady', function(e) {
+		var graph = document.getElementById("graph");
+		if (graph) {
+			// build the list of nodes
+			var menu = document.getElementById(contextMenuItemsClassName);
+			var items = graph.nodeList();
+			for (var i = 0; i < items.length; i++) {
+				var item = items[i];
+				item.className = contextMenuItemClassName;
+				item.onclick = function () {
+					graph.addNode({
+						type: this.type,
+						pos: [clickCoords.x, clickCoords.y]
+					});
+				};
+				menu.appendChild(item);
+			}
+		}
+	});
 }
 
 function searchListener() {
@@ -93,28 +116,6 @@ function contextListener() {
 
 		if ( graphInContext ) {
 			e.preventDefault();
-
-			if (!window.menuLoaded) {
-				var graph = document.getElementById("graph");
-				if (graph) {
-					// build the list of nodes
-					var menu = document.getElementById(contextMenuItemsClassName);
-					var items = graph.nodeList();
-					for (var i = 0; i < items.length; i++) {
-						var item = items[i];
-						item.className = contextMenuItemClassName;
-						item.onclick = function () {
-							graph.addNode({
-								type: this.type,
-								pos: [clickCoords.x, clickCoords.y]
-							});
-						};
-						menu.appendChild(item);
-					}
-					window.menuLoaded = true;
-				}
-			}
-
 			toggleMenuOn();
 			positionMenu(e);
 		} else {
