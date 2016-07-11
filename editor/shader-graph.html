@@ -4,7 +4,17 @@
 	<link rel="import" type="css" href="css/preview.css"/>
 
 	<template>
-		<div id="preview"></div>
+		<div id="dummy"></div>
+		<div id="preview">
+			<div id="GameDiv">
+				<canvas id="GameCanvas">
+				<div id="splash">
+					<div class:"progress-bar stripes">
+						<span style:"width:0%"></span>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div id="content" class="container-full">loading...</div>
 	</template>
 
@@ -210,17 +220,7 @@
 			},
 			render: function() {
 				this.updateShader();
-
-				return React.createElement('div', null,
-					React.createElement('div', {id:"GameDiv", style:{width: "226px", height: "226px"}, className:"style-scope shader-graph"},
-						React.createElement('canvas', {id:"GameCanvas", width:"226px", height:"226px", className:"style-scope shader-graph"}),
-						React.createElement('div', {id:"splash", className:"style-scope shader-graph"},
-							React.createElement('div', {className:"progress-bar stripes style-scope shader-graph"},
-								React.createElement('span', {style:{width: "0%"}, className:"style-scope shader-graph"})
-							)
-						)
-					)
-				);
+				return React.createElement("div");
 			},
 			updateShader: function(graph){
 				if (graph) {
@@ -258,7 +258,7 @@
 				shaderGraph = this;
 				var preview = ReactDOM.render(React.createElement(Preview, {onPreviewDidLoad:function(){
 					shaderGraph._editor.updateShader();
-				}}), shaderGraph.$.preview);
+				}}), shaderGraph.$.dummy);
 				shaderGraph._editor = ReactDOM.render(React.createElement(NodeEditor, {onUpdateShader:function(shader){
 					if (preview && preview.updateShader) {
 						preview.updateShader(shader);

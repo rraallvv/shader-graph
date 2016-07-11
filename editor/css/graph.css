@@ -59,11 +59,10 @@
 #goo {
 	width: 100%;
 }
-.preview {
-	padding-left: 15px;
-	padding-right: 15px;
-	padding-bottom: 15px;
+#preview {
+	padding: 0;
 	height: 226px;
+	width: 226px;
 }
 .demo {
 	touch-action: none;
