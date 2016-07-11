@@ -137,6 +137,16 @@ var NodeEditor = React.createClass({
 
 		}.bind(this));
 	},
+	loadGraph: function(graph){
+		var nodes = graph.nodes;
+		for (var i = 0; i < nodes.length; i++) {
+			this.addNode(nodes[i]);
+		}
+		var links = graph.links;
+		for (var i = 0; i < links.length; i++) {
+			this.connect(links[i][0], links[i][1]);
+		}
+	},
 	render: function() {
 		var nodes = this.state.nodes;
 		var shader = this.updateShader();
