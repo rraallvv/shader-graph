@@ -20,13 +20,9 @@
 			window.Editor = { polymerElement: Polymer, log: console.log };
 		}
 
-		var shaderGraph;
-
 		Editor.polymerElement({
 			ready: function(){
-				shaderGraph = this;
-
-				shaderGraph._editor = ReactDOM.render(React.createElement(NodeEditor), shaderGraph.$.content);
+				this._editor = ReactDOM.render(React.createElement(NodeEditor, {shaderGraph: this}), this.$.content);
 
 				//*
 				var data = {
@@ -83,14 +79,14 @@
 					[8, 1]
 				];
 				//*/
-				shaderGraph._editor.loadGraph(data);
+				this._editor.loadGraph(data);
 
 			},
 			updateShader() {
 				this._editor.updateShader();
 			},
 			nodeList: function() {
-				return shaderGraph._editor.nodeTypes().map(function (type) {
+				return this._editor.nodeTypes().map(function (type) {
 					var item = document.createElement("a");
 					item.type = item.innerHTML = type;
 					return item;
@@ -102,7 +98,7 @@
 				pos[0] -= b.left;
 				pos[1] -= b.top;
 				e.pos = pos;
-				shaderGraph._editor.addNode(e);
+				this._editor.addNode(e);
 			},
 			setTransform: function( s, r, n, t ){
 				// s = 1, r = 1, n = 0, t = 0;

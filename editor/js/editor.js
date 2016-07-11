@@ -62,7 +62,7 @@ var NodeEditor = React.createClass({
 			Container: "canvas"
 		});
 
-		shaderGraph.jsPlumbInstance = instance;
+		this.props.shaderGraph.jsPlumbInstance = instance;
 
 		instance.registerConnectionType("basicRL", {
 			anchors: ["Right", "Left"],
@@ -226,7 +226,7 @@ var NodeEditor = React.createClass({
 			nB.connect(conn.inputB, nA, conn.outputA);
 		}, this);
 
-		typeof shaderGraph.onUpdateShader === "function" && shaderGraph.onUpdateShader(shader);
+		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onUpdateShader === "function" && this.props.shaderGraph.onUpdateShader(shader);
 
 		return shader
 	},

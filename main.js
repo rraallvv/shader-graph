@@ -74,27 +74,29 @@ var menuPositionY;
 var windowWidth;
 var windowHeight;
 
+var shaderGraph;
+
 function init() {
 	searchListener();
-	menuReadyListerner();
+	graphReadyListerner();
 	contextListener();
 	clickListener();
 	keyupListener();
 	resizeListener();
 }
 
-function menuReadyListerner() {
+function graphReadyListerner() {
 	window.addEventListener('WebComponentsReady', function(e) {
-		var graph = document.getElementById("graph");
-		if (graph) {
+		shaderGraph = document.getElementById("graph");
+		if (shaderGraph) {
 			// build the list of nodes
 			var menu = document.getElementById(contextMenuItemsClassName);
-			var items = graph.nodeList();
+			var items = shaderGraph.nodeList();
 			for (var i = 0; i < items.length; i++) {
 				var item = items[i];
 				item.className = contextMenuItemClassName;
 				item.onclick = function () {
-					graph.addNode({
+					shaderGraph.addNode({
 						type: this.type,
 						pos: [clickCoords.x, clickCoords.y]
 					});
@@ -108,9 +110,7 @@ function menuReadyListerner() {
 		};
 		preview.init();
 		shaderGraph.onUpdateShader = function(shader){
-			if (preview && preview.updateShader) {
-				preview.updateShader(shader);
-			}
+			preview.updateShader(shader);
 		};
 
 	});
