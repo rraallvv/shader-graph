@@ -34,7 +34,7 @@
 			window.Editor = { polymerElement: Polymer, log: console.log };
 		}
 
-		var Preview = React.createClass({
+		var preview = {
 			_CCSettings: {
 				"platform": "web-desktop",
 				"groupList": [
@@ -82,7 +82,7 @@
 				"orientation": "",
 				"debug": false
 			},
-			componentDidMount: function(){
+			init: function(){
 				if (cc.sys.isBrowser) {
 					this._initEngine();
 				}
@@ -188,7 +188,7 @@
 							cc.eventManager.addCustomListener("preview_did_load", function(event){
 								cc.eventManager.removeCustomListeners("preview_did_load");
 								setTimeout(function(){
-									typeof self.props.onPreviewDidLoad === "function" && self.props.onPreviewDidLoad();
+									typeof self.onload === "function" && self.onload();
 								}, 1000);
 							});
 
@@ -249,16 +249,19 @@
 					}
 				}
 			}
-		});
+		};
 
 		var shaderGraph;
 
 		Editor.polymerElement({
 			ready: function(){
 				shaderGraph = this;
-				var preview = ReactDOM.render(React.createElement(Preview, {onPreviewDidLoad:function(){
+				
+				preview.onload = function(){
 					shaderGraph._editor.updateShader();
-				}}), shaderGraph.$.dummy);
+				};
+				preview.init();
+
 				shaderGraph._editor = ReactDOM.render(React.createElement(NodeEditor, {onUpdateShader:function(shader){
 					if (preview && preview.updateShader) {
 						preview.updateShader(shader);
