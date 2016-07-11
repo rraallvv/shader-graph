@@ -12,7 +12,7 @@ var App = React.createClass({
 		return React.createElement("div", {className:"row style-scope shader-graph"},
 			React.createElement("div", {id:"sidebar", className:"col-xs-3 style-scope shader-graph"},
 				React.createElement("div", {className:"row style-scope shader-graph"},
-					React.createElement(Preview, {shader:this.shader})
+					React.createElement(Preview, {graph:this.shader})
 				)
 			),
 			React.createElement("div", {className:"col-xs-9 style-scope shader-graph"},
