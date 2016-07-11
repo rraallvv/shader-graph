@@ -388,9 +388,9 @@ window.preview = {
 			if (cc.EffectPreview) {
 				var fs = shaderDef.fshader();
 				//fs = fs.split("uniform sampler2D texture12;").join("");
-				fs = fs.split("texture12").join("CC_Texture0");
+				//fs = fs.split("texture12").join("CC_Texture0");
 
-				console.log(ShaderGraph.Beautify(
+				document.getElementById("source").innerHTML = ShaderGraph.Beautify(
 					//optimize_glsl(fs, "2", "fs"),
 					fs,
 					{
@@ -400,7 +400,7 @@ window.preview = {
 						"brace_style": "expand",
 						"wrap_line_length": 0
 					}
-				));
+				);
 
 				cc.EffectPreview.frag_glsl = fs;
 				cc.EffectPreview.updateShader();
