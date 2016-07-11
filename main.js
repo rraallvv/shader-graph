@@ -380,10 +380,6 @@ window.preview = {
 
 		cc.game.run(option, onStart.bind(this));
 	},
-	render: function() {
-		this.updateShader();
-		return React.createElement("div");
-	},
 	updateShader: function(graph){
 		if (graph) {
 			var shaderDef = graph.buildShader();

@@ -13,6 +13,7 @@
 		E457510F1D33001000E93372 /* main.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
 		E45751101D33001000E93372 /* reset.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = reset.css; sourceTree = "<group>"; };
 		E45751111D33001000E93372 /* style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
+		E4D095C41D341FE200BD4705 /* preview.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = preview.css; sourceTree = "<group>"; };
 		E4EE05731D29BADF00964AFA /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
 		E4EE05741D29BC3E00964AFA /* server.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = server.js; sourceTree = "<group>"; };
 		E4EE05751D29BFA700964AFA /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
@@ -31,6 +32,7 @@
 				E457510F1D33001000E93372 /* main.js */,
 				E45751101D33001000E93372 /* reset.css */,
 				E45751111D33001000E93372 /* style.css */,
+				E4D095C41D341FE200BD4705 /* preview.css */,
 			);
 			sourceTree = "<group>";
 		};

@@ -3,6 +3,7 @@
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="reset.css">
 		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="preview.css"/>
 		<script src="pace.min.js"></script>
 		<script src="../webcomponents.js/webcomponents-lite.min.js"></script>
 		<link rel="import" href="../polymer/polymer.html">
@@ -10,6 +11,16 @@
 
 	</head>
 <body>
+	<div id="preview">
+		<div id="GameDiv">
+			<canvas id="GameCanvas">
+			<div id="splash">
+				<div class:"progress-bar stripes">
+					<span style:"width:0%"></span>
+				</div>
+			</div>
+		</div>
+	</div>
 	<shader-graph id="graph" class="graph"></shader-graph>
 	<nav id="context-menu" class="context-menu">
 		<form onsubmit="return false;" style="margin:0">
