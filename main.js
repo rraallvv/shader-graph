@@ -54,6 +54,9 @@ var contextMenuItemsClassName = "menu-items";
 var contextMenuActiveClassName = "context-menu--active";
 
 var graphClassName = "graph";
+
+var searchClassName = "search";
+
 var graphInContext;
 
 var clickCoords;
@@ -103,7 +106,7 @@ function menuReadyListerner() {
 }
 
 function searchListener() {
-	document.getElementById("search").onkeyup = function(e) {
+	document.getElementById(searchClassName).onkeyup = function(e) {
 		updateNodeList(this.value)
 	};
 }
@@ -129,7 +132,9 @@ function clickListener() {
 
 		if ( clickeElIsLink ) {
 			e.preventDefault();
-			toggleMenuOff();
+			if (!clickInsideElement( e, searchClassName )) {
+				toggleMenuOff();
+			}
 		} else {
 			var button = e.which || e.button;
 			if ( button === 1 ) {
@@ -157,7 +162,7 @@ function toggleMenuOn() {
 	if ( menuState !== 1 ) {
 		menuState = 1;
 		menu.classList.add( contextMenuActiveClassName );
-		document.getElementById("search").focus();
+		document.getElementById(searchClassName).focus();
 	}
 }
 
@@ -165,7 +170,7 @@ function toggleMenuOff() {
 	if ( menuState !== 0 ) {
 		menuState = 0;
 		menu.classList.remove( contextMenuActiveClassName );
-		document.getElementById("search").value = "";
+		document.getElementById(searchClassName).value = "";
 		updateNodeList("");
 	}
 }
