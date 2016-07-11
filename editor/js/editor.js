@@ -9,27 +9,18 @@ var App = React.createClass({
 	render: function() {
 		var shader = this.updateShader();
 		this.updateConnections();
-		return React.createElement("div", {className:"row style-scope shader-graph"},
-			React.createElement("div", {id:"sidebar", className:"col-xs-3 style-scope shader-graph"},
-				React.createElement("div", {className:"row style-scope shader-graph"},
-					React.createElement(Preview, {graph:this.shader})
-				)
-			),
-			React.createElement("div", {className:"col-xs-9 style-scope shader-graph"},
-				React.createElement(NodeEditor, {
-					updateShader:this.updateShader,
-					instance:this.instance,
-					shader:shader,
-					nodes:this.state.nodes,
-					connections:this.state.connections,
-					connect:this.connect,
-					disconnect:this.disconnect,
-					updateNodeData:this.updateNodeData,
-					initialize:this.initialize,
-					onClickRemoveNode:this.removeNode
-				})
-			)
-		);
+		return React.createElement(NodeEditor, {
+			updateShader:this.updateShader,
+			instance:this.instance,
+			shader:shader,
+			nodes:this.state.nodes,
+			connections:this.state.connections,
+			connect:this.connect,
+			disconnect:this.disconnect,
+			updateNodeData:this.updateNodeData,
+			initialize:this.initialize,
+			onClickRemoveNode:this.removeNode
+		});
 	},
 	nodeTypes: function(){
 		return Object.keys(ShaderGraph.Node.classes).sort().filter(function(type){
@@ -90,6 +81,8 @@ var App = React.createClass({
 			}
 			nB.connect(conn.inputB, nA, conn.outputA);
 		}, this);
+
+		typeof this.props.onUpdateShader === "function" && this.props.onUpdateShader(shader);
 
 		return shader
 	},

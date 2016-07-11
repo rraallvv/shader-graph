@@ -4,6 +4,7 @@
 	<link rel="import" type="css" href="css/preview.css"/>
 
 	<template>
+		<div id="preview"></div>
 		<div id="content" class="container-full">loading...</div>
 	</template>
 
@@ -176,7 +177,9 @@
 
 							cc.eventManager.addCustomListener("preview_did_load", function(event){
 								cc.eventManager.removeCustomListeners("preview_did_load");
-								setTimeout(function(){ self.updateShader(); }, 1000);
+								setTimeout(function(){
+									typeof self.props.onPreviewDidLoad === "function" && self.props.onPreviewDidLoad();
+								}, 1000);
 							});
 
 							console.log('Success to load scene: ' + launchScene);
@@ -219,29 +222,33 @@
 					)
 				);
 			},
-			updateShader: function(){
-				var shaderDef = this.props.graph.buildShader();
+			updateShader: function(graph){
+				if (graph) {
+					var shaderDef = graph.buildShader();
 
-				// console.log(shaderDef.fshader());
-				if (cc.EffectPreview) {
-					var fs = shaderDef.fshader();
-					//fs = fs.split("uniform sampler2D texture12;").join("");
-					fs = fs.split("texture12").join("CC_Texture0");
+					// console.log(shaderDef.fshader());
+					if (cc.EffectPreview) {
+						console.log("!");
 
-					console.log(ShaderGraph.Beautify(
-						//optimize_glsl(fs, "2", "fs"),
-						fs,
-						{
-							"indent_size": 1,
-							"indent_char": '\t',
-							"max_preserve_newlines": -1,
-							"brace_style": "expand",
-							"wrap_line_length": 0
-						}
-					));
+						var fs = shaderDef.fshader();
+						//fs = fs.split("uniform sampler2D texture12;").join("");
+						fs = fs.split("texture12").join("CC_Texture0");
 
-					cc.EffectPreview.frag_glsl = fs;
-					cc.EffectPreview.updateShader();
+						console.log(ShaderGraph.Beautify(
+							//optimize_glsl(fs, "2", "fs"),
+							fs,
+							{
+								"indent_size": 1,
+								"indent_char": '\t',
+								"max_preserve_newlines": -1,
+								"brace_style": "expand",
+								"wrap_line_length": 0
+							}
+						));
+
+						cc.EffectPreview.frag_glsl = fs;
+						cc.EffectPreview.updateShader();
+					}
 				}
 			}
 		});
@@ -251,18 +258,14 @@
 		Editor.polymerElement({
 			ready: function(){
 				shaderGraph = this;
-				shaderGraph._appInstance = ReactDOM.render(React.createElement(App), shaderGraph.$.content);
-
-				/*
-				// build the list of nodes
-				var sidebar = Polymer.dom(document.getElementById("sidebar"));
-				var items = shaderGraph.nodeList();
-				for (var i = 0; i < items.length; i++) {
-					var item = items[i];
-					item.className = "list-group-item add-node-button";
-					sidebar.appendChild(item);
-				}
-				*/
+				var preview = ReactDOM.render(React.createElement(Preview, {onPreviewDidLoad:function(){
+					shaderGraph._appInstance.updateShader();
+				}}), shaderGraph.$.preview);
+				shaderGraph._appInstance = ReactDOM.render(React.createElement(App, {onUpdateShader:function(shader){
+					if (preview && preview.updateShader) {
+						preview.updateShader(shader);
+					}
+				}}), shaderGraph.$.content);
 
 				//*
 				var nodes = [
