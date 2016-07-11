@@ -9,27 +9,26 @@ var App = React.createClass({
 	render: function() {
 		var shader = this.updateShader();
 		this.updateConnections();
-		return (
-			<div className="row style-scope shader-graph">
-				<div id="sidebar" className="col-xs-3 style-scope shader-graph">
-					<div className="row style-scope shader-graph">
-						<Preview shader={this.shader}/>
-					</div>
-				</div>
-				<div className="col-xs-9 style-scope shader-graph">
-					<NodeEditor
-						updateShader={this.updateShader}
-						instance={this.instance}
-						shader={shader}
-						nodes={this.state.nodes}
-						connections={this.state.connections}
-						connect={this.connect}
-						disconnect={this.disconnect}
-						updateNodeData={this.updateNodeData}
-						initialize={this.initialize}
-						onClickRemoveNode={this.removeNode} />
-				</div>
-			</div>
+		return React.createElement("div", {className:"row style-scope shader-graph"},
+			React.createElement("div", {id:"sidebar", className:"col-xs-3 style-scope shader-graph"},
+				React.createElement("div", {className:"row style-scope shader-graph"},
+					React.createElement(Preview, {shader:this.shader})
+				)
+			),
+			React.createElement("div", {className:"col-xs-9 style-scope shader-graph"},
+				React.createElement(NodeEditor, {
+					updateShader:this.updateShader,
+					instance:this.instance,
+					shader:shader,
+					nodes:this.state.nodes,
+					connections:this.state.connections,
+					connect:this.connect,
+					disconnect:this.disconnect,
+					updateNodeData:this.updateNodeData,
+					initialize:this.initialize,
+					onClickRemoveNode:this.removeNode
+				})
+			)
 		);
 	},
 	nodeTypes: function(){
