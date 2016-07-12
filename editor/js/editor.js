@@ -508,7 +508,7 @@ var Port = React.createClass({
 		var instance = this.props.instance;
 
 		instance.unmakeSource(el);
-		instance.makeTarget(el);
+		instance.unmakeTarget(el);
 	},
 	render: function(){
 		return React.createElement("div", {className:this.props.type + " style-scope shader-graph", key:this.props.portKey, id:this.props.portKey + this.props.id}, this.props.portKey);
