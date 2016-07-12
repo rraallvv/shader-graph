@@ -202,6 +202,7 @@ function graphReadyListerner() {
 		};
 		element.innerHTML = "Clear";
 		element.className = "demo";
+		element.style.color = "red";
 		placeholder.appendChild(element);
 
 		for (var i = 0; i < demos.length; i++) {
