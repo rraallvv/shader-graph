@@ -11,7 +11,6 @@
 		<script src="cocos2d-js.js"></script>
 	</head>
 <body>
-	<iframe id="one" src="preview.html" width="1024px" height="994"></iframe>
 	<div id="toolbar">
 		<div id="preview">
 			<div id="GameDiv">
@@ -35,17 +34,7 @@
 	<script src="google-code-prettify/prettify.js"></script>
 	<script src="main.js"></script>
 	<script>
-		function iframeRef( frameRef ) {
-			return frameRef.contentWindow
-				? frameRef.contentWindow.document
-				: frameRef.contentDocument
-		}
-		var inside
-		var iframe = document.getElementById('one');
-		iframe.onload = function() {
-			inside = iframeRef( iframe );
-			console.log(parent.xxx);
-		}
+		parent.xxx = "!!!";
 	</script>
 </body>
 </html>
