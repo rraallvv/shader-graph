@@ -56,9 +56,6 @@
 	-webkit-user-select: none;
 	-ms-user-select: none;
 }
-#goo {
-	width: 100%;
-}
 .demo {
 	touch-action: none;
 }

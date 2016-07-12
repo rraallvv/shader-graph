@@ -137,7 +137,8 @@ var NodeEditor = React.createClass({
 
 		}.bind(this));
 	},
-	loadGraph: function(graph){
+	loadGraph: function(graph) {
+		this.clearGraph();
 		var nodes = graph.nodes;
 		for (var i = 0; i < nodes.length; i++) {
 			this.addNode(nodes[i]);
@@ -146,6 +147,8 @@ var NodeEditor = React.createClass({
 		for (var i = 0; i < links.length; i++) {
 			this.connect(links[i][0], links[i][1]);
 		}
+	},
+	clearGraph: function() {
 	},
 	render: function() {
 		var nodes = this.state.nodes;

@@ -35,6 +35,9 @@
 			loadGraph: function(data) {
 				this._editor.loadGraph(data);
 			},
+			clearGraph: function() {
+				this._editor.clearGraph();
+			},
 			addNode: function(e) {
 				var b = graph.querySelector("#canvas").getBoundingClientRect();
 				var pos = e.pos || [0, 0];

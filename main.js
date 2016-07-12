@@ -188,6 +188,15 @@ function graphReadyListerner() {
 			}];
 
 		var placeholder = document.getElementById("demos");
+
+		var element = document.createElement("a");
+		element.onclick = function() {
+			parent.shaderGraph.clearGraph();
+		};
+		element.innerHTML = "Clear";
+		element.className = "demo";
+		placeholder.appendChild(element);
+
 		for (var i = 0; i < demos.length; i++) {
 			var element = document.createElement("a");
 			element.demo = demos[i];
