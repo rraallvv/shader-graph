@@ -101,6 +101,16 @@ var NodeEditor = React.createClass({
 			return result;
 		}
 
+		function getConnectionsInfo (con, id){
+			var existing = [];
+			if (con.length!=0 && document.getElementById(id).classList.contains("in")) {
+				for (var i = 0; i < con.length; i++) {
+					existing.push(getConnectionInfo(con[i]));
+				}
+			}
+			return existing;
+		}
+
 		instance.bind("click", function (c) {
 			if(!ignoreConnectionEvents){
 				var info = getConnectionInfo(c);
@@ -110,15 +120,15 @@ var NodeEditor = React.createClass({
 		});
 
 		instance.bind("beforeDrop", function (c) {
-			var dst = c.targetId;
-			var con = instance.getConnections({target:dst});
+			var existing = [], id, con;
 
-			var existing = [];
-			if (con.length!=0 && document.getElementById(dst).classList.contains("in")) {
-				for (var i = 0; i < con.length; i++) {
-					existing.push(getConnectionInfo(con[i]));
-				}
-			}
+			id = c.targetId;
+			con = instance.getConnections({target:id});
+			existing = existing.concat(getConnectionsInfo(con, id));
+
+			id = c.sourceId;
+			con = instance.getConnections({target:id});
+			existing = existing.concat(getConnectionsInfo(con, id));
 
 			var info = getConnectionInfo(c);
 
@@ -500,10 +510,10 @@ var Port = React.createClass({
 				outlineColor: "transparent",
 				outlineWidth: 4
 			},
-			maxConnections: 1,
+			// maxConnections: 1,
 			connectionType: this.props.type === "in" ? "basicLR" : "basicRL",
 			onMaxConnections: function (info, e) {
-				console.error("Maximum number of links (" + info.maxConnections + ") reached");
+				console.error("Maximum number of links (" + info.maxConnections + ") reached in source");
 			},
 			extract: {
 				"action": "the-action"
@@ -512,7 +522,11 @@ var Port = React.createClass({
 
 		instance.makeTarget(el, {
 			dropOptions: { hoverClass: "dragHover" },
-			allowLoopback: false
+			allowLoopback: false,
+			// maxConnections: 1,
+			onMaxConnections: function (info, e) {
+				console.error("Maximum number of links (" + info.maxConnections + ") reached in target");
+			},
 		});
 	},
 	componentWillUnmount: function(){
