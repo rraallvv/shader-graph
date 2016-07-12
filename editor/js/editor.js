@@ -140,6 +140,17 @@ var NodeEditor = React.createClass({
 
 		}.bind(this));
 	},
+	initialize: function(instance){
+		this.instance = instance;
+
+		// Add the main node
+		this.addNode({
+			type: ShaderGraph.FragColorNode.type,
+			pos: [600, 300]
+		});
+
+		this.setState(this.state);
+	},
 	loadGraph: function(graph) {
 		this.clearGraph();
 		var nodes = graph.nodes;
@@ -240,17 +251,6 @@ var NodeEditor = React.createClass({
 		}, this);
 
 		return shader
-	},
-	initialize: function(instance){
-		this.instance = instance;
-
-		// Add the main node
-		this.addNode({
-			type: ShaderGraph.FragColorNode.type,
-			pos: [600, 300]
-		});
-
-		this.setState(this.state);
 	},
 	updateConnections: function(){
 		if(this.instance){
