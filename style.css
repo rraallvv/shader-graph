@@ -135,7 +135,21 @@ input[type="text"] {
 	tab-size:4;
 }
 
+.demo {
+	cursor: default;
+	display: block;
+	padding: 4px 12px;
+	color: #0066aa;
+	text-decoration: none;
+}
+
+.demo:hover {
+	color: #fff;
+	background-color: #0066aa;
+}
+
 #demos {
+	border: solid 1px blue;
 	padding: 0;
 	margin: 0;
 	height: 226px;
