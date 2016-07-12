@@ -77,10 +77,10 @@
 					[8, 1]
 				];
 				//*/
-				this._editor.loadGraph(data);
+				this.loadGraph(data);
 
 			},
-			updateShader() {
+			updateShader: function() {
 				this._editor.updateShader();
 			},
 			nodeList: function() {
@@ -89,6 +89,9 @@
 					item.type = item.innerHTML = type;
 					return item;
 				});
+			},
+			loadGraph: function(data) {
+				this._editor.loadGraph(data);
 			},
 			addNode: function(e) {
 				var b = graph.querySelector("#canvas").getBoundingClientRect();
