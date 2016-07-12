@@ -228,8 +228,7 @@
 						//fs = fs.split("uniform sampler2D texture12;").join("");
 						//fs = fs.split("texture12").join("CC_Texture0");
 
-						var source = document.getElementById("source");
-						source.innerHTML = ShaderGraph.Beautify(
+						parent.source.innerHTML = ShaderGraph.Beautify(
 							optimize_glsl(fs, "2", "fs"),
 							//fs,
 							{
@@ -241,7 +240,7 @@
 							}
 						);
 
-						source.classList.remove("prettyprinted");
+						parent.source.classList.remove("prettyprinted");
 
 						prettyPrint();
 
