@@ -66,7 +66,6 @@ var searchClassName = "search";
 
 var graphInContext;
 
-var clickCoords;
 var clickCoordsX;
 var clickCoordsY;
 
@@ -103,7 +102,7 @@ function graphReadyListerner() {
 				item.onclick = function () {
 					parent.shaderGraph.addNode({
 						type: this.type,
-						pos: [clickCoords.x, clickCoords.y]
+						pos: [clickCoordsX, clickCoordsY]
 					});
 				};
 				menu.appendChild(item);
@@ -289,30 +288,30 @@ function toggleMenuOff() {
 }
 
 function positionMenu(e) {
-	clickCoords = getPosition(e);
-	clickCoordsX = clickCoords.x;
-	clickCoordsY = clickCoords.y;
-
-	menuWidth = menu.offsetWidth + 4;
-	menuHeight = menu.offsetHeight + 4;
-
 	var doc = document.documentElement;
 	var clientLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
 	var clientTop = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
 
+	var pos = getPosition(e);
+	clickCoordsX = pos.x - clientLeft;
+	clickCoordsY = pos.y - clientTop;
+
+	menuWidth = menu.offsetWidth + 4;
+	menuHeight = menu.offsetHeight + 4;
+
 	clientRight = clientLeft + window.innerWidth;
 	clientBottom = clientTop + window.innerHeight;
 
-	if ( (clientRight - clickCoordsX) < menuWidth ) {
+	if ( (clientRight - clickCoordsX - clientLeft) < menuWidth ) {
 		menu.style.left = clientRight - menuWidth + "px";
 	} else {
-		menu.style.left = clickCoordsX + "px";
+		menu.style.left = clickCoordsX + clientLeft + "px";
 	}
 
-	if ( (clientBottom - clickCoordsY) < menuHeight ) {
+	if ( (clientBottom - clickCoordsY - clientTop) < menuHeight ) {
 		menu.style.top = clientBottom - menuHeight + "px";
 	} else {
-		menu.style.top = clickCoordsY + "px";
+		menu.style.top = clickCoordsY + clientTop + "px";
 	}
 }
 
