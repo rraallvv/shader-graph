@@ -14,6 +14,8 @@
 		E45751111D33001000E93372 /* style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		E4D095C41D341FE200BD4705 /* preview.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = preview.css; sourceTree = "<group>"; };
 		E4D095C51D34697E00BD4705 /* preview.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = preview.html; sourceTree = "<group>"; };
+		E4D095C61D34759100BD4705 /* preview.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = preview.js; sourceTree = "<group>"; };
+		E4D095C71D34854B00BD4705 /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; path = js; sourceTree = "<group>"; };
 		E4EE05731D29BADF00964AFA /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
 		E4EE05741D29BC3E00964AFA /* server.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = server.js; sourceTree = "<group>"; };
 		E4EE05751D29BFA700964AFA /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
@@ -25,6 +27,7 @@
 			children = (
 				E41C5AC01D1CE08200B5143F /* editor */,
 				E41C5ABF1D1CE07000B5143F /* src */,
+				E4D095C71D34854B00BD4705 /* js */,
 				E4EE05731D29BADF00964AFA /* package.json */,
 				E4EE05741D29BC3E00964AFA /* server.js */,
 				E4EE05751D29BFA700964AFA /* index.html */,
@@ -32,6 +35,7 @@
 				E457510F1D33001000E93372 /* main.js */,
 				E45751111D33001000E93372 /* style.css */,
 				E4D095C51D34697E00BD4705 /* preview.html */,
+				E4D095C61D34759100BD4705 /* preview.js */,
 				E4D095C41D341FE200BD4705 /* preview.css */,
 			);
 			sourceTree = "<group>";

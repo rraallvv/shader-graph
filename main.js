@@ -108,7 +108,26 @@ function graphReadyListerner() {
 		};
 		parent.preview.init();
 		parent.shaderGraph.onUpdateShader = function(shader){
-			parent.preview.updateShader(shader);
+			if (shader) {
+				var shaderDef = shader.buildShader()
+				var source = document.getElementById("source");
+				source.innerHTML = ShaderGraph.Beautify(
+					optimize_glsl(shaderDef.fshader(), "2", "fs"),
+					//fs,
+					{
+						"indent_size": 1,
+						"indent_char": '\t',
+						"max_preserve_newlines": -1,
+						"brace_style": "expand",
+						"wrap_line_length": 0
+					}
+				);
+
+				source.classList.remove("prettyprinted");
+				prettyPrint();
+
+				parent.preview.updateShader(shaderDef);
+			}
 		};
 
 	});

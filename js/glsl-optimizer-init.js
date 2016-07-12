@@ -68,7 +68,7 @@ var Module = {
 	},
 	locateFile: function(hoho)
 	{
-		return 'editor/js/external/glsl-optimizer.js.mem';
+		return 'js/glsl-optimizer.js.mem';
 	}
 };
 Module.setStatus('Downloading...');

@@ -1,28 +1,21 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+
 		<link rel="stylesheet" href="google-code-prettify/prettify.css"/>
 		<link rel="stylesheet" href="style.css">
-		<link rel="stylesheet" href="preview.css"/>
+
 		<script src="pace.min.js"></script>
 		<script src="../webcomponents.js/webcomponents-lite.min.js"></script>
+		<script src="js/glsl-optimizer-init.js"></script>
+		<script src="js/glsl-optimizer.js"></script>
+
 		<link rel="import" href="../polymer/polymer.html">
 		<link rel="import" href="editor/shader-graph.html">
-		<script src="cocos2d-js.js"></script>
 	</head>
 <body>
-	<iframe id="one" src="preview.html" width="1024px" height="994"></iframe>
 	<div id="toolbar">
-		<div id="preview">
-			<div id="GameDiv">
-				<canvas id="GameCanvas">
-				<div id="splash">
-					<div class:"progress-bar stripes">
-						<span style:"width:0%"></span>
-					</div>
-				</div>
-			</div>
-		</div>
+		<iframe class="preview" src="preview.html" scrolling="no" frameborder="0"></iframe>
 		<pre id="source" class="prettyprint lang-glsl linenums"></pre>
 	</div>
 	<shader-graph id="graph" class="graph"></shader-graph>
@@ -34,19 +27,5 @@
 	</nav>
 	<script src="google-code-prettify/prettify.js"></script>
 	<script src="main.js"></script>
-	<script>
-		parent.source = document.getElementById("source");
-		function iframeRef( frameRef ) {
-			return frameRef.contentWindow
-				? frameRef.contentWindow.document
-				: frameRef.contentDocument
-		}
-		var inside
-		var iframe = document.getElementById('one');
-		iframe.onload = function() {
-			inside = iframeRef( iframe );
-			console.log(parent.xxx);
-		}
-	</script>
 </body>
 </html>
