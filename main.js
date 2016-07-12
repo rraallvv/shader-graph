@@ -132,7 +132,8 @@ function graphReadyListerner() {
 		
 		//*
 		var demos = [
-			{ nodes: [
+			{ name: "Pattern",
+				nodes: [
 					{type:"fragColor", pos:[650, 130]},
 					{type:"value", pos:[0, 0], value:70},
 					{type:"uv", pos:[0, 100]},
@@ -159,7 +160,8 @@ function graphReadyListerner() {
 					[10, 1]
 				]
 			},
-			{ nodes: [
+			{ name: "Black and White",
+				nodes: [
 					{type:"fragColor", pos:[660, 200]},
 					{type:"texture", pos:[0, 0]},
 					{type:"split", pos:[0, 170]},
@@ -185,7 +187,17 @@ function graphReadyListerner() {
 				]
 			}];
 
-		parent.shaderGraph.loadGraph(demos[1]);
+		var placeholder = document.getElementById("demos");
+		for (var i = 0; i < demos.length; i++) {
+			var element = document.createElement("a");
+			element.demo = demos[i];
+			element.onclick = function() {
+				parent.shaderGraph.loadGraph(this.demo);
+			};
+			element.innerHTML = element.demo.name;
+			element.className = "demo";
+			placeholder.appendChild(element);
+		}
 	});
 }
 
