@@ -149,6 +149,8 @@ var NodeEditor = React.createClass({
 		}
 	},
 	clearGraph: function() {
+		// TODO
+		console.log("TODO");
 	},
 	render: function() {
 		var nodes = this.state.nodes;
