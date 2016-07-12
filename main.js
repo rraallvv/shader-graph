@@ -78,8 +78,8 @@ var menuPosition;
 var menuPositionX;
 var menuPositionY;
 
-var windowWidth;
-var windowHeight;
+var clientRight;
+var clientBottom;
 
 function init() {
 	searchListener();
@@ -295,17 +295,21 @@ function positionMenu(e) {
 	menuWidth = menu.offsetWidth + 4;
 	menuHeight = menu.offsetHeight + 4;
 
-	windowWidth = window.innerWidth;
-	windowHeight = window.innerHeight;
+	var doc = document.documentElement;
+	var clientLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+	var clientTop = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
 
-	if ( (windowWidth - clickCoordsX) < menuWidth ) {
-		menu.style.left = windowWidth - menuWidth + "px";
+	clientRight = clientLeft + window.innerWidth;
+	clientBottom = clientTop + window.innerHeight;
+
+	if ( (clientRight - clickCoordsX) < menuWidth ) {
+		menu.style.left = clientRight - menuWidth + "px";
 	} else {
 		menu.style.left = clickCoordsX + "px";
 	}
 
-	if ( (windowHeight - clickCoordsY) < menuHeight ) {
-		menu.style.top = windowHeight - menuHeight + "px";
+	if ( (clientBottom - clickCoordsY) < menuHeight ) {
+		menu.style.top = clientBottom - menuHeight + "px";
 	} else {
 		menu.style.top = clickCoordsY + "px";
 	}
