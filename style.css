@@ -126,13 +126,24 @@ input[type="text"] {
 	padding: 0;
 	margin: 0;
 	height: 226px;
-	width: 798px;
+	width: 648px;
 	overflow-x: hidden;
 	overflow-y: auto;
 	float:right;
 	font-family: monospace;
 	font-size: medium;
 	tab-size:4;
+}
+
+#demos {
+	padding: 0;
+	margin: 0;
+	height: 226px;
+	width: 150px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	float:right;
+	font-size: medium;
 }
 
 #toolbar {

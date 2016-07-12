@@ -131,63 +131,61 @@ function graphReadyListerner() {
 		};
 		
 		//*
-		var data = {
-			nodes: [
-				{type:"fragColor", pos:[650, 130]},
-				{type:"value", pos:[0, 0], value:70},
-				{type:"uv", pos:[0, 100]},
-				{type:"value", pos:[0, 220], value:35},
-				{type:"value", pos:[0, 320], value:0.5},
-				{type:"multiply", pos:[200, 50]},
-				{type:"multiply", pos:[200, 150]},
-				{type:"cos", pos:[350, 50]},
-				{type:"sin", pos:[350, 150]},
-				{type:"join", pos:[500, 100]},
-				{type:"value", pos:[320, 250], value: 1}
-			],
-			links: [
-				[2, 6],
-				[3.1, 6.1],
-				[3.2, 7],
-				[4, 7.1],
-				[6, 8],
-				[7, 9],
-				[8, 10],
-				[9, 10.1],
-				[5, 10.2],
-				[11, 10.3],
-				[10, 1]
-			]
-		};
-		//*/
-		/*
-		var nodes = [
-			{type:"fragColor", pos:[660, 200]},
-			{type:"texture", pos:[0, 0]},
-			{type:"split", pos:[0, 170]},
-			{type:"add", pos:[135, 90]},
-			{type:"add", pos:[267, 90]},
-			{type:"divide", pos:[400, 90]},
-			{type:"value", pos:[250, 175], value:3},
-			{type:"join", pos:[530, 170]}
-		];
-		var links = [
-			[2, 3],
-			[3, 4],
-			[3.1, 4.1],
-			[4, 5],
-			[3.2, 5.1],
-			[5, 6],
-			[7, 6.1],
-			[6, 8],
-			[6, 8.1],
-			[6, 8.2],
-			[3.3, 8.3],
-			[8, 1]
-		];
-		//*/
+		var demos = [
+			{ nodes: [
+					{type:"fragColor", pos:[650, 130]},
+					{type:"value", pos:[0, 0], value:70},
+					{type:"uv", pos:[0, 100]},
+					{type:"value", pos:[0, 220], value:35},
+					{type:"value", pos:[0, 320], value:0.5},
+					{type:"multiply", pos:[200, 50]},
+					{type:"multiply", pos:[200, 150]},
+					{type:"cos", pos:[350, 50]},
+					{type:"sin", pos:[350, 150]},
+					{type:"join", pos:[500, 100]},
+					{type:"value", pos:[320, 250], value: 1}
+				],
+				links: [
+					[2, 6],
+					[3.1, 6.1],
+					[3.2, 7],
+					[4, 7.1],
+					[6, 8],
+					[7, 9],
+					[8, 10],
+					[9, 10.1],
+					[5, 10.2],
+					[11, 10.3],
+					[10, 1]
+				]
+			},
+			{ nodes: [
+					{type:"fragColor", pos:[660, 200]},
+					{type:"texture", pos:[0, 0]},
+					{type:"split", pos:[0, 170]},
+					{type:"add", pos:[135, 90]},
+					{type:"add", pos:[267, 90]},
+					{type:"divide", pos:[400, 90]},
+					{type:"value", pos:[250, 175], value:3},
+					{type:"join", pos:[530, 170]}
+				],
+				links: [
+					[2, 3],
+					[3, 4],
+					[3.1, 4.1],
+					[4, 5],
+					[3.2, 5.1],
+					[5, 6],
+					[7, 6.1],
+					[6, 8],
+					[6, 8.1],
+					[6, 8.2],
+					[3.3, 8.3],
+					[8, 1]
+				]
+			}];
 
-		parent.shaderGraph.loadGraph(data);
+		parent.shaderGraph.loadGraph(demos[1]);
 	});
 }
 
