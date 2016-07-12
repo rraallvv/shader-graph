@@ -143,12 +143,15 @@ var NodeEditor = React.createClass({
 	loadGraph: function(graph) {
 		this.clearGraph();
 		var nodes = graph.nodes;
+		var ids = []
 		for (var i = 0; i < nodes.length; i++) {
-			this.addNode(nodes[i]);
+			ids.push(this.addNode(nodes[i]));
 		}
 		var links = graph.links;
 		for (var i = 0; i < links.length; i++) {
-			this.connect(links[i][0], links[i][1]);
+			var portA = this._splitPort(links[i][0]);
+			var portB = this._splitPort(links[i][1]);
+			this.connect(ids[portA[0]], portA[1], ids[portB[0]], portB[1]);
 		}
 	},
 	clearGraph: function() {
