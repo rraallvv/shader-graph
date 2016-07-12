@@ -12,41 +12,43 @@ var NodeEditor = React.createClass({
 	componentDidMount: function(){
 		var component = this;
 
+		var curviness = function(v){
+			// link going forward
+			var df = 100;
+			const sf = 2;
+			// link going backwards
+			var db = 600;
+			const sb = 4;
+			// transition threshold
+			const th = 300;
+			// distance percentage
+			const c = 0.25;
+
+			var d0 = v[ 0 ];
+			var d1 = v[ 1 ];
+			var d = Math.sqrt( d0 * d0 + d1 * d1 );
+			// var d = v[0];
+
+			// fix distance
+			df = df + (d - df) / sf;
+			db = db + (d - db) / sb;
+
+			if ( v[ 0 ] > 0 ) { // forward
+				d = df;
+			} else if ( v[ 0 ] < -th  ) { // backwards
+				d = db;
+			} else { // transition
+				var t = v[ 0 ] / th;
+				d = (1 + t) * df - t * db;
+			}
+			// console.log(c * d);
+			return c * d;
+		};
+
 		// setup some defaults for jsPlumb.
 		var instance = jsPlumb.getInstance({
 			Endpoint: ["Dot", {radius: 0.00001}],
-			Connector: ["Bezier", {curviness: function(v){
-				// link going forward
-				var df = 100;
-				const sf = 2;
-				// link going backwards
-				var db = 600;
-				const sb = 4;
-				// transition threshold
-				const th = 300;
-				// distance percentage
-				const c = 0.25;
-
-				var d0 = v[ 0 ];
-				var d1 = v[ 1 ];
-				var d = Math.sqrt( d0 * d0 + d1 * d1 );
-				// var d = v[0];
-
-				// fix distance
-				df = df + (d - df) / sf;
-				db = db + (d - db) / sb;
-
-				if ( v[ 0 ] > 0 ) { // forward
-					d = df;
-				} else if ( v[ 0 ] < -th  ) { // backwards
-					d = db;
-				} else { // transition
-					var t = v[ 0 ] / th;
-					d = (1 + t) * df - t * db;
-				}
-				// console.log(c * d);
-				return c * d;
-			}, snapThreshold: 0.00001}],
+			Connector: ["Bezier", {curviness: 50, snapThreshold: 0.00001}],
 			HoverPaintStyle: {
 				strokeStyle: "#ddd",
 				lineWidth: 2

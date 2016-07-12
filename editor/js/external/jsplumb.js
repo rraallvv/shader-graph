@@ -11495,7 +11495,7 @@
         params = params || {};
 
         var _super = _jp.Connectors.AbstractConnector.apply(this, arguments),
-            majorAnchor = params.curviness || function(){return 150;},
+            majorAnchor = typeof params.curviness === "function" ? params.curviness : function(){return params.curviness || 150;},
             minorAnchor = params.snapThreshold || 10;
 
         this.type = "Bezier";
