@@ -9,6 +9,13 @@ function clickInsideElement( e, className ) {
 
 	var bounds = el.getBoundingClientRect();
 
+	var doc = document.documentElement;
+	var clientLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+	var clientTop = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+
+	pos.y -= clientTop;
+	pos.x -= clientLeft;
+
 	if (pos.x < bounds.left || pos.x > bounds.right || pos.y < bounds.top || pos.y > bounds.bottom) {
 		return false;
 	}
