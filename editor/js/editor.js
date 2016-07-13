@@ -48,7 +48,7 @@ var NodeEditor = React.createClass({
 		// setup some defaults for jsPlumb.
 		var instance = jsPlumb.getInstance({
 			Endpoint: ["Dot", {radius: 0.00001}],
-			Connector: ["Bezier", {curviness: 50, snapThreshold: 0.00001}],
+			Connector: ["Bezier", {curviness: curviness, snapThreshold: 0.00001}],
 			HoverPaintStyle: {
 				strokeStyle: "#ddd",
 				lineWidth: 2
