@@ -529,6 +529,7 @@ var Port = React.createClass({
 		var el = ReactDOM.findDOMNode(this);
 		var instance = this.props.instance;
 
+        instance.detachAllConnections(el);
 		instance.unmakeSource(el);
 		instance.unmakeTarget(el);
 	},
