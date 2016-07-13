@@ -43,11 +43,19 @@ function getPosition(e) {
 	}
 }
 
-function updateNodeList(value) {
+function updateNodeList(type) {
 	var items = document.getElementById(contextMenuItemsClassName).children;
+	var result = fuse.search(type);
 	for (var i = 0; i < items.length; i++) {
 		var item = items[i];
-		if (item.innerHTML.startsWith(value)) {
+		var found = false;
+		for (var j = 0; j < result.length; j++) {
+			if (item.innerHTML === result[j].type) {
+				found = true;
+				break;
+			}
+		}
+		if (found) {
 			item.style.display = "block";
 		} else {
 			item.style.display = "none";
@@ -80,6 +88,21 @@ var menuPositionY;
 var clientRight;
 var clientBottom;
 
+var nodeTypes = [];
+
+var fuse;
+var fuseOptions = {
+  caseSensitive: false,
+  includeScore: false,
+  shouldSort: true,
+  tokenize: true,
+  threshold: 0.3,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 32,
+  keys: ["type"]
+};
+
 function init() {
 	searchListener();
 	graphReadyListerner();
@@ -95,10 +118,10 @@ function graphReadyListerner() {
 		if (parent.shaderGraph) {
 			// build the list of nodes
 			var menu = document.getElementById(contextMenuItemsClassName);
-			var types = parent.shaderGraph.nodeList();
-			for (var i = 0; i < types.length; i++) {
+			nodeTypes = parent.shaderGraph.nodeList();
+			for (var i = 0; i < nodeTypes.length; i++) {
 				var a = document.createElement("a");
-				a.type = a.innerHTML = types[i].type;
+				a.type = a.innerHTML = nodeTypes[i].type;
 				a.className = contextMenuItemClassName;
 				a.onclick = function () {
 					parent.shaderGraph.addNode({
@@ -109,6 +132,8 @@ function graphReadyListerner() {
 				menu.appendChild(a);
 			}
 		}
+
+		fuse = new ShaderGraph.Fuse(nodeTypes, fuseOptions);
 
 		parent.preview.onload = function(){
 			parent.shaderGraph.updateShader();
