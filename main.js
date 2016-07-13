@@ -48,11 +48,14 @@ function updateNodeList(type) {
 	var result = fuse.search(type);
 	for (var i = 0; i < items.length; i++) {
 		var item = items[i];
-		var found = false;
-		for (var j = 0; j < result.length; j++) {
-			if (item.innerHTML === result[j].type) {
-				found = true;
-				break;
+		var found = true;
+		if (type.length) {
+			found = false;
+			for (var j = 0; j < result.length; j++) {
+				if (item.innerHTML === result[j].type) {
+					found = true;
+					break;
+				}
 			}
 		}
 		if (found) {
