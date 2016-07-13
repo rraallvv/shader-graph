@@ -1,6 +1,7 @@
 (function(){
 
 var ignoreConnectionEvents = false;
+var batchRender = false;
 
 var NodeEditor = React.createClass({
 	getInitialState: function(){
@@ -105,6 +106,7 @@ var NodeEditor = React.createClass({
 	},
 	initialize: function(instance){
 		this.instance = instance;
+		batchRender = true;
 
 		// Find the main node
 		var fragColorNodeData = this.state.nodes.find(function(node){
@@ -123,10 +125,13 @@ var NodeEditor = React.createClass({
 			pos: [600, 300]
 		});
 
+		batchRender = false;
+
 		this.setState(this.state);
 	},
 	loadGraph: function(graph) {
 		this.instance.batch(function () {
+			batchRender = true;
 			var nodes = graph.nodes;
 			var ids = []
 			for (var i = 0; i < nodes.length; i++) {
@@ -138,21 +143,25 @@ var NodeEditor = React.createClass({
 				var portB = this._splitPort(links[i][1]);
 				this.connect(ids[portA[0]], portA[1], ids[portB[0]], portB[1]);
 			}
+			batchRender = false;
+			this.setState(this.state);
 		}.bind(this));
 	},
 	clearGraph: function() {
 		this.instance.batch(function () {
+			batchRender = true;
 			var nodes = this.state.nodes.slice(0);
 			for (var i = 0; i < nodes.length; i++) {
 				var node = nodes[i];
 				this.removeNode(node.id);
 			}
+			batchRender = false;
+			this.setState(this.state);
 		}.bind(this));
 	},
 	render: function() {
 		var nodes = this.state.nodes;
 		var shader = this.updateShader();
-		this.updateConnections();
 
 		return React.createElement("div", {id:"canvas", className:"style-scope shader-graph"},
 			nodes.map(function(node) {
@@ -167,6 +176,9 @@ var NodeEditor = React.createClass({
 			}, this)
 		);
 	},
+	componentDidUpdate: function() {
+		this.updateConnections();
+	},
 	nodeTypes: function(){
 		return Object.keys(ShaderGraph.Node.classes).sort().filter(function(type){
 			// Should not list the main node
@@ -175,7 +187,7 @@ var NodeEditor = React.createClass({
 	},
 	updateShader: function(){
 		// window._times = (window._times || 0) + 1, console.log(window._times);
-		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onUpdateShader === "function" && this.props.shaderGraph.onUpdateShader(this.shader);
+		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onShaderUpdate === "function" && this.props.shaderGraph.onShaderUpdate(this.shader);
 
 		return this.shader
 	},
@@ -273,7 +285,9 @@ var NodeEditor = React.createClass({
 
 		var state = this.state;
 		state.nodes.push(data);
-		this.setState(state);
+		if (!batchRender) {
+			this.setState(state);
+		}
 		return data.id;
 	},
 	removeNode: function(id){
@@ -310,7 +324,10 @@ var NodeEditor = React.createClass({
 		if(idx !== -1){
 			 state.nodes.splice(idx, 1);
 		}
-		this.setState(state);
+
+		if (!batchRender) {
+			this.setState(state);
+		}
 
 		return true;
 	},
@@ -322,7 +339,9 @@ var NodeEditor = React.createClass({
 			for(var key in data){
 				node[key] = data[key];
 			}
-			this.setState(this.state);
+			if (!batchRender) {
+				this.setState(this.state);
+			}
 		}
 	},
 	_splitPort: function(port) {
@@ -445,7 +464,11 @@ var NodeEditor = React.createClass({
 		}
 
 		state.links.push(link);
-		this.setState(state);
+
+		if (!batchRender) {
+			this.setState(state);
+		}
+
 		return true;
 	},
 	disconnect: function(nodeA, outputA, nodeB, inputB){
@@ -492,7 +515,9 @@ var NodeEditor = React.createClass({
 		});
 		*/
 
-		this.setState(state);
+		if (!batchRender) {
+			this.setState(state);
+		}
 	}
 });
 
