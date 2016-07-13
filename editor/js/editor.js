@@ -212,7 +212,7 @@ var NodeEditor = React.createClass({
 			return node.type === 'fragColor';
 		});
 
-		var shader = this.shader = new ShaderGraph.GraphShader({
+		this.shader = new ShaderGraph.GraphShader({
 			fragMainNode: new ShaderGraph.FragColorNode({
 				id: fragColorNodeData && fragColorNodeData.id
 			})
@@ -260,9 +260,9 @@ var NodeEditor = React.createClass({
 		}, this);
 
 		// window._times = (window._times || 0) + 1, console.log(window._times);
-		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onUpdateShader === "function" && this.props.shaderGraph.onUpdateShader(shader);
+		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onUpdateShader === "function" && this.props.shaderGraph.onUpdateShader(this.shader);
 
-		return shader
+		return this.shader
 	},
 	updateConnections: function(){
 		if(this.instance){
