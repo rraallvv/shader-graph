@@ -762,9 +762,7 @@ Editor.polymerElement({
 	},
 	nodeList: function() {
 		return this._editor.nodeTypes().map(function (type) {
-			var item = document.createElement("a");
-			item.type = item.innerHTML = type;
-			return item;
+			return { type: type };
 		});
 	},
 	loadGraph: function(data) {

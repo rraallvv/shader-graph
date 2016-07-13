@@ -95,17 +95,18 @@ function graphReadyListerner() {
 		if (parent.shaderGraph) {
 			// build the list of nodes
 			var menu = document.getElementById(contextMenuItemsClassName);
-			var items = parent.shaderGraph.nodeList();
-			for (var i = 0; i < items.length; i++) {
-				var item = items[i];
-				item.className = contextMenuItemClassName;
-				item.onclick = function () {
+			var types = parent.shaderGraph.nodeList();
+			for (var i = 0; i < types.length; i++) {
+				var a = document.createElement("a");
+				a.type = a.innerHTML = types[i].type;
+				a.className = contextMenuItemClassName;
+				a.onclick = function () {
 					parent.shaderGraph.addNode({
 						type: this.type,
 						pos: [clickCoordsX, clickCoordsY]
 					});
 				};
-				menu.appendChild(item);
+				menu.appendChild(a);
 			}
 		}
 
