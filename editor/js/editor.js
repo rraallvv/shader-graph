@@ -155,12 +155,6 @@ var NodeEditor = React.createClass({
 	initialize: function(instance){
 		this.instance = instance;
 
-		// Add the main node
-		this.addNode({
-			type: ShaderGraph.FragColorNode.type,
-			pos: [600, 300]
-		});
-
 		// Find the main node
 		var fragColorNodeData = this.state.nodes.find(function(node){
 			return node.type === 'fragColor';
@@ -170,6 +164,12 @@ var NodeEditor = React.createClass({
 			fragMainNode: new ShaderGraph.FragColorNode({
 				id: fragColorNodeData && fragColorNodeData.id
 			})
+		});
+
+		// Add the main node
+		this.addNode({
+			type: ShaderGraph.FragColorNode.type,
+			pos: [600, 300]
 		});
 
 		this.setState(this.state);
@@ -190,8 +190,13 @@ var NodeEditor = React.createClass({
 		}.bind(this));
 	},
 	clearGraph: function() {
-		// TODO
-		console.log("TODO");
+		this.instance.batch(function () {
+			var nodes = this.state.nodes.slice(0);
+			for (var i = 0; i < nodes.length; i++) {
+				var node = nodes[i];
+				this.removeNode(node.id);
+			}
+		}.bind(this));
 	},
 	render: function() {
 		var nodes = this.state.nodes;
@@ -718,9 +723,6 @@ var Node = React.createClass({
 		});
 	},
 	handleClickRemove: function(){
-		this.props.removeNode(this.props.data.id);
-	},
-	componentWillUnmount: function(){
 		this.props.removeNode(this.props.data.id);
 	}
 });
