@@ -142,14 +142,22 @@ Node.prototype.connect = function(key, targetNode, targetPortKey){
 Node.prototype.disconnect = function(key, targetNode, targetPortKey){
 	var conn = this.graph.connections.find(function(c){
 		return (
+			c.fromNode === this &&
+			c.fromPortKey === key &&
+			c.toNode === targetNode &&
+			c.toPortKey === targetPortKey
+		) || (
 			c.fromNode === targetNode &&
 			c.fromPortKey === targetPortKey &&
 			c.toNode === this &&
 			c.toPortKey === key
 		);
 	}, this);
-	if(conn)
+	if(conn) {
 		this.graph.removeConnection(conn);
+	} else {
+		throw new Error('Couldn\'t find connection');
+	}
 };
 
 Node.prototype.getAttributes = function(){

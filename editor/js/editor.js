@@ -333,11 +333,21 @@ var NodeEditor = React.createClass({
 		state.links.filter(function(link){
 			return link.nodeA == id || link.nodeB == id;
 		}).forEach(function(link){
+			var nA = this.shader.fragmentGraph.getNodeById(link.nodeA);
+			if(!nA) throw new Error('couldnt find node ' + link.nodeA);
+			var nB = this.shader.fragmentGraph.getNodeById(link.nodeB);
+			if(!nB) throw new Error('couldnt find node ' + link.nodeB);
+			nA.disconnect(link.outputA, nB, link.inputB);
+
 			var idx = state.links.indexOf(link);
 			if(idx !== -1){
 				state.links.splice(idx, 1);
 			}
-		});
+		}, this);
+
+		var node = this.shader.fragmentGraph.getNodeById(id);
+		if(!node) throw new Error('couldnt find node ' + id);
+		this.shader.fragmentGraph.removeNode(node);
 
 		var idx = state.nodes.indexOf(nodeToRemove);
 		if(idx !== -1){

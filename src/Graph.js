@@ -26,6 +26,8 @@ Graph.prototype.removeNode = function(node){
 	if(index !== -1){
 		this.nodes.splice(index, 1);
 		node.graph = null;
+	} else {
+		throw new Error('Couldn\'t find node');
 	}
 };
 
