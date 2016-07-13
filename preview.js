@@ -187,16 +187,14 @@ parent.preview = {
 		cc.game.run(option, onStart.bind(this));
 	},
 	updateShader: function(shaderDef){
-		if (shaderDef) {
-			// console.log(shaderDef.fshader());
-			if (cc.EffectPreview) {
-				var fs = shaderDef.fshader();
-				//fs = fs.split("uniform sampler2D texture12;").join("");
-				//fs = fs.split("texture12").join("CC_Texture0");
+		// console.log(shaderDef.fshader());
+		if (cc.EffectPreview) {
+			var fs = shaderDef.fshader();
+			//fs = fs.split("uniform sampler2D texture12;").join("");
+			//fs = fs.split("texture12").join("CC_Texture0");
 
-				cc.EffectPreview.frag_glsl = fs;
-				cc.EffectPreview.updateShader();
-			}
+			cc.EffectPreview.frag_glsl = fs;
+			cc.EffectPreview.updateShader();
 		}
 	}
 };
