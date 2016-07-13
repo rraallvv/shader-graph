@@ -79,67 +79,18 @@ var NodeEditor = React.createClass({
 			connector: "Bezier"
 		});
 
-		function getConnectionInfo(info){
-			var result = {};
-			var reg = /([^\d]+)(\d+)/;
-			if (typeof info.source !== "undefined") {
-				result.nodeA = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
-				result.outputA = info.source.innerHTML;
-			} else {
-				var m = info.sourceId.match(reg);
-				result.nodeA = m[2];
-				result.outputA = m[1];
-			}
-			if (typeof info.target !== "undefined") {
-				result.nodeB = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
-				result.inputB = info.target.innerHTML;
-			} else {
-				var m = info.targetId.match(reg);
-				result.nodeB = m[2];
-				result.inputB = m[1];
-			}
-			return result;
-		}
-
-		function getConnectionsInfo (con, id){
-			var existing = [];
-			if (con.length!=0 && document.getElementById(id).classList.contains("in")) {
-				for (var i = 0; i < con.length; i++) {
-					existing.push(getConnectionInfo(con[i]));
-				}
-			}
-			return existing;
-		}
-
 		instance.bind("click", function (c) {
 			if(!ignoreConnectionEvents){
-				var info = getConnectionInfo(c);
+				var info = component._getConnectionInfo(c);
 				component.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
 				//instance.detach(c);
 			}
 		});
 
 		instance.bind("beforeDrop", function (c) {
-			var existing = [], id, con;
-
-			id = c.targetId;
-			con = instance.getConnections({target:id});
-			existing = existing.concat(getConnectionsInfo(con, id));
-
-			id = c.sourceId;
-			con = instance.getConnections({target:id});
-			existing = existing.concat(getConnectionsInfo(con, id));
-
-			var info = getConnectionInfo(c);
-
 			if (!ignoreConnectionEvents) {
-				if (component.connect(info.nodeA, info.outputA, info.nodeB, info.inputB)) {
-					// disconnect existing links if is input
-					for (var i = 0; i < existing.length; i++) {
-						info = existing[i];
-						component.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
-					}
-				}
+				var info = component._getConnectionInfo(c);
+				component.connect(info.nodeA, info.outputA, info.nodeB, info.inputB);
 			}
 		});
 
@@ -382,6 +333,36 @@ var NodeEditor = React.createClass({
 		var split = string.split('.');
 		return [parseInt(split[0]), parseInt(split[1])];
 	},
+	_getConnectionInfo: function(info) {
+		var result = {};
+		var reg = /([^\d]+)(\d+)/;
+		if (typeof info.source !== "undefined") {
+			result.nodeA = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
+			result.outputA = info.source.innerHTML;
+		} else {
+			var m = info.sourceId.match(reg);
+			result.nodeA = m[2];
+			result.outputA = m[1];
+		}
+		if (typeof info.target !== "undefined") {
+			result.nodeB = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
+			result.inputB = info.target.innerHTML;
+		} else {
+			var m = info.targetId.match(reg);
+			result.nodeB = m[2];
+			result.inputB = m[1];
+		}
+		return result;
+	},
+	_getConnectionsInfo: function(con, id) {
+		var existing = [];
+		if (con.length!=0 && document.getElementById(id).classList.contains("in")) {
+			for (var i = 0; i < con.length; i++) {
+				existing.push(this._getConnectionInfo(con[i]));
+			}
+		}
+		return existing;
+	},
 	connect: function(nodeA, outputA, nodeB, inputB){
 		if(arguments.length === 2) {
 			var portA = this._splitPort(arguments[0]);
@@ -445,6 +426,22 @@ var NodeEditor = React.createClass({
 				outputA: outputA,
 				inputB: inputB
 			};
+		}
+
+		// remove existing connections for input ports
+		var existing = [], id, con;
+
+		id = outputA + nodeA;
+		con = this.instance.getConnections({target:id});
+		existing = existing.concat(this._getConnectionsInfo(con, id));
+
+		id = inputB + nodeB;
+		con = this.instance.getConnections({target:id});
+		existing = existing.concat(this._getConnectionsInfo(con, id));
+
+		for (var i = 0; i < existing.length; i++) {
+			var info = existing[i];
+			this.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
 		}
 
 		state.links.push(link);
