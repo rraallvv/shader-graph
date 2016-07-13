@@ -201,7 +201,7 @@ var NodeEditor = React.createClass({
 		return React.createElement("div", {id:"canvas", className:"style-scope shader-graph"},
 			nodes.map(function(node) {
 				return React.createElement(Node, {
-					onClickRemove:node.type !== 'fragColor' ? this.removeNode : undefined,
+					removeNode:node.type !== 'fragColor' ? this.removeNode : undefined,
 					updateNodeData:this.updateNodeData,
 					instance:this.instance,
 					key:node.id,
@@ -566,7 +566,7 @@ var Node = React.createClass({
 			});
 		}, this) : undefined;
 
-		var removeButton = this.props.onClickRemove ? React.createElement("span", {
+		var removeButton = this.props.removeNode ? React.createElement("span", {
 			className:"glyphicon glyphicon-remove remove-button pull-right style-scope shader-graph",
 			onClick:this.handleClickRemove
 		}) : undefined;
@@ -718,7 +718,10 @@ var Node = React.createClass({
 		});
 	},
 	handleClickRemove: function(){
-		this.props.onClickRemove(this.props.data.id);
+		this.props.removeNode(this.props.data.id);
+	},
+	componentWillUnmount: function(){
+		this.props.removeNode(this.props.data.id);
 	}
 });
 
