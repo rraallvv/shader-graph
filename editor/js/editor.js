@@ -161,6 +161,17 @@ var NodeEditor = React.createClass({
 			pos: [600, 300]
 		});
 
+		// Find the main node
+		var fragColorNodeData = this.state.nodes.find(function(node){
+			return node.type === 'fragColor';
+		});
+
+		this.shader = new ShaderGraph.GraphShader({
+			fragMainNode: new ShaderGraph.FragColorNode({
+				id: fragColorNodeData && fragColorNodeData.id
+			})
+		});
+
 		this.setState(this.state);
 	},
 	loadGraph: function(graph) {
@@ -206,59 +217,6 @@ var NodeEditor = React.createClass({
 		});
 	},
 	updateShader: function(){
-
-		// Find the main node
-		var fragColorNodeData = this.state.nodes.find(function(node){
-			return node.type === 'fragColor';
-		});
-
-		this.shader = new ShaderGraph.GraphShader({
-			fragMainNode: new ShaderGraph.FragColorNode({
-				id: fragColorNodeData && fragColorNodeData.id
-			})
-		});
-
-		// Add nodes that are not main nodes
-		this.state.nodes.filter(function(nodeData){
-			return nodeData.type !== 'fragColor';
-		}).forEach(function(nodeData){
-			var node = new ShaderGraph.Node.classes[nodeData.type]({
-				id: nodeData.id
-			});
-			this.shader.fragmentGraph.addNode(node);
-			switch(nodeData.type){
-			case 'value':
-				var v = parseFloat(nodeData.value);
-				node.value = isNaN(v) ? 0 : v;
-				break;
-			case 'vec2':
-			case 'vec3':
-			case 'vec4':
-				node.value = nodeData.value.map(function(comp){
-					var v = parseFloat(comp);
-					return isNaN(v) ? 0 : v;
-				});
-				break;
-			}
-		}, this);
-
-		// Connections
-		this.state.links.slice(0).forEach(function (link){
-			var nA = this.shader.fragmentGraph.getNodeById(link.nodeA);
-			var nB = this.shader.fragmentGraph.getNodeById(link.nodeB);
-			if(!nA) console.warn('couldnt find node ' + link.nodeA);
-			if(!nB) console.warn('couldnt find node ' + link.nodeB);
-
-			if(!nB.canConnect(link.inputB, nA, link.outputA)){
-				console.warn(nB.errorMessage);
-
-				// If it cannot be rebuilt we may as well remove it from the datamodel
-				this.disconnect(link.nodeA, link.outputA, link.nodeB, link.inputB);
-				return false;
-			}
-			nB.connect(link.inputB, nA, link.outputA);
-		}, this);
-
 		// window._times = (window._times || 0) + 1, console.log(window._times);
 		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onUpdateShader === "function" && this.props.shaderGraph.onUpdateShader(this.shader);
 
@@ -331,6 +289,31 @@ var NodeEditor = React.createClass({
 				break;
 			}
 		}
+
+		// Add nodes that are not main nodes
+		if (data.type !== 'fragColor') {
+			var node = new ShaderGraph.Node.classes[data.type]({
+				id: data.id
+			});
+			this.shader.fragmentGraph.addNode(node);
+			switch(data.type){
+			case 'value':
+				var v = parseFloat(data.value);
+				node.value = isNaN(v) ? 0 : v;
+				break;
+			case 'vec2':
+			case 'vec3':
+			case 'vec4':
+				node.value = data.value.map(function(comp){
+					var v = parseFloat(comp);
+					return isNaN(v) ? 0 : v;
+				});
+				break;
+			}
+
+			data.node = node;
+		}
+
 		var state = this.state;
 		state.nodes.push(data);
 		this.setState(state);
@@ -421,6 +404,8 @@ var NodeEditor = React.createClass({
 
 		var state = this.state;
 
+		var link;
+
 		if(!nB.canConnect(inputB, nA, outputA)){
 			if (!nA.canConnect(outputA, nB, inputB)) {
 				console.warn(nB.errorMessage);
@@ -428,26 +413,26 @@ var NodeEditor = React.createClass({
 			} else {
 				// make the connetion in opposite direction
 				nA.connect(outputA, nB, inputB);
-				state.links.push({
+				link = {
 					nodeA: nodeB,
 					nodeB: nodeA,
 					outputA: inputB,
 					inputB: outputA
-				});
+				};
 			}
 		} else {
 			// make the connetion as is
 			nB.connect(inputB, nA, outputA);
-			state.links.push({
+			link = {
 				nodeA: nodeA,
 				nodeB: nodeB,
 				outputA: outputA,
 				inputB: inputB
-			});
+			};
 		}
 
+		state.links.push(link);
 		this.setState(state);
-
 		return true;
 	},
 	disconnect: function(nodeA, outputA, nodeB, inputB){
@@ -677,7 +662,9 @@ var Node = React.createClass({
 	onChangeValue: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
 			value: evt.target.value
-		})
+		});
+		var v = parseFloat(this.props.data.value);
+		this.props.data.node.value = isNaN(v) ? 0 : v;
 	},
 	onChangeVec2Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -685,7 +672,11 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[0].value,
 				evt.target.parentNode.childNodes[1].value
 			]
-		})
+		});
+		this.props.data.node.value = this.props.data.value.map(function(comp){
+			var v = parseFloat(comp);
+			return isNaN(v) ? 0 : v;
+		});
 	},
 	onChangeVec3Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -694,7 +685,11 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[1].value,
 				evt.target.parentNode.childNodes[2].value
 			]
-		})
+		});
+		this.props.data.node.value = this.props.data.value.map(function(comp){
+			var v = parseFloat(comp);
+			return isNaN(v) ? 0 : v;
+		});
 	},
 	onChangeVec4Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -704,7 +699,11 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[2].value,
 				evt.target.parentNode.childNodes[3].value
 			]
-		})
+		});
+		this.props.data.node.value = this.props.data.value.map(function(comp){
+			var v = parseFloat(comp);
+			return isNaN(v) ? 0 : v;
+		});
 	},
 	handleClickRemove: function(){
 		this.props.onClickRemove(this.props.data.id);
