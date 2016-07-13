@@ -191,7 +191,7 @@ var NodeEditor = React.createClass({
 
 		return React.createElement("div", {id:"canvas", className:"style-scope shader-graph"},
 			nodes.map(function(node) {
-				return React.createElement(SGNode, {
+				return React.createElement(Node, {
 					onClickRemove:node.type !== 'fragColor' ? this.removeNode : undefined,
 					updateNodeData:this.updateNodeData,
 					instance:this.instance,
@@ -541,7 +541,7 @@ var Port = React.createClass({
 	}
 });
 
-var SGNode = React.createClass({
+var Node = React.createClass({
 	componentDidMount: function(){
 		var el = ReactDOM.findDOMNode(this);
 		var instance = this.props.instance;
