@@ -302,6 +302,7 @@ function toggleMenuOn() {
 		menuState = 1;
 		menu.classList.add( contextMenuActiveClassName );
 		document.getElementById(searchClassName).focus();
+		document.getElementById(contextMenuItemsClassName).scrollTop = 0;
 	}
 }
 
