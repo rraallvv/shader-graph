@@ -7473,11 +7473,7 @@
                         var aae = this._jsPlumb.instance.deriveEndpointAndAnchorSpec(this.connectionType);
                         if (aae.endpoints[1]) endpointToFloat = aae.endpoints[1];
                     }
-                    var centerAnchor = this._jsPlumb.instance.makeAnchor("Center");
-                    centerAnchor.isFloating = true;
-                    this._jsPlumb.floatingEndpoint = _makeFloatingEndpoint(this.getPaintStyle(), centerAnchor, endpointToFloat, this.canvas, placeholderInfo.element, _jsPlumb, _newEndpoint, this.scope);
-                    var _savedAnchor = this._jsPlumb.floatingEndpoint.anchor;
-
+                    this._jsPlumb.floatingEndpoint = _makeFloatingEndpoint(this.getPaintStyle(), this.anchor, endpointToFloat, this.canvas, placeholderInfo.element, _jsPlumb, _newEndpoint, this.scope);
 
                     if (jpc == null) {
 
@@ -7502,7 +7498,7 @@
                         jpc.pending = true;
                         jpc.addClass(_jsPlumb.draggingClass);
                         this._jsPlumb.floatingEndpoint.addClass(_jsPlumb.draggingClass);
-                        this._jsPlumb.floatingEndpoint.anchor = _savedAnchor;
+                        this._jsPlumb.floatingEndpoint.anchor.isFloating = true;
                         // fire an event that informs that a connection is being dragged
                         _jsPlumb.fire("connectionDrag", jpc);
 
@@ -12616,8 +12612,8 @@
         this.type = "Bezier";
 
         var _super = _jp.Connectors.AbstractBezierConnector.apply(this, arguments),
-            majorAnchor = params.curviness || 150,
-            minorAnchor = 10;
+            majorAnchor = typeof params.curviness === "function" ? params.curviness : function(){return params.curviness || 150;},
+            minorAnchor = params.snapThreshold || 10;
 
         this.getCurviness = function () {
             return majorAnchor;
@@ -12627,25 +12623,31 @@
             // determine if the two anchors are perpendicular to each other in their orientation.  we swap the control
             // points around if so (code could be tightened up)
             var perpendicular = soo[0] != too[0] || soo[1] == too[1],
-                p = [];
+                p = [],
+				t = too[0] + too[1],
+				s = soo[0] + soo[1],
+				d = [
+					sourceAnchorPosition[0] * t + targetAnchorPosition[0] * s,
+					sourceAnchorPosition[1] * t + targetAnchorPosition[1] * s
+				];
 
             if (!perpendicular) {
                 if (soo[0] === 0) // X
                     p.push(sourceAnchorPosition[0] < targetAnchorPosition[0] ? point[0] + minorAnchor : point[0] - minorAnchor);
-                else p.push(point[0] - (majorAnchor * soo[0]));
+                else p.push(point[0] - (majorAnchor(d) * soo[0]));
 
                 if (soo[1] === 0) // Y
                     p.push(sourceAnchorPosition[1] < targetAnchorPosition[1] ? point[1] + minorAnchor : point[1] - minorAnchor);
-                else p.push(point[1] + (majorAnchor * too[1]));
+                else p.push(point[1] + (majorAnchor(d) * too[1]));
             }
             else {
                 if (too[0] === 0) // X
                     p.push(targetAnchorPosition[0] < sourceAnchorPosition[0] ? point[0] + minorAnchor : point[0] - minorAnchor);
-                else p.push(point[0] + (majorAnchor * too[0]));
+                else p.push(point[0] + (majorAnchor(d) * too[0]));
 
                 if (too[1] === 0) // Y
                     p.push(targetAnchorPosition[1] < sourceAnchorPosition[1] ? point[1] + minorAnchor : point[1] - minorAnchor);
-                else p.push(point[1] + (majorAnchor * soo[1]));
+                else p.push(point[1] + (majorAnchor(d) * soo[1]));
             }
 
             return p;
