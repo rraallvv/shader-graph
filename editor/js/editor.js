@@ -96,6 +96,31 @@ var NodeEditor = React.createClass({
 		});
 
 		instance.bind("connectionAborted", function (c, e) {
+			var info = component._getConnectionInfo(c);
+			var nodeA = info.outputA;
+			var outputA = info.nodeA;
+			var isInput = component._isInput(outputA, nodeA);
+			var container = instance.getContainer();
+			var el = document.getElementById("temp");
+			if (el) {
+				component.instance.detachAllConnections(el);
+			} else {
+				el = document.createElement("span");
+				el.innerHTML = "temp";
+				el.className = "w " + (isInput ? "in" : "out");
+				el.id = "temp";
+				Polymer.dom(container).appendChild(el);
+			}
+			var bounds = container.getBoundingClientRect();
+			console.log(c, e);
+			el.style.left = e.clientX - bounds.left;
+			el.style.top = e.clientY - bounds.top;
+			instance.connect({
+				source: nodeA + outputA,
+				target: el.id,
+				type: isInput ? "basicLR" : "basicRL"
+			});
+			instance.revalidate(el);
 			if (!ignoreConnectionEvents) {
 				typeof component.props.shaderGraph !== "undefined" && typeof component.props.shaderGraph.onConnectionReleased === "function" && component.props.shaderGraph.onConnectionReleased(e);
 			}
