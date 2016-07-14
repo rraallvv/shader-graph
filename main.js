@@ -304,34 +304,23 @@ function searchListeners() {
 		if (code === 8 && this.innerHTML.length === 1) {
 			this.innerHTML = "";
 			e.preventDefault();
-		} else if (code === 38) {
+		} else if (code === 38 || code === 40) {
 			var container = document.getElementById(contextMenuItemsClassName);
 			var items = container.children;
 			var hovered = clearHoveredMenuItems();
 			var i = hovered, item;
-			while((item = items[--i]) && item.style.display === "none");
-			if (i < 0) {
-				i = items.length;
-				while(i > hovered && (item = items[--i]) && item.style.display === "none");
-			}
-			items[i].classList.add(contextMenuItemHoverClassName);
-			items[i].isHovered = true;
-			this.innerHTML = items[i].type;
-			placeCaretAtEnd(this);
-			var offsetHeight = items[i].offsetHeight;
-			var offsetTop = Math.floor(items[i].offsetTop / offsetHeight) * offsetHeight;
-			container.scrollTop = Math.min(container.scrollTop, offsetTop);
-			container.scrollTop = Math.max(container.scrollTop, offsetTop + offsetHeight - container.clientHeight);
-			e.preventDefault();
-		} else if (code === 40) {
-			var container = document.getElementById(contextMenuItemsClassName);
-			var items = container.children;
-			var hovered = clearHoveredMenuItems();
-			var i = hovered, item;
-			while((item = items[++i]) && item.style.display === "none");
-			if (i === items.length) {
-				i = -1;
-				while(i < hovered && (item = items[++i]) && item.style.display === "none");
+			if (code === 38) {
+				while((item = items[--i]) && item.style.display === "none");
+				if (i < 0) {
+					i = items.length;
+					while(i > hovered && (item = items[--i]) && item.style.display === "none");
+				}
+			} else {
+				while((item = items[++i]) && item.style.display === "none");
+				if (i === items.length) {
+					i = -1;
+					while(i < hovered && (item = items[++i]) && item.style.display === "none");
+				}
 			}
 			items[i].classList.add(contextMenuItemHoverClassName);
 			items[i].isHovered = true;
