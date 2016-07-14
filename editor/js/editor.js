@@ -385,7 +385,9 @@ var NodeEditor = React.createClass({
 		}
 		return result;
 	},
-	_getConnectionsInfo: function(con, id) {
+	_getExistingConnections: function(node, port) {
+		var id = port + node;
+		var con = this.instance.getConnections({target:id});
 		var existing = [];
 		if (con.length!=0 && document.getElementById(id).classList.contains("in")) {
 			for (var i = 0; i < con.length; i++) {
@@ -460,15 +462,10 @@ var NodeEditor = React.createClass({
 		}
 
 		// remove existing connections for input ports
-		var existing = [], id, con;
+		var existing = [];
 
-		id = outputA + nodeA;
-		con = this.instance.getConnections({target:id});
-		existing = existing.concat(this._getConnectionsInfo(con, id));
-
-		id = inputB + nodeB;
-		con = this.instance.getConnections({target:id});
-		existing = existing.concat(this._getConnectionsInfo(con, id));
+		existing = existing.concat(this._getExistingConnections(nodeA, outputA));
+		existing = existing.concat(this._getExistingConnections(nodeB, inputB));
 
 		for (var i = 0; i < existing.length; i++) {
 			var info = existing[i];
