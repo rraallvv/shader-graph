@@ -314,11 +314,14 @@ function searchListeners() {
 				i = items.length;
 				while(i > hovered && (item = items[--i]) && item.style.display === "none");
 			}
-			hovered = i;
-			items[hovered].classList.add(contextMenuItemHoverClassName);
-			items[hovered].isHovered = true;
-			this.innerHTML = items[hovered].type;
+			items[i].classList.add(contextMenuItemHoverClassName);
+			items[i].isHovered = true;
+			this.innerHTML = items[i].type;
 			placeCaretAtEnd(this);
+			var offsetHeight = items[i].offsetHeight;
+			var offsetTop = Math.floor(items[i].offsetTop / offsetHeight) * offsetHeight;
+			container.scrollTop = Math.min(container.scrollTop, offsetTop);
+			container.scrollTop = Math.max(container.scrollTop, offsetTop + offsetHeight - container.clientHeight);
 			e.preventDefault();
 		} else if (code === 40) {
 			var container = document.getElementById(contextMenuItemsClassName);
@@ -330,11 +333,14 @@ function searchListeners() {
 				i = -1;
 				while(i < hovered && (item = items[++i]) && item.style.display === "none");
 			}
-			hovered = i;
-			items[hovered].classList.add(contextMenuItemHoverClassName);
-			items[hovered].isHovered = true;
-			this.innerHTML = items[hovered].type;
+			items[i].classList.add(contextMenuItemHoverClassName);
+			items[i].isHovered = true;
+			this.innerHTML = items[i].type;
 			placeCaretAtEnd(this);
+			var offsetHeight = items[i].offsetHeight;
+			var offsetTop = Math.floor(items[i].offsetTop / offsetHeight) * offsetHeight;
+			container.scrollTop = Math.min(container.scrollTop, offsetTop);
+			container.scrollTop = Math.max(container.scrollTop, offsetTop + offsetHeight - container.clientHeight);
 			e.preventDefault();
 		}
 	};
