@@ -385,11 +385,19 @@ var NodeEditor = React.createClass({
 		}
 		return result;
 	},
+	_isInput: function(node, port) {
+		var id = port + node;
+		return document.getElementById(id).classList.contains("in");
+	},
+	_isOutput: function(node, port) {
+		var id = port + node;
+		return document.getElementById(id).classList.contains("out");
+	},
 	_getExistingConnections: function(node, port) {
 		var id = port + node;
 		var con = this.instance.getConnections({target:id});
 		var existing = [];
-		if (con.length!=0 && document.getElementById(id).classList.contains("in")) {
+		if (con.length!=0 && this._isInput(node, port)) {
 			for (var i = 0; i < con.length; i++) {
 				existing.push(this._getConnectionInfo(con[i]));
 			}
