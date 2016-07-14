@@ -79,6 +79,26 @@ function clearHoveredMenuItems() {
 	return hovered;
 }
 
+function placeCaretAtEnd(element) {
+    element.focus();
+    if (typeof window.getSelection != "undefined"
+            && typeof document.createRange != "undefined") {
+        var range = document.createRange();
+        range.selectNodeContents(element);
+        range.collapse(false);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    } else if (typeof document.body.createTextRange != "undefined") {
+        var textRange = document.body.createTextRange();
+        textRange.moveToElementText(element);
+        textRange.collapse(false);
+        textRange.select();
+    }
+}
+
+
+
 var contextMenuClassName = "context-menu";
 var contextMenuItemClassName = "menu-item";
 var contextMenuItemHoverClassName = "menu-item-hover";
@@ -285,7 +305,8 @@ function searchListeners() {
 			this.innerHTML = "";
 			e.preventDefault();
 		} else if (code === 38) {
-			var items = document.getElementById(contextMenuItemsClassName).children;
+			var container = document.getElementById(contextMenuItemsClassName);
+			var items = container.children;
 			var hovered = clearHoveredMenuItems();
 			var i = hovered, item;
 			while((item = items[--i]) && item.style.display === "none");
@@ -296,8 +317,12 @@ function searchListeners() {
 			hovered = i;
 			items[hovered].classList.add(contextMenuItemHoverClassName);
 			items[hovered].isHovered = true;
+			this.innerHTML = items[hovered].type;
+			placeCaretAtEnd(this);
+			e.preventDefault();
 		} else if (code === 40) {
-			var items = document.getElementById(contextMenuItemsClassName).children;
+			var container = document.getElementById(contextMenuItemsClassName);
+			var items = container.children;
 			var hovered = clearHoveredMenuItems();
 			var i = hovered, item;
 			while((item = items[++i]) && item.style.display === "none");
@@ -308,10 +333,16 @@ function searchListeners() {
 			hovered = i;
 			items[hovered].classList.add(contextMenuItemHoverClassName);
 			items[hovered].isHovered = true;
+			this.innerHTML = items[hovered].type;
+			placeCaretAtEnd(this);
+			e.preventDefault();
 		}
 	};
 	document.getElementById(searchClassName).onkeyup = function(e) {
-		updateNodeList(this.innerHTML)
+		var code = e.keyCode || e.which;
+		if (code !== 38 && code !== 40) {
+			updateNodeList(this.innerHTML);
+		}
 	};
 }
 
