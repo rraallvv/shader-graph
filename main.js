@@ -66,8 +66,22 @@ function updateNodeList(type) {
 	}
 }
 
+function clearHoveredMenuItems() {
+	var items = document.getElementById(contextMenuItemsClassName).children;
+	var hovered = -1;
+	for (var i = 0; i < items.length; i++) {
+		if (items[i].isHovered) {
+			items[i].classList.remove(contextMenuItemHoverClassName);
+			items[i].isHovered = false;
+			hovered = i;
+		}
+	}
+	return hovered;
+}
+
 var contextMenuClassName = "context-menu";
 var contextMenuItemClassName = "menu-item";
+var contextMenuItemHoverClassName = "menu-item-hover";
 var contextMenuItemsClassName = "menu-items";
 var contextMenuActiveClassName = "context-menu--active";
 
@@ -132,6 +146,20 @@ function graphReadyListerner() {
 						pos: [clickCoordsX, clickCoordsY]
 					});
 				};
+				a.onmouseover = function () {
+					clearHoveredMenuItems();
+					this.isHovered = true;
+					this.classList.add(contextMenuItemHoverClassName);
+				}
+				a.onmouseout = function () {
+					this.isHovered = false;
+					this.classList.remove(contextMenuItemHoverClassName);
+				}
+				a.onmousemove = function (e) {
+					if (!this.isHovered) {
+						this.onmouseover(e);
+					}
+				}
 				menu.appendChild(a);
 			}
 		}
@@ -256,6 +284,30 @@ function searchListeners() {
 		if (code === 8 && this.innerHTML.length === 1) {
 			this.innerHTML = "";
 			e.preventDefault();
+		} else if (code === 38) {
+			var items = document.getElementById(contextMenuItemsClassName).children;
+			var hovered = clearHoveredMenuItems();
+			var i = hovered, item;
+			while((item = items[--i]) && item.style.display === "none");
+			if (i < 0) {
+				i = items.length;
+				while(i > hovered && (item = items[--i]) && item.style.display === "none");
+			}
+			hovered = i;
+			items[hovered].classList.add(contextMenuItemHoverClassName);
+			items[hovered].isHovered = true;
+		} else if (code === 40) {
+			var items = document.getElementById(contextMenuItemsClassName).children;
+			var hovered = clearHoveredMenuItems();
+			var i = hovered, item;
+			while((item = items[++i]) && item.style.display === "none");
+			if (i === items.length) {
+				i = -1;
+				while(i < hovered && (item = items[++i]) && item.style.display === "none");
+			}
+			hovered = i;
+			items[hovered].classList.add(contextMenuItemHoverClassName);
+			items[hovered].isHovered = true;
 		}
 	};
 	document.getElementById(searchClassName).onkeyup = function(e) {

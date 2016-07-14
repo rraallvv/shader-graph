@@ -90,7 +90,7 @@ body {
 	color: #0066aa;
 	text-decoration: none;
 }
-.menu-item:hover {
+.menu-item-hover {
 	color: #fff;
 	background-color: #0066aa;
 }
