@@ -362,16 +362,22 @@ var NodeEditor = React.createClass({
 		var result = {};
 		var reg = /([^\d]+)(\d+)/;
 		if (typeof info.source !== "undefined") {
-			result.nodeA = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
-			result.outputA = info.source.innerHTML;
+			var attributes = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'];
+			if (attributes) {
+				result.nodeA = attributes.value;
+				result.outputA = info.source.innerHTML;
+			}
 		} else {
 			var m = info.sourceId.match(reg);
 			result.nodeA = m[2];
 			result.outputA = m[1];
 		}
 		if (typeof info.target !== "undefined") {
-			result.nodeB = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
-			result.inputB = info.target.innerHTML;
+			var attributes = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'];
+			if (attributes) {
+				result.nodeB = attributes.value;
+				result.inputB = info.target.innerHTML;
+			}
 		} else {
 			var m = info.targetId.match(reg);
 			result.nodeB = m[2];
