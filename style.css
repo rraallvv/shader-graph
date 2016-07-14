@@ -98,6 +98,10 @@ body {
 .search {
 	margin: 0;
 	height: 25px;
+	width: 100%;
+	border: solid 1px #dfdfdf;
+	display: inline-block;
+	outline: 0;
 }
 
 input[type="text"] {

@@ -107,7 +107,7 @@ var fuseOptions = {
 };
 
 function init() {
-	searchListener();
+	searchListeners();
 	graphReadyListerner();
 	contextListener();
 	clickListener();
@@ -244,9 +244,22 @@ function graphReadyListerner() {
 	});
 }
 
-function searchListener() {
+function searchListeners() {
+	document.getElementById(searchClassName).onkeypress = function(e) {
+		var code = e.keyCode || e.which;
+		if (code === 13) {
+			e.preventDefault();
+		}
+	};
+	document.getElementById(searchClassName).onkeydown = function(e) {
+		var code = e.keyCode || e.which;
+		if (code === 8 && this.innerHTML.length === 1) {
+			this.innerHTML = "";
+			e.preventDefault();
+		}
+	};
 	document.getElementById(searchClassName).onkeyup = function(e) {
-		updateNodeList(this.value)
+		updateNodeList(this.innerHTML)
 	};
 }
 
