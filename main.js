@@ -426,6 +426,7 @@ function toggleMenuOff() {
 		searchField.innerHTML = "";
 		updateNodeList("");
 		clearHoveredMenuItems();
+		parent.shaderGraph.clearTempConnection();
 	}
 }
 

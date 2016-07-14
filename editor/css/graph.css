@@ -59,6 +59,11 @@
 .demo {
 	touch-action: none;
 }
+.temp {
+	padding: 0;
+	position: absolute;
+	display: node;
+}
 .w {
 	padding: 0;
 	position: absolute;

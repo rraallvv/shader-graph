@@ -106,13 +106,14 @@ var NodeEditor = React.createClass({
 				component.instance.detachAllConnections(el);
 			} else {
 				el = document.createElement("span");
-				el.innerHTML = "temp";
-				el.className = "w " + (isInput ? "in" : "out");
+				el.className = "temp " + isInput ? "in" : "out";
 				el.id = "temp";
+				el.style.position = "absolute";
+				el.style.width = 0;
+				el.style.height = 20;
 				Polymer.dom(container).appendChild(el);
 			}
 			var bounds = container.getBoundingClientRect();
-			console.log(c, e);
 			el.style.left = e.clientX - bounds.left;
 			el.style.top = e.clientY - bounds.top;
 			instance.connect({
@@ -209,6 +210,12 @@ var NodeEditor = React.createClass({
 	},
 	componentDidUpdate: function() {
 		this.updateConnections();
+	},
+	clearTempConnection: function() {
+		var el = document.getElementById("temp")
+		if (el) {
+			this.instance.detachAllConnections(el);
+		}
 	},
 	nodeTypes: function(){
 		return Object.keys(ShaderGraph.Node.classes).sort().filter(function(type){
@@ -820,6 +827,9 @@ Editor.polymerElement({
 		pos[1] -= b.top;
 		e.pos = pos;
 		this._editor.addNode(e);
+	},
+	clearTempConnection: function() {
+		this._editor.clearTempConnection();
 	},
 	setTransform: function( s, r, n, t ){
 		// s = 1, r = 1, n = 0, t = 0;
