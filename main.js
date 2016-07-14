@@ -191,7 +191,9 @@ function graphReadyListerner() {
 		parent.preview.onload = function(){
 			parent.shaderGraph.updateShader();
 		};
+		
 		parent.preview.init();
+
 		parent.shaderGraph.onShaderUpdate = function(shader){
 			var shaderDef = shader.buildShader()
 			var source = document.getElementById("source");
@@ -211,6 +213,11 @@ function graphReadyListerner() {
 			prettyPrint();
 
 			parent.preview.updateShader(shaderDef);
+		};
+
+		parent.shaderGraph.onConnectionReleased = function(e) {
+			toggleMenuOn();
+			positionMenu(e);
 		};
 		
 		//*

@@ -95,6 +95,12 @@ var NodeEditor = React.createClass({
 			}
 		});
 
+		instance.bind("connectionAborted", function (c, e) {
+			if (!ignoreConnectionEvents) {
+				typeof component.props.shaderGraph !== "undefined" && typeof component.props.shaderGraph.onConnectionReleased === "function" && component.props.shaderGraph.onConnectionReleased(e);
+			}
+		});
+
 		console.log('Mount node editor')
 
 		// suspend drawing and initialize.
