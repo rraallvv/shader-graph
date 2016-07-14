@@ -97,7 +97,12 @@ function placeCaretAtEnd(element) {
     }
 }
 
-
+function addNode(type) {
+	parent.shaderGraph.addNode({
+		type: type,
+		pos: [clickCoordsX, clickCoordsY]
+	});
+}
 
 var contextMenuClassName = "context-menu";
 var contextMenuItemClassName = "menu-item";
@@ -161,10 +166,7 @@ function graphReadyListerner() {
 				a.type = a.innerHTML = nodeTypes[i].type;
 				a.className = contextMenuItemClassName;
 				a.onclick = function () {
-					parent.shaderGraph.addNode({
-						type: this.type,
-						pos: [clickCoordsX, clickCoordsY]
-					});
+					addNode(this.type);
 				};
 				a.onmouseover = function () {
 					clearHoveredMenuItems();
@@ -296,6 +298,16 @@ function searchListeners() {
 	document.getElementById(searchClassName).onkeypress = function(e) {
 		var code = e.keyCode || e.which;
 		if (code === 13) {
+			var type = this.innerHTML;
+			var result = nodeTypes.filter(function(node){
+				return node.type === type;
+			});
+			if (result.length) {
+				addNode(type)
+				toggleMenuOff();
+			} else {
+				throw Error("Type '" + type + "' is not a valid type");
+			}
 			e.preventDefault();
 		}
 	};
