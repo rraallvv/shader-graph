@@ -124,6 +124,9 @@ input[type="text"] {
 	float:left;
 
 	overflow: hidden;
+
+	border: solid 1px black;
+	background-color: black;
 }
 
 #source {
