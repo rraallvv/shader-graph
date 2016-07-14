@@ -304,10 +304,10 @@ function searchListeners() {
 			});
 			if (result.length) {
 				addNode(type)
-				toggleMenuOff();
 			} else {
-				throw Error("Type '" + type + "' is not a valid type");
+				console.error("Type '" + type + "' is not a valid type");
 			}
+			toggleMenuOff();
 			e.preventDefault();
 		}
 	};
@@ -403,6 +403,7 @@ function resizeListener() {
 function toggleMenuOn() {
 	if ( menuState !== 1 ) {
 		menuState = 1;
+		document.getElementById(searchClassName).innerHTML = "";
 		menu.classList.add( contextMenuActiveClassName );
 		document.getElementById(searchClassName).focus();
 		document.getElementById(contextMenuItemsClassName).scrollTop = 0;
@@ -413,8 +414,11 @@ function toggleMenuOff() {
 	if ( menuState !== 0 ) {
 		menuState = 0;
 		menu.classList.remove( contextMenuActiveClassName );
-		document.getElementById(searchClassName).value = "";
+		var searchField = document.getElementById(searchClassName);
+		searchField.value = "";
+		searchField.innerHTML = "";
 		updateNodeList("");
+		clearHoveredMenuItems();
 	}
 }
 
