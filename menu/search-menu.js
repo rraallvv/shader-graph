@@ -146,7 +146,7 @@ Editor.polymerElement({
 		}
 	},
 	clearHoveredMenuItems: function() {
-		var items = document.getElementById(contextMenuItemsClassName).children;
+		var items = this.$[contextMenuItemsClassName].children;
 		var hovered = -1;
 		for (var i = 0; i < items.length; i++) {
 			if (items[i].isHovered) {
@@ -176,7 +176,8 @@ Editor.polymerElement({
 	},
 	_initSearchListeners: function() {
 		var self = this;
-		document.getElementById(searchClassName).onkeypress = function(e) {
+		var el = this.$[searchClassName];
+		el.onkeypress = function(e) {
 			var code = e.keyCode || e.which;
 			if (code === 13) {
 				var type = this.innerHTML;
@@ -192,13 +193,13 @@ Editor.polymerElement({
 				e.preventDefault();
 			}
 		};
-		document.getElementById(searchClassName).onkeydown = function(e) {
+		el.onkeydown = function(e) {
 			var code = e.keyCode || e.which;
 			if (code === 8 && this.innerHTML.length === 1) {
 				this.innerHTML = "";
 				e.preventDefault();
 			} else if (code === 38 || code === 40) {
-				var container = document.getElementById(contextMenuItemsClassName);
+				var container = self.$[contextMenuItemsClassName];
 				var items = container.children;
 				var hovered = self.clearHoveredMenuItems();
 				var i = hovered, item;
@@ -226,7 +227,7 @@ Editor.polymerElement({
 				e.preventDefault();
 			}
 		};
-		document.getElementById(searchClassName).onkeyup = function(e) {
+		el.onkeyup = function(e) {
 			var code = e.keyCode || e.which;
 			if (code !== 38 && code !== 40) {
 				self.updateNodeList(this.innerHTML);
@@ -282,17 +283,17 @@ Editor.polymerElement({
 	toggleMenuOn: function() {
 		if ( menuState !== 1 ) {
 			menuState = 1;
-			document.getElementById(searchClassName).innerHTML = "";
+			this.$[searchClassName].innerHTML = "";
 			menu.classList.add( contextMenuActiveClassName );
-			document.getElementById(searchClassName).focus();
-			document.getElementById(contextMenuItemsClassName).scrollTop = 0;
+			this.$[searchClassName].focus();
+			this.$[contextMenuItemsClassName].scrollTop = 0;
 		}
 	},
 	toggleMenuOff: function() {
 		if ( menuState !== 0 ) {
 			menuState = 0;
 			menu.classList.remove( contextMenuActiveClassName );
-			var searchField = document.getElementById(searchClassName);
+			var searchField = this.$[searchClassName];
 			searchField.value = "";
 			searchField.innerHTML = "";
 			this.updateNodeList("");
