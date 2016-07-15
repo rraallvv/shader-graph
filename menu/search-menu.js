@@ -42,7 +42,7 @@ Editor.polymerElement({
 		this._initSearchListeners();
 		this._initContextListener();
 		this._initClickListener();
-		this._initKeyupListener();
+		this._initKeydownListener();
 		this._initResizeListener();
 	},
 	properties: {
@@ -178,8 +178,7 @@ Editor.polymerElement({
 		var self = this;
 		var el = this.$[searchClassName];
 		el.onkeypress = function(e) {
-			var code = e.keyCode || e.which;
-			if (code === 13) {
+			if (e.keyCode === 13) {
 				var type = this.innerHTML;
 				var result = nodeTypes.filter(function(node){
 					return node.type === type;
@@ -194,7 +193,7 @@ Editor.polymerElement({
 			}
 		};
 		el.onkeydown = function(e) {
-			var code = e.keyCode || e.which;
+			var code = e.keyCode;
 			if (code === 8 && this.innerHTML.length === 1) {
 				this.innerHTML = "";
 				e.preventDefault();
@@ -228,7 +227,7 @@ Editor.polymerElement({
 			}
 		};
 		el.onkeyup = function(e) {
-			var code = e.keyCode || e.which;
+			var code = e.keyCode;
 			if (code !== 38 && code !== 40) {
 				self.updateNodeList(this.innerHTML);
 			}
@@ -245,7 +244,7 @@ Editor.polymerElement({
 				self.positionMenu(e);
 			} else {
 				inContext = null;
-				toggleMenuOff();
+				self.toggleMenuOff();
 			}
 		});
 	},
@@ -267,10 +266,11 @@ Editor.polymerElement({
 			}
 		});
 	},
-	_initKeyupListener: function() {
-		window.onkeyup = function(e) {
+	_initKeydownListener: function() {
+		var self = this;
+		window.onkeydown = function(e) {
 			if ( e.keyCode === 27 ) {
-				toggleMenuOff();
+				self.toggleMenuOff();
 			}
 		}
 	},
