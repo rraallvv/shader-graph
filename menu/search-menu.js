@@ -26,7 +26,7 @@ var graphInContext;
 var clickCoordsX;
 var clickCoordsY;
 
-var menu = document.querySelector("#context-menu");
+var menu;
 var menuState = 0;
 var menuWidth;
 var menuHeight;
@@ -204,6 +204,7 @@ function graphReadyListerner() {
 
 Editor.polymerElement({
 	ready: function() {
+		menu = document.querySelector("#context-menu")
 		this._initSearchListeners();
 		// graphReadyListerner();
 		this._initContextListener();
