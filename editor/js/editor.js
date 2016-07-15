@@ -96,37 +96,52 @@ var NodeEditor = React.createClass({
 		});
 
 		instance.bind("connectionAborted", function (c, e) {
-			var info = component._tempLink = component._getConnectionInfo(c);
-			if (typeof info.nodeB !== "undefined") {
-				return;
-			}
-			var nodeA = info.outputA;
-			var outputA = info.nodeA;
-			var isInput = component._isInput(outputA, nodeA);
-			var container = instance.getContainer();
-			var el = document.getElementById("temp");
-			if (el) {
-				component.instance.detachAllConnections(el);
-			} else {
-				el = document.createElement("span");
-				el.className = "temp " + isInput ? "in" : "out";
-				el.id = "temp";
-				el.style.position = "absolute";
-				el.style.width = 0;
-				el.style.height = 20;
-				Polymer.dom(container).appendChild(el);
-			}
-			var bounds = container.getBoundingClientRect();
-			el.style.left = e.clientX - bounds.left;
-			el.style.top = e.clientY - bounds.top;
-			instance.connect({
-				source: nodeA + outputA,
-				target: el.id,
-				type: isInput ? "basicLR" : "basicRL"
-			});
-			instance.revalidate(el);
 			if (!ignoreConnectionEvents) {
-				typeof component.props.shaderGraph !== "undefined" && typeof component.props.shaderGraph.onConnectionReleased === "function" && component.props.shaderGraph.onConnectionReleased(e);
+				var info = component._tempLink = component._getConnectionInfo(c);
+
+				// If it was droped on a node just abort
+				if (typeof info.nodeB !== "undefined") {
+					return;
+				}
+
+				// If returned true or undefined onConnectionReleased release too, i.e. abort
+				if (typeof component.props.shaderGraph !== "undefined" && typeof component.props.shaderGraph.onConnectionReleased === "function") {
+					var aborted = component.props.shaderGraph.onConnectionReleased(e);
+					if (typeof aborted === "undefined" || aborted) {
+						return;
+					}
+				}
+
+				// Create or reuse the temporarty connection node
+				var nodeA = info.outputA;
+				var outputA = info.nodeA;
+				var isInput = component._isInput(outputA, nodeA);
+				var container = instance.getContainer();
+				var el = document.getElementById("temp");
+				if (el) {
+					component.instance.detachAllConnections(el);
+				} else {
+					el = document.createElement("span");
+					el.className = "temp " + isInput ? "in" : "out";
+					el.id = "temp";
+					el.style.position = "absolute";
+					el.style.width = 0;
+					el.style.height = 20;
+					Polymer.dom(container).appendChild(el);
+				}
+
+				// Get the click coordinates relative to the container
+				var bounds = container.getBoundingClientRect();
+				el.style.left = e.clientX - bounds.left;
+				el.style.top = e.clientY - bounds.top;
+
+				// Create the temporary connection
+				instance.connect({
+					source: nodeA + outputA,
+					target: el.id,
+					type: isInput ? "basicLR" : "basicRL"
+				});
+				instance.revalidate(el);
 			}
 		});
 

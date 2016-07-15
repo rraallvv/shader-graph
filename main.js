@@ -220,6 +220,7 @@ function graphReadyListerner() {
 		parent.shaderGraph.onConnectionReleased = function(e) {
 			toggleMenuOn();
 			positionMenu(e);
+			return false;
 		};
 		
 		//*
