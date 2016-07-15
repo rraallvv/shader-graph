@@ -96,7 +96,10 @@ var NodeEditor = React.createClass({
 		});
 
 		instance.bind("connectionAborted", function (c, e) {
-			var info = component._getConnectionInfo(c);
+			var info = component._tempLink = component._getConnectionInfo(c);
+			if (typeof info.nodeB !== "undefined") {
+				return;
+			}
 			var nodeA = info.outputA;
 			var outputA = info.nodeA;
 			var isInput = component._isInput(outputA, nodeA);
@@ -212,6 +215,7 @@ var NodeEditor = React.createClass({
 		this.updateConnections();
 	},
 	clearTempConnection: function() {
+		this._tempLink = null;
 		var el = document.getElementById("temp")
 		if (el) {
 			this.instance.detachAllConnections(el);
@@ -326,6 +330,22 @@ var NodeEditor = React.createClass({
 		if (!batchRender) {
 			this.setState(state);
 		}
+
+		// If there is a temporary connection attach it to the new node
+		if (this._tempLink) {
+			var nodeA = this._tempLink.nodeA;
+			var portA = this._tempLink.outputA;
+			var nodeB = data.id;
+			if (this._isOutput(nodeA, portA)) {
+				var portB = ShaderGraph.Node.classes[data.type].prototype.getInputPorts()[0];
+				this.connect(nodeB, portB, nodeA, portA);
+			} else {
+				var portB = ShaderGraph.Node.classes[data.type].prototype.getOutputPorts()[0];
+				this.connect(nodeB, portB, nodeA, portA);
+			}
+			this.clearTempConnection();
+		}
+
 		return data.id;
 	},
 	removeNode: function(id){
