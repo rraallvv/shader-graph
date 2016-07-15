@@ -12,6 +12,7 @@
 
 		<link rel="import" href="../polymer/polymer.html">
 		<link rel="import" href="editor/shader-graph.html">
+		<link rel="import" href="menu/search-menu.html">
 	</head>
 <body>
 	<div id="toolbar">
@@ -20,10 +21,7 @@
 		<pre id="source" class="prettyprint lang-glsl linenums"></pre>
 	</div>
 	<shader-graph id="graph" class="graph"></shader-graph>
-	<nav id="context-menu" class="context-menu">
-		<span contentEditable="true" id="search" class="search"></span>
-		<div id="menu-items"></div>
-	</nav>
+	<search-menu id="context-menu" class="context-menu"></search-menu>
 	<script src="google-code-prettify/prettify.js"></script>
 	<script src="main.js"></script>
 </body>

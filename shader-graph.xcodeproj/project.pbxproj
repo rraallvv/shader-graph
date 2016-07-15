@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		E40565871D394E4E00CE6325 /* menu */ = {isa = PBXFileReference; lastKnownFileType = folder; path = menu; sourceTree = "<group>"; };
 		E41C5ABF1D1CE07000B5143F /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
 		E41C5AC01D1CE08200B5143F /* editor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = editor; sourceTree = "<group>"; };
 		E42640AB1D2C71FE0022702E /* index.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
@@ -26,6 +27,7 @@
 			isa = PBXGroup;
 			children = (
 				E41C5AC01D1CE08200B5143F /* editor */,
+				E40565871D394E4E00CE6325 /* menu */,
 				E41C5ABF1D1CE07000B5143F /* src */,
 				E4D095C71D34854B00BD4705 /* js */,
 				E4EE05731D29BADF00964AFA /* package.json */,

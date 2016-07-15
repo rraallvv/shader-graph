@@ -1,7 +1,7 @@
 (function() {
 
 "use strict";
-/*
+
 function clickInsideElement( e, className ) {
 	var el = document.getElementsByClassName(className)[0];
 
@@ -96,17 +96,14 @@ function placeCaretAtEnd(element) {
         textRange.select();
     }
 }
-*/
+/*
 function addNode(type) {
 	parent.shaderGraph.addNode({
 		type: type,
 		pos: [clickCoordsX, clickCoordsY]
 	});
 }
-
-var nodeTypes = [];
-
-/*
+*/
 var contextMenuClassName = "context-menu";
 var contextMenuItemClassName = "menu-item";
 var contextMenuItemHoverClassName = "menu-item-hover";
@@ -133,6 +130,8 @@ var menuPositionY;
 var clientRight;
 var clientBottom;
 
+var nodeTypes = [];
+
 var fuse;
 var fuseOptions = {
   caseSensitive: false,
@@ -145,25 +144,23 @@ var fuseOptions = {
   maxPatternLength: 32,
   keys: ["type"]
 };
-*/
-function init() {
-	//searchListeners();
-	graphReadyListerner();
-	//contextListener();
-	//clickListener();
-	//keyupListener();
-	//resizeListener();
-}
 
+function init() {
+	searchListeners();
+	// graphReadyListerner();
+	contextListener();
+	clickListener();
+	keyupListener();
+	resizeListener();
+}
+/*
 function graphReadyListerner() {
 	window.addEventListener('WebComponentsReady', function(e) {
 		parent.shaderGraph = document.getElementById("graph");
 		if (parent.shaderGraph) {
-			nodeTypes = parent.shaderGraph.nodeList();
-			document.getElementById("context-menu").buildMenu(nodeTypes);
 			// build the list of nodes
-			/*
 			var menu = document.getElementById(contextMenuItemsClassName);
+			nodeTypes = parent.shaderGraph.nodeList();
 			for (var i = 0; i < nodeTypes.length; i++) {
 				var a = document.createElement("a");
 				a.type = a.innerHTML = nodeTypes[i].type;
@@ -189,9 +186,7 @@ function graphReadyListerner() {
 				}
 				menu.appendChild(a);
 			}
-			*/
 		}
-		return;
 
 		fuse = new ShaderGraph.Fuse(nodeTypes, fuseOptions);
 
@@ -308,7 +303,7 @@ function graphReadyListerner() {
 		}
 	});
 }
-/*
+*/
 function searchListeners() {
 	document.getElementById(searchClassName).onkeypress = function(e) {
 		var code = e.keyCode || e.which;
@@ -465,7 +460,39 @@ function positionMenu(e) {
 		menu.style.top = clickCoordsY + clientTop + "px";
 	}
 }
-*/
-init();
+
+Editor.polymerElement({
+	ready: function() {
+		init();
+	},
+	buildMenu: function(items) {
+		var menu = Polymer.dom(this.$[contextMenuItemsClassName]);
+		for (var i = 0; i < items.length; i++) {
+			var a = document.createElement("a");
+			a.type = a.innerHTML = items[i].type;
+			a.className = contextMenuItemClassName;
+			a.onclick = function (e) {
+				addNode(this.type);
+				toggleMenuOff();
+				e.stopPropagation();
+			};
+			a.onmouseover = function () {
+				clearHoveredMenuItems();
+				this.isHovered = true;
+				this.classList.add(contextMenuItemHoverClassName);
+			}
+			a.onmouseout = function () {
+				this.isHovered = false;
+				this.classList.remove(contextMenuItemHoverClassName);
+			}
+			a.onmousemove = function (e) {
+				if (!this.isHovered) {
+					this.onmouseover(e);
+				}
+			}
+			menu.appendChild(a);
+		}
+	}
+});
 
 })();
