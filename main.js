@@ -97,12 +97,6 @@ function placeCaretAtEnd(element) {
     }
 }
 */
-function addNode(type) {
-	parent.shaderGraph.addNode({
-		type: type,
-		pos: [clickCoordsX, clickCoordsY]
-	});
-}
 
 var nodeTypes = [];
 
@@ -158,40 +152,18 @@ function init() {
 function graphReadyListerner() {
 	window.addEventListener('WebComponentsReady', function(e) {
 		parent.shaderGraph = document.getElementById("graph");
+		var menu = document.getElementById("context-menu")
 		if (parent.shaderGraph) {
 			nodeTypes = parent.shaderGraph.nodeList();
-			document.getElementById("context-menu").buildMenu(nodeTypes);
-			// build the list of nodes
-			/*
-			var menu = document.getElementById(contextMenuItemsClassName);
-			for (var i = 0; i < nodeTypes.length; i++) {
-				var a = document.createElement("a");
-				a.type = a.innerHTML = nodeTypes[i].type;
-				a.className = contextMenuItemClassName;
-				a.onclick = function (e) {
-					addNode(this.type);
-					toggleMenuOff();
-					e.stopPropagation();
-				};
-				a.onmouseover = function () {
-					clearHoveredMenuItems();
-					this.isHovered = true;
-					this.classList.add(contextMenuItemHoverClassName);
-				}
-				a.onmouseout = function () {
-					this.isHovered = false;
-					this.classList.remove(contextMenuItemHoverClassName);
-				}
-				a.onmousemove = function (e) {
-					if (!this.isHovered) {
-						this.onmouseover(e);
-					}
-				}
-				menu.appendChild(a);
-			}
-			*/
+			menu.buildMenu(nodeTypes);
+			menu.onItemSelected = function(name) {
+				var e = window.event;
+				parent.shaderGraph.addNode({
+					type: name,
+					pos: [e.x, e.y]
+				});
+			};
 		}
-		return;
 
 		parent.preview.onload = function(){
 			parent.shaderGraph.updateShader();

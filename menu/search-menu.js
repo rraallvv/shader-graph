@@ -212,6 +212,7 @@ Editor.polymerElement({
 		this._initResizeListener();
 	},
 	buildMenu: function(items) {
+		var self = this;
 		nodeTypes = items.slice(0);
 		fuse = new Fuse(nodeTypes, fuseOptions);
 		var menu = Polymer.dom(this.$[contextMenuItemsClassName]);
@@ -220,12 +221,14 @@ Editor.polymerElement({
 			a.type = a.innerHTML = nodeTypes[i].type;
 			a.className = contextMenuItemClassName;
 			a.onclick = function (e) {
-				addNode(this.type);
-				toggleMenuOff();
+				if (typeof self.onItemSelected === "function") {
+					self.onItemSelected(this.type);
+				}
+				self.toggleMenuOff();
 				e.stopPropagation();
 			};
 			a.onmouseover = function () {
-				clearHoveredMenuItems();
+				self.clearHoveredMenuItems();
 				this.isHovered = true;
 				this.classList.add(contextMenuItemHoverClassName);
 			}
