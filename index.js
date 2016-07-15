@@ -60,7 +60,6 @@ module.exports = {
 	ResolutionNode: require('./src/nodes/ResolutionNode'),
 
 	Beautify: require('./js/beautify').js_beautify,
-	Fuse: require('./js/fuse'),
 
 };
 

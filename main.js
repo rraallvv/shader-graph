@@ -193,8 +193,6 @@ function graphReadyListerner() {
 		}
 		return;
 
-		fuse = new ShaderGraph.Fuse(nodeTypes, fuseOptions);
-
 		parent.preview.onload = function(){
 			parent.shaderGraph.updateShader();
 		};
