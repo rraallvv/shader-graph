@@ -300,7 +300,9 @@ Editor.polymerElement({
 			searchField.innerHTML = "";
 			this.updateNodeList("");
 			this.clearHoveredMenuItems();
-			parent.shaderGraph.clearTempConnection();
+			if (this.onToggleOff) {
+				this.onToggleOff();
+			}
 		}
 	},
 	positionMenu: function(e) {

@@ -163,6 +163,9 @@ function graphReadyListerner() {
 					pos: [pos.x, pos.y]
 				});
 			};
+			menu.onToggleOff = function() {
+				parent.shaderGraph.clearTempConnection();
+			};
 		}
 
 		parent.preview.onload = function(){
