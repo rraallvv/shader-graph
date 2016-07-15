@@ -204,7 +204,6 @@ function graphReadyListerner() {
 
 Editor.polymerElement({
 	ready: function() {
-		fuse = new Fuse(nodeTypes, fuseOptions);
 		this._initSearchListeners();
 		// graphReadyListerner();
 		this._initContextListener();
@@ -213,10 +212,12 @@ Editor.polymerElement({
 		this._initResizeListener();
 	},
 	buildMenu: function(items) {
+		nodeTypes = items.slice(0);
+		fuse = new Fuse(nodeTypes, fuseOptions);
 		var menu = Polymer.dom(this.$[contextMenuItemsClassName]);
-		for (var i = 0; i < items.length; i++) {
+		for (var i = 0; i < nodeTypes.length; i++) {
 			var a = document.createElement("a");
-			a.type = a.innerHTML = items[i].type;
+			a.type = a.innerHTML = nodeTypes[i].type;
 			a.className = contextMenuItemClassName;
 			a.onclick = function (e) {
 				addNode(this.type);
@@ -331,6 +332,7 @@ Editor.polymerElement({
 		}
 	},
 	_initSearchListeners: function() {
+		var self = this;
 		document.getElementById(searchClassName).onkeypress = function(e) {
 			var code = e.keyCode || e.which;
 			if (code === 13) {
@@ -384,7 +386,7 @@ Editor.polymerElement({
 		document.getElementById(searchClassName).onkeyup = function(e) {
 			var code = e.keyCode || e.which;
 			if (code !== 38 && code !== 40) {
-				updateNodeList(this.innerHTML);
+				self.updateNodeList(this.innerHTML);
 			}
 		};
 	},
