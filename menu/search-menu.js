@@ -8,11 +8,7 @@ var contextMenuItemHoverClassName = "menu-item-hover";
 var contextMenuItemsClassName = "menu-items";
 var contextMenuActiveClassName = "context-menu--active";
 
-var graphClassName = "graph";
-
 var searchClassName = "search";
-
-var graphInContext;
 
 var clickCoordsX;
 var clickCoordsY;
@@ -51,6 +47,9 @@ Editor.polymerElement({
 		this._initClickListener();
 		this._initKeyupListener();
 		this._initResizeListener();
+	},
+	properties: {
+		activateForClass: String
 	},
 	buildMenu: function(items) {
 		var self = this;
@@ -240,14 +239,14 @@ Editor.polymerElement({
 	_initContextListener: function() {
 		var self = this;
 		document.addEventListener( "contextmenu", function(e) {
-			graphInContext = self.clickInsideElement( e, graphClassName );
+			var inContext = self.clickInsideElement( e, self.activateForClass );
 
-			if ( graphInContext ) {
+			if ( inContext ) {
 				e.preventDefault();
 				self.toggleMenuOn();
 				self.positionMenu(e);
 			} else {
-				graphInContext = null;
+				inContext = null;
 				toggleMenuOff();
 			}
 		});
