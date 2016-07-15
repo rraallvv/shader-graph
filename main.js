@@ -165,8 +165,10 @@ function graphReadyListerner() {
 				var a = document.createElement("a");
 				a.type = a.innerHTML = nodeTypes[i].type;
 				a.className = contextMenuItemClassName;
-				a.onclick = function () {
+				a.onclick = function (e) {
 					addNode(this.type);
+					toggleMenuOff();
+					e.stopPropagation();
 				};
 				a.onmouseover = function () {
 					clearHoveredMenuItems();
