@@ -221,9 +221,7 @@ Editor.polymerElement({
 			a.type = a.innerHTML = nodeTypes[i].type;
 			a.className = contextMenuItemClassName;
 			a.onclick = function (e) {
-				if (typeof self.onItemSelected === "function") {
-					self.onItemSelected(this.type);
-				}
+				self._itemSelected(this.type);
 				self.toggleMenuOff();
 				e.stopPropagation();
 			};
@@ -231,23 +229,28 @@ Editor.polymerElement({
 				self.clearHoveredMenuItems();
 				this.isHovered = true;
 				this.classList.add(contextMenuItemHoverClassName);
-			}
+			};
 			a.onmouseout = function () {
 				this.isHovered = false;
 				this.classList.remove(contextMenuItemHoverClassName);
-			}
+			};
 			a.onmousemove = function (e) {
 				if (!this.isHovered) {
 					this.onmouseover(e);
-				}
-			}
+				};
+			};
 			menu.appendChild(a);
+		}
+	},
+	_itemSelected: function(type) {
+		if (this.onItemSelected) {
+			this.onItemSelected(type);
 		}
 	},
 	clickInsideElement: function( e, className ) {
 		var el = document.getElementsByClassName(className)[0];
 
-		var pos = this.getPosition(e);
+		var pos = this._getMousePosition(e);
 
 		var bounds = el.getBoundingClientRect();
 
@@ -264,7 +267,7 @@ Editor.polymerElement({
 
 		return true;
 	},
-	getPosition: function(e) {
+	_getMousePosition: function(e) {
 		var posx = 0;
 		var posy = 0;
 
@@ -344,7 +347,7 @@ Editor.polymerElement({
 					return node.type === type;
 				});
 				if (result.length) {
-					addNode(type)
+					self._itemSelected(type);
 				} else {
 					console.error("Type '" + type + "' is not a valid type");
 				}
@@ -464,7 +467,7 @@ Editor.polymerElement({
 		var clientLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
 		var clientTop = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
 
-		var pos = this.getPosition(e);
+		var pos = this._getMousePosition(e);
 		clickCoordsX = pos.x - clientLeft;
 		clickCoordsY = pos.y - clientTop;
 
