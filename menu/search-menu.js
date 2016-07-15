@@ -45,7 +45,7 @@ var fuseOptions = {
 
 Editor.polymerElement({
 	ready: function() {
-		menu = this.$["context-menu"];
+		menu = this.$[contextMenuClassName];
 		this._initSearchListeners();
 		this._initContextListener();
 		this._initClickListener();
