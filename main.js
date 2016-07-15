@@ -157,10 +157,10 @@ function graphReadyListerner() {
 			nodeTypes = parent.shaderGraph.nodeList();
 			menu.buildMenu(nodeTypes);
 			menu.onItemSelected = function(name) {
-				var e = window.event;
+				var pos = menu.getPosition();
 				parent.shaderGraph.addNode({
 					type: name,
-					pos: [e.x, e.y]
+					pos: [pos.x, pos.y]
 				});
 			};
 		}
@@ -193,8 +193,8 @@ function graphReadyListerner() {
 		};
 
 		parent.shaderGraph.onConnectionReleased = function(e) {
-			toggleMenuOn();
-			positionMenu(e);
+			menu.toggleMenuOn();
+			menu.positionMenu(e);
 			return false;
 		};
 		

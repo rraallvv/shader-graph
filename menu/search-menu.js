@@ -351,7 +351,7 @@ Editor.polymerElement({
 				} else {
 					console.error("Type '" + type + "' is not a valid type");
 				}
-				toggleMenuOff();
+				self.toggleMenuOff();
 				e.preventDefault();
 			}
 		};
@@ -363,7 +363,7 @@ Editor.polymerElement({
 			} else if (code === 38 || code === 40) {
 				var container = document.getElementById(contextMenuItemsClassName);
 				var items = container.children;
-				var hovered = clearHoveredMenuItems();
+				var hovered = self.clearHoveredMenuItems();
 				var i = hovered, item;
 				if (code === 38) {
 					while((item = items[--i]) && item.style.display === "none");
@@ -381,7 +381,7 @@ Editor.polymerElement({
 				items[i].classList.add(contextMenuItemHoverClassName);
 				items[i].isHovered = true;
 				this.innerHTML = items[i].type;
-				placeCaretAtEnd(this);
+				self.placeCaretAtEnd(this);
 				var offsetHeight = items[i].offsetHeight;
 				var offsetTop = Math.floor(items[i].offsetTop / offsetHeight) * offsetHeight;
 				container.scrollTop = Math.min(container.scrollTop, offsetTop);
@@ -418,7 +418,7 @@ Editor.polymerElement({
 
 			if ( clickeElIsLink ) {
 				e.preventDefault();
-				if (!clickInsideElement( e, searchClassName )) {
+				if (!self.clickInsideElement( e, searchClassName )) {
 					self.toggleMenuOff();
 				}
 			} else {
@@ -437,8 +437,9 @@ Editor.polymerElement({
 		}
 	},
 	_initResizeListener: function() {
+		var self = this;
 		window.onresize = function(e) {
-			toggleMenuOff();
+			self.toggleMenuOff();
 		};
 	},
 	toggleMenuOn: function() {
@@ -488,6 +489,9 @@ Editor.polymerElement({
 		} else {
 			menu.style.top = clickCoordsY + clientTop + "px";
 		}
+	},
+	getPosition: function() {
+		return {x: clickCoordsX, y: clickCoordsY};
 	}
 });
 
