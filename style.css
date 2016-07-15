@@ -46,58 +46,8 @@ body {
 
 .outter-context-menu {
 	display: block;
-	position: absolute;
 	z-index: 10;
 	padding: 0;
-}
-
-#menu-items {
-	display: block;
-	height: 300px;
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-#menu-items::-webkit-scrollbar {
-    width: 8px;
-}
-#menu-items::-webkit-scrollbar-track {
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-	background: transparent;
-}
-#menu-items::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-    background: rgba(64,64,64,0.1);
-}
-#menu-items::-webkit-scrollbar-thumb:window-inactive {
-	/*background: rgba(32,32,32,0.1);*/
-}
-
-.menu-item {
-	cursor: default;
-	display: block;
-	padding: 4px 12px;
-	color: #0066aa;
-	text-decoration: none;
-}
-.menu-item-hover {
-	color: #fff;
-	background-color: #0066aa;
-}
-
-.search {
-	margin: 0;
-	height: 25px;
-	width: 100%;
-	border: solid 1px #dfdfdf;
-	display: inline-block;
-	outline: 0;
-}
-
-input[type="text"] {
-    font-size:16px;
-	padding: 4px 10px;
 }
 
 .preview {

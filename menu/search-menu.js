@@ -319,15 +319,15 @@ Editor.polymerElement({
 		clientBottom = clientTop + window.innerHeight;
 
 		if ( (clientRight - clickCoordsX - clientLeft) < menuWidth ) {
-			menu.style.left = clientRight - menuWidth - this.offsetLeft + "px";
+			menu.style.left = clientRight - menuWidth /*- this.offsetLeft*/ + "px";
 		} else {
-			menu.style.left = clickCoordsX + clientLeft - this.offsetLeft + "px";
+			menu.style.left = clickCoordsX + clientLeft /*- this.offsetLeft*/ + "px";
 		}
 
 		if ( (clientBottom - clickCoordsY - clientTop) < menuHeight ) {
-			menu.style.top = clientBottom - menuHeight - this.offsetTop + "px";
+			menu.style.top = clientBottom - menuHeight /*- this.offsetTop*/ + "px";
 		} else {
-			menu.style.top = clickCoordsY + clientTop - this.offsetTop + "px";
+			menu.style.top = clickCoordsY + clientTop /*- this.offsetTop*/ + "px";
 		}
 	},
 	getPosition: function() {
