@@ -128,7 +128,7 @@ Editor.polymerElement({
 		}
 	},
 	updateNodeList: function(type) {
-		var items = document.getElementById(contextMenuItemsClassName).children;
+		var items = this.$[contextMenuItemsClassName].children;
 		var result = fuse.search(type);
 		for (var i = 0; i < items.length; i++) {
 			var item = items[i];
