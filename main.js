@@ -101,11 +101,11 @@ function placeCaretAtEnd(element) {
 var nodeTypes = [];
 
 /*
-var contextMenuClassName = "context-menu";
+var contextMenuClassName = "outter-context-menu";
 var contextMenuItemClassName = "menu-item";
 var contextMenuItemHoverClassName = "menu-item-hover";
 var contextMenuItemsClassName = "menu-items";
-var contextMenuActiveClassName = "context-menu--active";
+var contextMenuActiveClassName = "outter-context-menu--active";
 
 var graphClassName = "graph";
 
@@ -116,7 +116,7 @@ var graphInContext;
 var clickCoordsX;
 var clickCoordsY;
 
-var menu = document.querySelector("#context-menu");
+var menu = document.querySelector("#outter-context-menu");
 var menuState = 0;
 var menuWidth;
 var menuHeight;
@@ -152,7 +152,7 @@ function init() {
 function graphReadyListerner() {
 	window.addEventListener('WebComponentsReady', function(e) {
 		parent.shaderGraph = document.getElementById("graph");
-		var menu = document.getElementById("context-menu")
+		var menu = document.getElementById("outter-context-menu")
 		if (parent.shaderGraph) {
 			nodeTypes = parent.shaderGraph.nodeList();
 			menu.buildMenu(nodeTypes);

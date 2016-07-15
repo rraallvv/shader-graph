@@ -204,7 +204,7 @@ function graphReadyListerner() {
 
 Editor.polymerElement({
 	ready: function() {
-		menu = document.querySelector("#context-menu")
+		menu = this.$["context-menu"];
 		this._initSearchListeners();
 		// graphReadyListerner();
 		this._initContextListener();

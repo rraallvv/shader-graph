@@ -44,20 +44,11 @@ body {
 
 /* context menu */
 
-.context-menu {
-	display: none;
+.outter-context-menu {
+	display: block;
 	position: absolute;
 	z-index: 10;
 	padding: 0;
-	width: 240px;
-	background-color: #fff;
-	border: solid 1px #dfdfdf;
-	box-shadow: 2px 2px 2px #666;
-}
-
-.context-menu--active {
-	display: block;
-	height: 327px;
 }
 
 #menu-items {
