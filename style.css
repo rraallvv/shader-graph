@@ -50,7 +50,7 @@ body {
 	padding: 0;
 }
 
-.preview {
+#preview {
 	outline: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
