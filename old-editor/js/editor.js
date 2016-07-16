@@ -107,6 +107,36 @@ var App = React.createClass({
 
 		this.setState(this.state);
 	},
+	loadGraph: function(graph) {
+		this.instance.batch(function () {
+			batchRender = true;
+			var nodes = graph.nodes;
+			var ids = []
+			for (var i = 0; i < nodes.length; i++) {
+				ids.push(this.addNode(nodes[i]));
+			}
+			var links = graph.links;
+			for (var i = 0; i < links.length; i++) {
+				var portA = this._splitPort(links[i][0]);
+				var portB = this._splitPort(links[i][1]);
+				this.connect(ids[portA[0]], portA[1], ids[portB[0]], portB[1]);
+			}
+			batchRender = false;
+			this.setState(this.state);
+		}.bind(this));
+	},
+	clearGraph: function() {
+		this.instance.batch(function () {
+			batchRender = true;
+			var nodes = this.state.nodes.slice(0);
+			for (var i = 0; i < nodes.length; i++) {
+				var node = nodes[i];
+				this.removeNode(node.id);
+			}
+			batchRender = false;
+			this.setState(this.state);
+		}.bind(this));
+	},
 	updateConnections: function(){
 		if(this.instance){
 			var instance = this.instance;
@@ -931,49 +961,21 @@ Editor.polymerElement({
 	ready: function(){
 		setTimeout(function(){
 			this._editor = ReactDOM.render(React.createElement(App, {shaderGraph: this}), this.$.content);
-
-			var data = {
-				nodes: [
-					{type:"value", pos:[0, 0], value:70},
-					{type:"uv", pos:[0, 100]},
-					{type:"value", pos:[0, 220], value:35},
-					{type:"value", pos:[0, 320], value:0.5},
-					{type:"multiply", pos:[200, 50]},
-					{type:"multiply", pos:[200, 150]},
-					{type:"cos", pos:[350, 50]},
-					{type:"sin", pos:[350, 150]},
-					{type:"join", pos:[500, 100]},
-					{type:"value", pos:[300, 300], value: 1}
-				],
-				links: [
-					[2, 6],
-					[3.1, 6.1],
-					[3.2, 7],
-					[4, 7.1],
-					[6, 8],
-					[7, 9],
-					[8, 10],
-					[9, 10.1],
-					[5, 10.2],
-					[11, 10.3],
-					[10, 1]
-				]
-			};
-
-			for (var i = 0; i < data.nodes.length; i++) {
-				this._editor.addNode(data.nodes[i]);
-			}
-
-			for (var i = 0; i < data.links.length; i++) {
-				this._editor.connect(data.links[i][0], data.links[i][1]);
-			}
 		}.bind(this), 1000);
-
+	},
+	updateShader: function() {
+		this._editor.updateShader();
 	},
 	nodeList: function() {
 		return this._editor.nodeTypes().map(function (type) {
 			return { type: type };
 		});
+	},
+	loadGraph: function(data) {
+		this._editor.loadGraph(data);
+	},
+	clearGraph: function() {
+		this._editor.clearGraph();
 	},
 	addNode: function(e) {
 		var b = graph.querySelector("#canvas").getBoundingClientRect();
@@ -983,6 +985,9 @@ Editor.polymerElement({
 		e.pos = pos;
 		this._editor.addNode(e);
 	},
+	clearTempConnection: function() {
+		this._editor.clearTempConnection();
+	},
 	setTransform: function( s, r, n, t ){
 		// s = 1, r = 1, n = 0, t = 0;
 		this.style.transform = "matrix(" +
@@ -990,18 +995,6 @@ Editor.polymerElement({
 			r + ", " +
 			Math.round(n + 0.5 * this.offsetWidth * (s - 1)) + ", " +
 			Math.round(t + 0.5 * this.offsetHeight * (r - 1)) + ")";
-	},
-	updateShader: function() {
-		this._editor.updateShader();
-	},
-	loadGraph: function(data) {
-		this._editor.loadGraph(data);
-	},
-	clearGraph: function() {
-		this._editor.clearGraph();
-	},
-	clearTempConnection: function() {
-		this._editor.clearTempConnection();
 	}
 });
 
