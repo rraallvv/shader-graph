@@ -932,77 +932,40 @@ Editor.polymerElement({
 		setTimeout(function(){
 			this._editor = ReactDOM.render(React.createElement(App, {shaderGraph: this}), this.$.content);
 
-			/*
-			// build the list of nodes
-			var sidebar = Polymer.dom(document.getElementById("sidebar"));
-			var items = this.nodeList();
-			for (var i = 0; i < items.length; i++) {
-				var item = items[i];
-				item.className = "list-group-item add-node-button";
-				sidebar.appendChild(item);
-			}
-			*/
+			var data = {
+				nodes: [
+					{type:"value", pos:[0, 0], value:70},
+					{type:"uv", pos:[0, 100]},
+					{type:"value", pos:[0, 220], value:35},
+					{type:"value", pos:[0, 320], value:0.5},
+					{type:"multiply", pos:[200, 50]},
+					{type:"multiply", pos:[200, 150]},
+					{type:"cos", pos:[350, 50]},
+					{type:"sin", pos:[350, 150]},
+					{type:"join", pos:[500, 100]},
+					{type:"value", pos:[300, 300], value: 1}
+				],
+				links: [
+					[2, 6],
+					[3.1, 6.1],
+					[3.2, 7],
+					[4, 7.1],
+					[6, 8],
+					[7, 9],
+					[8, 10],
+					[9, 10.1],
+					[5, 10.2],
+					[11, 10.3],
+					[10, 1]
+				]
+			};
 
-			//*
-			var nodes = [
-				{type:"value", pos:[0, 0], value:70},
-				{type:"uv", pos:[0, 100]},
-				{type:"value", pos:[0, 220], value:35},
-				{type:"value", pos:[0, 320], value:0.5},
-				{type:"multiply", pos:[200, 50]},
-				{type:"multiply", pos:[200, 150]},
-				{type:"cos", pos:[350, 50]},
-				{type:"sin", pos:[350, 150]},
-				{type:"join", pos:[500, 100]},
-				{type:"value", pos:[300, 300], value: 1}
-			];
-			var links = [
-				[2, 6],
-				[3.1, 6.1],
-				[3.2, 7],
-				[4, 7.1],
-				[6, 8],
-				[7, 9],
-				[8, 10],
-				[9, 10.1],
-				[5, 10.2],
-				[11, 10.3],
-				[10, 1]
-			];
-			//*/
-			/*
-			var nodes = [
-				{type:"fragColor", pos:[660, 200]},
-				{type:"texture", pos:[0, 0]},
-				{type:"split", pos:[0, 170]},
-				{type:"add", pos:[135, 90]},
-				{type:"add", pos:[267, 90]},
-				{type:"divide", pos:[400, 90]},
-				{type:"value", pos:[250, 175], value:3},
-				{type:"join", pos:[530, 170]}
-			];
-			var links = [
-				[2, 3],
-				[3, 4],
-				[3.1, 4.1],
-				[4, 5],
-				[3.2, 5.1],
-				[5, 6],
-				[7, 6.1],
-				[6, 8],
-				[6, 8.1],
-				[6, 8.2],
-				[3.3, 8.3],
-				[8, 1]
-			];
-			//*/
-
-			for (var i = 0; i < nodes.length; i++) {
-				this._editor.addNode(nodes[i]);
+			for (var i = 0; i < data.nodes.length; i++) {
+				this._editor.addNode(data.nodes[i]);
 			}
 
-			for (var i = 0; i < links.length; i++) {
-				this._editor.connect(links[i][0], links[i][1]);
+			for (var i = 0; i < data.links.length; i++) {
+				this._editor.connect(data.links[i][0], data.links[i][1]);
 			}
 		}.bind(this), 1000);
 
