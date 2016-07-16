@@ -11,27 +11,26 @@ var App = React.createClass({
 	render: function() {
 		var shader = this.updateShader();
 		this.updateConnections();
-		return (
-			<div className="row style-scope shader-graph">
-				<div id="sidebar" className="col-xs-3 style-scope shader-graph">
-					<div className="row style-scope shader-graph">
-						<Preview shader={this.shader}/>
-					</div>
-				</div>
-				<div className="col-xs-9 style-scope shader-graph">
-					<NodeEditor
-						updateShader={this.updateShader}
-						instance={this.instance}
-						shader={shader}
-						nodes={this.state.nodes}
-						connections={this.state.connections}
-						connect={this.connect}
-						disconnect={this.disconnect}
-						updateNodeData={this.updateNodeData}
-						initialize={this.initialize}
-						onClickRemoveNode={this.removeNode} />
-				</div>
-			</div>
+		return React.createElement("div", {className: "row style-scope shader-graph"},
+			React.createElement("div", {id: "sidebar", className: "col-xs-3 style-scope shader-graph"},
+				React.createElement("div", {className: "row style-scope shader-graph"},
+					React.createElement(Preview, {shader: this.shader})
+				)
+			),
+			React.createElement("div", {className: "col-xs-9 style-scope shader-graph"},
+				React.createElement(NodeEditor, {
+					updateShader: this.updateShader,
+					instance: this.instance,
+					shader: shader,
+					nodes: this.state.nodes,
+					connections: this.state.connections,
+					connect: this.connect,
+					disconnect: this.disconnect,
+					updateNodeData: this.updateNodeData,
+					initialize: this.initialize,
+					onClickRemoveNode: this.removeNode
+				})
+			)
 		);
 	},
 	nodeTypes: function(){
@@ -525,17 +524,15 @@ var Preview = React.createClass({
 	},
 	render: function() {
 		this.updateShader();
-		return (
-			<div>
-				<div id="GameDiv" style={{width: "226px", height: "226px"}} className="style-scope shader-graph">
-					<canvas id="GameCanvas" width={"226"} height={"226"} className="style-scope shader-graph"></canvas>
-					<div id="splash" className="style-scope shader-graph">
-						<div className="progress-bar stripes style-scope shader-graph">
-							<span style={{width: "0%"}} className="style-scope shader-graph"></span>
-						</div>
-					</div>
-				</div>
-			</div>
+		return React.createElement("div", null,
+			React.createElement("div", {id: "GameDiv", style: {width: "226px", height: "226px"}, className: "style-scope shader-graph"},
+				React.createElement("canvas", {id: "GameCanvas", width: "226", height: "226", className: "style-scope shader-graph"}),
+				React.createElement("div", {id: "splash", className: "style-scope shader-graph"},
+					React.createElement("div", {className:"progress-bar stripes style-scope shader-graph"},
+						React.createElement("span", {style: {width: "0%"}, className: "style-scope shader-graph"})
+					)
+				)
+			)
 		);
 	},
 	updateShader: function(){
@@ -700,21 +697,18 @@ var NodeEditor = React.createClass({
 	},
 	render: function() {
 		var nodes = this.props.nodes;
-		return (
-		<div id="canvas" className="style-scope shader-graph">
-			{nodes.map(function(node) {
-			return (
-				<SGNode
-					updateShader={this.props.updateShader}
-					onClickRemove={node.type !== 'fragColor' ? this.props.onClickRemoveNode : undefined }
-					updateNodeData={this.props.updateNodeData}
-					instance={this.props.instance}
-					key={node.id}
-					data={node}
-					shader={this.props.shader} />
-			);
-			}, this)}
-		</div>
+		return React.createElement("div", {id: "canvas", className: "style-scope shader-graph"},
+			nodes.map(function(node) {
+				return React.createElement(Node, {
+					updateShader: this.props.updateShader,
+					onClickRemove: node.type !== 'fragColor' ? this.props.onClickRemoveNode : undefined,
+					updateNodeData: this.props.updateNodeData,
+					instance: this.props.instance,
+					key: node.id,
+					data: node,
+					shader: this.props.shader
+				});
+			}, this)
 		);
 	}
 });
@@ -754,13 +748,11 @@ var Port = React.createClass({
 		instance.makeTarget(el);
 	},
 	render: function(){
-		return (
-			<div className={this.props.type + " style-scope shader-graph"} key={this.props.portKey} id={this.props.portKey + this.props.id}>{this.props.portKey}</div>
-		);
+		return React.createElement("div", {className:this.props.type + " style-scope shader-graph", key:this.props.portKey, id:this.props.portKey + this.props.id}, this.props.portKey);
 	}
 });
 
-var SGNode = React.createClass({
+var Node = React.createClass({
 	componentDidMount: function(){
 		var el = ReactDOM.findDOMNode(this);
 		var instance = this.props.instance;
@@ -770,103 +762,104 @@ var SGNode = React.createClass({
 		var shader = this.props.updateShader();
 		var node = shader.fragmentGraph.getNodeById(this.props.data.id);
 		var inputs = node ? node.getInputPorts().map(function(key){
-			return (
-				<Port
-					type={"in"}
-					id={this.props.data.id}
-					instance={this.props.instance}
-					key={key}
-					portKey={key} />
-			);
+			return React.createElement(Port, {
+				type: "in",
+				id: this.props.data.id,
+				instance: this.props.instance,
+				key: key,
+				portKey: key
+			});
 		}, this) : undefined;
 		var outputs = node ? node.getOutputPorts().map(function(key){
-			return (
-				<Port
-					type={"out"}
-					id={this.props.data.id}
-					key={key}
-					instance={this.props.instance}
-					portKey={key} />
-			);
+			return React.createElement(Port, {
+				type: "out",
+				id: this.props.data.id,
+				key: key,
+				instance: this.props.instance,
+				portKey: key
+			});
 		}, this) : undefined;
 
-		var removeButton = this.props.onClickRemove ? (
-			<span className="glyphicon glyphicon-remove remove-button pull-right style-scope shader-graph" onClick={this.handleClickRemove}></span>
-		) : undefined;
+		var removeButton = this.props.onClickRemove ? React.createElement("span", {
+			className: "glyphicon glyphicon-remove remove-button pull-right style-scope shader-graph",
+			onClick: this.handleClickRemove
+		}) : undefined;
 
 		var extra;
 
 		switch(this.props.data.type){
 		case 'value':
-			extra = (
-				<input
-					type="number"
-					className="style-scope shader-graph"
-					value={this.props.data.value}
-					onChange={this.onChangeValue} />
-			);
+			extra = React.createElement("input", {
+				type: "number",
+				className: "style-scope shader-graph",
+				value: this.props.data.value,
+				onChange: this.onChangeValue
+			});
 			break;
 		case 'vec2':
-			extra = (
-				<div>
-					<input
-						type="number"
-						className="style-scope shader-graph"
-						value={this.props.data.value[0]}
-						onChange={this.onChangeVec2Value} />
-					<input
-						type="number"
-						className="style-scope shader-graph"
-						value={this.props.data.value[1]}
-						onChange={this.onChangeVec2Value} />
-				</div>
+			extra = React.createElement("div", null,
+				React.createElement("input", {
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[0],
+					onChange: this.onChangeVec2Value
+				}),
+				React.createElement("input", {
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[1],
+					onChange: this.onChangeVec2Value
+				})
 			);
 			break;
 		case 'vec3':
-			extra = (
-				<div>
-					<input
-						type="number"
-						className="style-scope shader-graph"
-						value={this.props.data.value[0]}
-						onChange={this.onChangeVec3Value} />
-					<input
-						type="number"
-						className="style-scope shader-graph"
-						value={this.props.data.value[1]}
-						onChange={this.onChangeVec3Value} />
-					<input
-						type="number"
-						className="style-scope shader-graph"
-						value={this.props.data.value[2]}
-						onChange={this.onChangeVec3Value} />
-				</div>
+			extra = React.createElement("div", null,
+				React.createElement("input", {
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[0],
+					onChange: this.onChangeVec3Value
+				}),
+				React.createElement("input", {
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[1],
+					onChange: this.onChangeVec3Value
+				}),
+				React.createElement("input", {
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[2],
+					onChange: this.onChangeVec3Value
+				})
 			);
 			break;
 		case 'vec4':
-			extra = (
-				<div>
-					<input
-						type="number"
-						className="style-scope shader-graph"
-						value={this.props.data.value[0]}
-						onChange={this.onChangeVec4Value} />
-					<input
-						type="number"
-						className="style-scope shader-graph"
-						value={this.props.data.value[1]}
-						onChange={this.onChangeVec4Value} />
-					<input
-						type="number"
-						className="style-scope shader-graph"
-						value={this.props.data.value[2]}
-						onChange={this.onChangeVec4Value} />
-					<input
-						type="number"
-						className="style-scope shader-graph"
-						value={this.props.data.value[3]}
-						onChange={this.onChangeVec4Value} />
-				</div>
+			extra = React.createElement("div", null,
+				React.createElement("input", {
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[0],
+					onChange: this.onChangeVec4Value
+				}),
+				React.createElement("input", {
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[1],
+					onChange: this.onChangeVec4Value
+				}),
+				React.createElement("input", {
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[2],
+					onChange: this.onChangeVec4Value
+				}),
+				React.createElement("input", {
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[3],
+					onChange: this.onChangeVec4Value
+				})
 			);
 			break;
 		};
@@ -876,22 +869,20 @@ var SGNode = React.createClass({
 			top: this.props.data.pos[1]
 		};
 
-		return (
-			<div className={"w node-type-" + this.props.data.type + " style-scope shader-graph"} style={nodeStyle} data-node-id={this.props.data.id}>
-				<div className="title style-scope shader-graph">
-					{this.props.data.type}
-					{removeButton}
-				</div>
-				{extra}
-				<div>
-					<div className="inputs style-scope shader-graph">
-						{inputs}
-					</div>
-					<div className="outputs style-scope shader-graph">
-						{outputs}
-					</div>
-				</div>
-			</div>
+		return React.createElement("div", {className:"w node-type-" + this.props.data.type + " style-scope shader-graph", style:nodeStyle, "data-node-id":this.props.data.id},
+			React.createElement("div", {className:"title style-scope shader-graph"},
+				this.props.data.type,
+				removeButton
+			),
+			extra,
+			React.createElement("div", null,
+				React.createElement("div", {className:"inputs style-scope shader-graph"},
+					inputs
+				),
+				React.createElement("div", {className:"outputs style-scope shader-graph"},
+					outputs
+				)
+			)
 		);
 	},
 	onChangeValue: function(evt){
