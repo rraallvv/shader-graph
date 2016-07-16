@@ -255,11 +255,17 @@ var NodeEditor = React.createClass({
 				ignoreConnectionEvents = true;
 				instance.detachEveryConnection();
 				this.state.links.forEach(function(link){
-					instance.connect({
-						source: link.outputA + link.nodeA,
-						target: link.inputB + link.nodeB,
-						type: "basicRL"
-					});
+					var srcId = link.outputA + link.nodeA;
+					var src = document.getElementById(srcId);
+					var tarId = link.inputB + link.nodeB;
+					var tar = document.getElementById(tarId);
+					if (src && tar) {
+						instance.connect({
+							source: srcId,
+							target: tarId,
+							type: "basicRL"
+						});
+					}
 				}, this);
 				ignoreConnectionEvents = false;
 			}.bind(this));
@@ -614,31 +620,33 @@ var Port = React.createClass({
 		var el = ReactDOM.findDOMNode(this);
 		var instance = this.props.instance;
 
-		instance.makeSource(el, {
-			connectorStyle: {
-				strokeStyle: "black",
-				lineWidth: 2,
-				outlineColor: "transparent",
-				outlineWidth: 4
-			},
-			// maxConnections: 1,
-			connectionType: this.props.type === "in" ? "basicLR" : "basicRL",
-			onMaxConnections: function (info, e) {
-				console.error("Maximum number of links (" + info.maxConnections + ") reached in source");
-			},
-			extract: {
-				"action": "the-action"
-			}
-		});
+		if (el.offsetParent) {
+			instance.makeSource(el, {
+				connectorStyle: {
+					strokeStyle: "black",
+					lineWidth: 2,
+					outlineColor: "transparent",
+					outlineWidth: 4
+				},
+				// maxConnections: 1,
+				connectionType: this.props.type === "in" ? "basicLR" : "basicRL",
+				onMaxConnections: function (info, e) {
+					console.error("Maximum number of links (" + info.maxConnections + ") reached in source");
+				},
+				extract: {
+					"action": "the-action"
+				}
+			});
 
-		instance.makeTarget(el, {
-			dropOptions: { hoverClass: "dragHover" },
-			allowLoopback: false,
-			// maxConnections: 1,
-			onMaxConnections: function (info, e) {
-				console.error("Maximum number of links (" + info.maxConnections + ") reached in target");
-			},
-		});
+			instance.makeTarget(el, {
+				dropOptions: { hoverClass: "dragHover" },
+				allowLoopback: false,
+				// maxConnections: 1,
+				onMaxConnections: function (info, e) {
+					console.error("Maximum number of links (" + info.maxConnections + ") reached in target");
+				},
+			});
+		}
 	},
 	componentWillUnmount: function(){
 		var el = ReactDOM.findDOMNode(this);
