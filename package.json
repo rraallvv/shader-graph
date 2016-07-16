@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node server 8080",
-	"build": "node_modules/babel-cli/bin/babel.js --plugins transform-react-jsx editor/js/editor.jsx -o editor/generated/editor.js && node_modules/webpack/bin/webpack.js ./index.js --output-file ./shadergraph.js",
+	"build": "node_modules/babel-cli/bin/babel.js --plugins transform-react-jsx old-editor/js/editor.jsx -o old-editor/generated/editor.js && node_modules/webpack/bin/webpack.js ./index.js --output-file ./shadergraph.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Stefan Hedman",

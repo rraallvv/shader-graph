@@ -59,7 +59,7 @@ module.exports = {
 	MouseTouchNode: require('./src/nodes/MouseTouchNode'),
 	ResolutionNode: require('./src/nodes/ResolutionNode'),
 
-	Beautify: require('./editor/js/external/beautify').js_beautify,
+	Beautify: require('./old-editor/js/external/beautify').js_beautify,
 
 };
 
