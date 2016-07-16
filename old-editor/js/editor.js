@@ -930,7 +930,7 @@ if ( typeof Editor === "undefined" ) {
 Editor.polymerElement({
 	ready: function(){
 		setTimeout(function(){
-			this._appInstance = ReactDOM.render(React.createElement(App, {shaderGraph: this}), this.$.content);
+			this._editor = ReactDOM.render(React.createElement(App, {shaderGraph: this}), this.$.content);
 
 			/*
 			// build the list of nodes
@@ -998,17 +998,17 @@ Editor.polymerElement({
 			//*/
 
 			for (var i = 0; i < nodes.length; i++) {
-				this._appInstance.addNode(nodes[i]);
+				this._editor.addNode(nodes[i]);
 			}
 
 			for (var i = 0; i < links.length; i++) {
-				this._appInstance.connect(links[i][0], links[i][1]);
+				this._editor.connect(links[i][0], links[i][1]);
 			}
 		}.bind(this), 1000);
 
 	},
 	nodeList: function() {
-		return this._appInstance.nodeTypes().map(function (type) {
+		return this._editor.nodeTypes().map(function (type) {
 			var item = document.createElement("a");
 			item.type = item.innerHTML = type;
 			return item;
@@ -1020,7 +1020,7 @@ Editor.polymerElement({
 		pos[0] -= b.left;
 		pos[1] -= b.top;
 		e.pos = pos;
-		this._appInstance.addNode(e);
+		this._editor.addNode(e);
 	},
 	setTransform: function( s, r, n, t ){
 		// s = 1, r = 1, n = 0, t = 0;
