@@ -14,7 +14,7 @@ var App = React.createClass({
 		return React.createElement("div", {className: "row style-scope shader-graph"},
 			React.createElement("div", {id: "sidebar", className: "col-xs-3 style-scope shader-graph"},
 				React.createElement("div", {className: "row style-scope shader-graph"},
-					React.createElement(Preview, {shader: this.shader})
+					React.createElement(Preview, {shader: this.shader, shaderGraph: this.props.shaderGraph})
 				)
 			),
 			React.createElement("div", {className: "col-xs-9 style-scope shader-graph"},
@@ -28,7 +28,8 @@ var App = React.createClass({
 					disconnect: this.disconnect,
 					updateNodeData: this.updateNodeData,
 					initialize: this.initialize,
-					onClickRemoveNode: this.removeNode
+					onClickRemoveNode: this.removeNode,
+					shaderGraph: this.props.shaderGraph
 				})
 			)
 		);
@@ -467,8 +468,8 @@ var Preview = React.createClass({
 
 			// init assets
 			cc.AssetLibrary.init({
-				libraryPath: shaderGraph.resolveUrl('res/import'),
-				rawAssetsBase: shaderGraph.resolveUrl('res/raw-'),
+				libraryPath: this.props.shaderGraph.resolveUrl('res/import'),
+				rawAssetsBase: this.props.shaderGraph.resolveUrl('res/raw-'),
 				rawAssets: this._CCSettings.rawAssets
 			});
 
@@ -514,7 +515,7 @@ var Preview = React.createClass({
 			showFPS: this._CCSettings.debug,
 			frameRate: 60,
 			jsList: [
-				shaderGraph.resolveUrl('js/preview.js')
+				this.props.shaderGraph.resolveUrl('js/preview.js')
 			],
 			groupList: this._CCSettings.groupList,
 			collisionMatrix: this._CCSettings.collisionMatrix
@@ -620,7 +621,7 @@ var NodeEditor = React.createClass({
 			Container: "canvas"
 		});
 
-		shaderGraph.jsPlumbInstance = instance;
+		this.props.shaderGraph.jsPlumbInstance = instance;
 
 		instance.registerConnectionType("basicRL", {
 			anchors: ["Right", "Left"],
@@ -926,14 +927,10 @@ if ( typeof Editor === "undefined" ) {
 	window.Editor = { polymerElement: Polymer, log: console.log };
 }
 
-var shaderGraph;
-
 Editor.polymerElement({
 	ready: function(){
-		shaderGraph = this;
-
 		setTimeout(function(){
-			this._appInstance = ReactDOM.render(React.createElement(App), this.$.content);
+			this._appInstance = ReactDOM.render(React.createElement(App, {shaderGraph: this}), this.$.content);
 
 			/*
 			// build the list of nodes
