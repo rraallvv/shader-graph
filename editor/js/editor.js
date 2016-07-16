@@ -356,7 +356,7 @@ var NodeEditor = React.createClass({
 			if (this._isOutput(nodeA, portA)) {
 				var portB = ShaderGraph.Node.classes[data.type].prototype.getInputPorts()[0];
 				this.connect(nodeB, portB, nodeA, portA);
-			} else {
+			} else if (this._isInput(nodeA, portA)) {
 				var portB = ShaderGraph.Node.classes[data.type].prototype.getOutputPorts()[0];
 				this.connect(nodeB, portB, nodeA, portA);
 			}
@@ -456,11 +456,13 @@ var NodeEditor = React.createClass({
 	},
 	_isInput: function(node, port) {
 		var id = port + node;
-		return document.getElementById(id).classList.contains("in");
+		var el = document.getElementById(id);
+		return el && el.classList.contains("in");
 	},
 	_isOutput: function(node, port) {
 		var id = port + node;
-		return document.getElementById(id).classList.contains("out");
+		var el = document.getElementById(id);
+		return el && el.classList.contains("out");
 	},
 	_getExistingConnections: function(node, port) {
 		var id = port + node;
