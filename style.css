@@ -38,6 +38,7 @@ body {
 /* graph */
 
 .graph {
+	padding: 15px;
 	display: flex;
 	justify-content: space-between;
 }
