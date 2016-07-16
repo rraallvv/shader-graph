@@ -5,30 +5,30 @@
 var nodeTypes = [];
 
 window.addEventListener('WebComponentsReady', function(e) {
-	parent.shaderGraph = document.getElementById("graph");
+	var shaderGraph = document.getElementById("graph");
 	var menu = document.getElementById("context-menu")
-	if (parent.shaderGraph) {
-		nodeTypes = parent.shaderGraph.nodeList();
+	if (shaderGraph) {
+		nodeTypes = shaderGraph.nodeList();
 		menu.buildMenu(nodeTypes);
 		menu.onItemSelected = function(name) {
 			var pos = menu.getPosition();
-			parent.shaderGraph.addNode({
+			shaderGraph.addNode({
 				type: name,
 				pos: [pos.x, pos.y]
 			});
 		};
 		menu.onToggleOff = function() {
-			parent.shaderGraph.clearTempConnection();
+			shaderGraph.clearTempConnection();
 		};
 	}
 
 	var preview = document.getElementById("preview");
 
 	preview.onload = function(){
-		parent.shaderGraph.updateShader();
+		shaderGraph.updateShader();
 	};
 
-	parent.shaderGraph.onShaderUpdate = function(shader){
+	shaderGraph.onShaderUpdate = function(shader){
 		var shaderDef = shader.buildShader()
 		var source = document.getElementById("source");
 		source.innerHTML = ShaderGraph.Beautify(
@@ -49,7 +49,7 @@ window.addEventListener('WebComponentsReady', function(e) {
 		preview.updateShader(shaderDef);
 	};
 
-	parent.shaderGraph.onConnectionReleased = function(e) {
+	shaderGraph.onConnectionReleased = function(e) {
 		menu.toggleMenuOn();
 		menu.positionMenu(e);
 		return false;
@@ -116,7 +116,7 @@ window.addEventListener('WebComponentsReady', function(e) {
 
 	var element = document.createElement("a");
 	element.onclick = function() {
-		parent.shaderGraph.clearGraph();
+		shaderGraph.clearGraph();
 	};
 	element.innerHTML = "Clear";
 	element.className = "demo";
@@ -127,7 +127,7 @@ window.addEventListener('WebComponentsReady', function(e) {
 		var element = document.createElement("a");
 		element.demo = demos[i];
 		element.onclick = function() {
-			parent.shaderGraph.loadGraph(this.demo);
+			shaderGraph.loadGraph(this.demo);
 		};
 		element.innerHTML = element.demo.name;
 		element.className = "demo";
