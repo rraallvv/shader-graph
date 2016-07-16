@@ -8,7 +8,7 @@ Editor.polymerElement({
 		this.$.preview.onload = function() {
 			parent.preview.init();
 			if (self.onload) {
-				self.onload();
+				parent.preview.onload = self.onload;
 			}
 		};
 	},

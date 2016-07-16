@@ -2,7 +2,7 @@
 
 "use strict";
 
-parent.preview = {
+var preview = {
 	_CCSettings: {
 		"platform": "web-desktop",
 		"groupList": [
@@ -198,5 +198,7 @@ parent.preview = {
 		}
 	}
 };
+
+parent.preview = preview;
 
 })();
