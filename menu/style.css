@@ -1,9 +1,3 @@
-*,
-*::before,
-*::after {
-	box-sizing: border-box;
-}
-
 :host {
 	color: #595959;
 	font-family: "Roboto", sans-serif;
@@ -12,7 +6,7 @@
 	line-height: 1.5;
 }
 
-.context-menu {
+.menu {
 	display: none;
 	position: absolute;
 	z-index: 10;
@@ -23,7 +17,7 @@
 	box-shadow: 2px 2px 2px #666;
 }
 
-.context-menu--active {
+.menu-active {
 	display: block;
 	height: 327px;
 }
@@ -34,19 +28,23 @@
 	overflow-x: hidden;
 	overflow-y: auto;
 }
+
 #menu-items::-webkit-scrollbar {
     width: 8px;
 }
+
 #menu-items::-webkit-scrollbar-track {
     -webkit-border-radius: 8px;
     border-radius: 8px;
 	background: transparent;
 }
+
 #menu-items::-webkit-scrollbar-thumb {
     -webkit-border-radius: 8px;
     border-radius: 8px;
     background: rgba(64,64,64,0.1);
 }
+
 #menu-items::-webkit-scrollbar-thumb:window-inactive {
 	/*background: rgba(32,32,32,0.1);*/
 }

@@ -2,11 +2,11 @@
 
 "use strict";
 
-var contextMenuClassName = "context-menu";
+var contextMenuClassName = "menu";
 var contextMenuItemClassName = "menu-item";
 var contextMenuItemHoverClassName = "menu-item-hover";
 var contextMenuItemsClassName = "menu-items";
-var contextMenuActiveClassName = "context-menu--active";
+var contextMenuActiveClassName = "menu-active";
 
 var searchClassName = "search";
 
