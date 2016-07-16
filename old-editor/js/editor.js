@@ -933,12 +933,12 @@ Editor.polymerElement({
 		shaderGraph = this;
 
 		setTimeout(function(){
-			shaderGraph._appInstance = ReactDOM.render(React.createElement(App), shaderGraph.$.content);
+			this._appInstance = ReactDOM.render(React.createElement(App), this.$.content);
 
 			/*
 			// build the list of nodes
 			var sidebar = Polymer.dom(document.getElementById("sidebar"));
-			var items = shaderGraph.nodeList();
+			var items = this.nodeList();
 			for (var i = 0; i < items.length; i++) {
 				var item = items[i];
 				item.className = "list-group-item add-node-button";
@@ -1001,17 +1001,17 @@ Editor.polymerElement({
 			//*/
 
 			for (var i = 0; i < nodes.length; i++) {
-				shaderGraph._appInstance.addNode(nodes[i]);
+				this._appInstance.addNode(nodes[i]);
 			}
 
 			for (var i = 0; i < links.length; i++) {
-				shaderGraph._appInstance.connect(links[i][0], links[i][1]);
+				this._appInstance.connect(links[i][0], links[i][1]);
 			}
-		}, 1000);
+		}.bind(this), 1000);
 
 	},
 	nodeList: function() {
-		return shaderGraph._appInstance.nodeTypes().map(function (type) {
+		return this._appInstance.nodeTypes().map(function (type) {
 			var item = document.createElement("a");
 			item.type = item.innerHTML = type;
 			return item;
@@ -1023,7 +1023,7 @@ Editor.polymerElement({
 		pos[0] -= b.left;
 		pos[1] -= b.top;
 		e.pos = pos;
-		shaderGraph._appInstance.addNode(e);
+		this._appInstance.addNode(e);
 	},
 	setTransform: function( s, r, n, t ){
 		// s = 1, r = 1, n = 0, t = 0;
