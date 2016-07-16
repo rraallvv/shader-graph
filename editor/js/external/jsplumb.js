@@ -4832,7 +4832,7 @@
         var _ensureContainer = function (candidate) {
             if (!_container && candidate) {
                 var can = _currentInstance.getElement(candidate);
-                if (can.offsetParent) _currentInstance.setContainer(can.offsetParent);
+                if (can && can.offsetParent) _currentInstance.setContainer(can.offsetParent);
             }
         };
 
