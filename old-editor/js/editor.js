@@ -1009,9 +1009,7 @@ Editor.polymerElement({
 	},
 	nodeList: function() {
 		return this._editor.nodeTypes().map(function (type) {
-			var item = document.createElement("a");
-			item.type = item.innerHTML = type;
-			return item;
+			return { type: type };
 		});
 	},
 	addNode: function(e) {
@@ -1029,6 +1027,18 @@ Editor.polymerElement({
 			r + ", " +
 			Math.round(n + 0.5 * this.offsetWidth * (s - 1)) + ", " +
 			Math.round(t + 0.5 * this.offsetHeight * (r - 1)) + ")";
+	},
+	updateShader: function() {
+		this._editor.updateShader();
+	},
+	loadGraph: function(data) {
+		this._editor.loadGraph(data);
+	},
+	clearGraph: function() {
+		this._editor.clearGraph();
+	},
+	clearTempConnection: function() {
+		this._editor.clearTempConnection();
 	}
 });
 
