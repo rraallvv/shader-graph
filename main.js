@@ -1,7 +1,7 @@
 (function() {
 
 "use strict";
-/*
+
 var nodeTypes = [];
 
 window.addEventListener('WebComponentsReady', function(e) {
@@ -22,11 +22,11 @@ window.addEventListener('WebComponentsReady', function(e) {
 		};
 	}
 
-	parent.preview.onload = function(){
+	var preview = document.getElementById("preview");
+
+	preview.onload = function(){
 		parent.shaderGraph.updateShader();
 	};
-	
-	parent.preview.init();
 
 	parent.shaderGraph.onShaderUpdate = function(shader){
 		var shaderDef = shader.buildShader()
@@ -46,7 +46,7 @@ window.addEventListener('WebComponentsReady', function(e) {
 		source.classList.remove("prettyprinted");
 		prettyPrint();
 
-		parent.preview.updateShader(shaderDef);
+		preview.updateShader(shaderDef);
 	};
 
 	parent.shaderGraph.onConnectionReleased = function(e) {
@@ -134,6 +134,5 @@ window.addEventListener('WebComponentsReady', function(e) {
 		placeholder.appendChild(element);
 	}
 });
-*/
 
 })();
