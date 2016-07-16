@@ -2,9 +2,13 @@
 
 "use strict";
 
+
+
 Editor.polymerElement({
 	ready: function() {
-		console.log("Loaded!");
+		this.$.preview.onload = function() {
+			parent.preview.init();
+		};
 	}
 });
 

@@ -1,7 +1,7 @@
 (function() {
 
 "use strict";
-
+/*
 var nodeTypes = [];
 
 window.addEventListener('WebComponentsReady', function(e) {
@@ -134,5 +134,6 @@ window.addEventListener('WebComponentsReady', function(e) {
 		placeholder.appendChild(element);
 	}
 });
+*/
 
 })();
