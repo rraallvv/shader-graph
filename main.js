@@ -2,28 +2,28 @@
 
 "use strict";
 
-var nodeTypes = [];
+var shaderGraph = document.getElementById("graph");
+var preview = document.getElementById("preview");
+var menu = document.getElementById("context-menu")
 
 window.addEventListener('WebComponentsReady', function(e) {
-	var shaderGraph = document.getElementById("graph");
-	var menu = document.getElementById("context-menu")
-	if (shaderGraph) {
-		nodeTypes = shaderGraph.nodeList();
-		menu.buildMenu(nodeTypes);
-		menu.onItemSelected = function(name) {
-			var pos = menu.getPosition();
-			shaderGraph.addNode({
-				type: name,
-				pos: [pos.x, pos.y]
-			});
-		};
-		menu.onToggleOff = function() {
-			shaderGraph.clearTempConnection();
-		};
-	}
+	// Build the context menu from the list of available nodes
+	var nodeTypes = shaderGraph.nodeList();
+	menu.buildMenu(nodeTypes);
 
-	var preview = document.getElementById("preview");
+	menu.onItemSelected = function(name) {
+		var pos = menu.getPosition();
+		shaderGraph.addNode({
+			type: name,
+			pos: [pos.x, pos.y]
+		});
+	};
 
+	menu.onToggleOff = function() {
+		shaderGraph.clearTempConnection();
+	};
+
+	// Update the shader when the preview is loaded
 	preview.onload = function(){
 		shaderGraph.updateShader();
 	};
@@ -110,7 +110,8 @@ window.addEventListener('WebComponentsReady', function(e) {
 				[2.3, 7.3],
 				[7, 0]
 			]
-		}];
+		}
+	];
 
 	var placeholder = document.getElementById("demos");
 

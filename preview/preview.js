@@ -144,9 +144,11 @@ parent.preview._initEngine = function() {
 
 				cc.eventManager.addCustomListener("preview_did_load", function(event){
 					cc.eventManager.removeCustomListeners("preview_did_load");
-					setTimeout(function(){
-						typeof self.onload === "function" && self.onload();
-					}, 1000);
+					if (self.onload) {
+						setTimeout(function(){
+							self.onload();
+						}, 1000);
+					}
 				});
 
 				console.log('Success to load scene: ' + launchScene);
