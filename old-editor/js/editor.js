@@ -146,7 +146,6 @@ var NodeEditor = React.createClass({
 		return React.createElement("div", {id: "canvas", className: "style-scope shader-graph"},
 			nodes.map(function(node) {
 				return React.createElement(Node, {
-					updateShader: this.updateShader,
 					onClickRemove: node.type !== 'fragColor' ? this.removeNode : undefined,
 					updateNodeData: this.updateNodeData,
 					instance: this.instance,
@@ -540,7 +539,7 @@ var Node = React.createClass({
 		instance.draggable(el);
 	},
 	render: function() {
-		var shader = this.props.updateShader();
+		var shader = this.props.shader;
 		var node = shader.fragmentGraph.getNodeById(this.props.data.id);
 		var inputs = node ? node.getInputPorts().map(function(key){
 			return React.createElement(Port, {
