@@ -179,7 +179,6 @@ var NodeEditor = React.createClass({
 		});
 
 		batchRender = false;
-
 		this.setState(this.state);
 	},
 	loadGraph: function(graph) {
@@ -350,7 +349,7 @@ var NodeEditor = React.createClass({
 				break;
 			}
 
-			data.node = node;
+			//data.node = node;
 		}
 
 		var state = this.state;
@@ -425,6 +424,13 @@ var NodeEditor = React.createClass({
 			for(var key in data){
 				node[key] = data[key];
 			}
+
+			// Update the value in the shader node 
+			var n = this.shader.fragmentGraph.getNodeById(id);
+			if (n) {
+				n.value = node.value;
+			}
+
 			this.updateShader();
 		}
 	},
@@ -675,26 +681,26 @@ var Node = React.createClass({
 		var node = shader.fragmentGraph.getNodeById(this.props.data.id);
 		var inputs = node ? node.getInputPorts().map(function(key){
 			return React.createElement(Port, {
-				type:"in",
-				id:this.props.data.id,
-				key:key,
-				instance:this.props.instance,
-				portKey:key
+				type: "in",
+				id: this.props.data.id,
+				instance: this.props.instance,
+				key: key,
+				portKey: key
 			});
 		}, this) : undefined;
 		var outputs = node ? node.getOutputPorts().map(function(key){
 			return React.createElement(Port, {
-				type:"out",
-				id:this.props.data.id,
-				key:key,
-				instance:this.props.instance,
-				portKey:key
+				type: "out",
+				id: this.props.data.id,
+				key: key,
+				instance: this.props.instance,
+				portKey: key
 			});
 		}, this) : undefined;
 
 		var removeButton = this.props.removeNode ? React.createElement("span", {
-			className:"glyphicon glyphicon-remove remove-button pull-right style-scope shader-graph",
-			onClick:this.handleClickRemove
+			className: "glyphicon glyphicon-remove remove-button pull-right style-scope shader-graph",
+			onClick: this.handleClickRemove
 		}) : undefined;
 
 		var extra;
@@ -702,75 +708,75 @@ var Node = React.createClass({
 		switch(this.props.data.type){
 		case 'value':
 			extra = React.createElement("input", {
-				type:"number",
-				className:"style-scope shader-graph",
-				value:this.props.data.value,
-				onChange:this.onChangeValue
+				type: "number",
+				className: "style-scope shader-graph",
+				value: this.props.data.value,
+				onChange: this.onChangeValue
 			});
 			break;
 		case 'vec2':
 			extra = React.createElement("div", null,
 				React.createElement("input", {
-					type:"number",
-					className:"style-scope shader-graph",
-					value:this.props.data.value[0],
-					onChange:this.onChangeVec2Value
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[0],
+					onChange: this.onChangeVec2Value
 				}),
 				React.createElement("input", {
-					type:"number",
-					className:"style-scope shader-graph",
-					value:this.props.data.value[1],
-					onChange:this.onChangeVec2Value
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[1],
+					onChange: this.onChangeVec2Value
 				})
 			);
 			break;
 		case 'vec3':
 			extra = React.createElement("div", null,
 				React.createElement("input", {
-					type:"number",
-					className:"style-scope shader-graph",
-					value:this.props.data.value[0],
-					onChange:this.onChangeVec3Value
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[0],
+					onChange: this.onChangeVec3Value
 				}),
 				React.createElement("input", {
-					type:"number",
-					className:"style-scope shader-graph",
-					value:this.props.data.value[1],
-					onChange:this.onChangeVec3Value,
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[1],
+					onChange: this.onChangeVec3Value
 				}),
 				React.createElement("input", {
-					type:"number",
-					className:"style-scope shader-graph",
-					value:this.props.data.value[2],
-					onChange:this.onChangeVec3Value
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[2],
+					onChange: this.onChangeVec3Value
 				})
 			);
 			break;
 		case 'vec4':
 			extra = React.createElement("div", null,
 				React.createElement("input", {
-					type:"number",
-					className:"style-scope shader-graph",
-					value:this.props.data.value[0],
-					onChange:this.onChangeVec4Value
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[0],
+					onChange: this.onChangeVec4Value
 				}),
 				React.createElement("input", {
-					type:"number",
-					className:"style-scope shader-graph",
-					value:this.props.data.value[1],
-					onChange:this.onChangeVec4Value
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[1],
+					onChange: this.onChangeVec4Value
 				}),
 				React.createElement("input", {
-					type:"number",
-					className:"style-scope shader-graph",
-					value:this.props.data.value[2],
-					onChange:this.onChangeVec4Value
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[2],
+					onChange: this.onChangeVec4Value
 				}),
 				React.createElement("input", {
-					type:"number",
-					className:"style-scope shader-graph",
-					value:this.props.data.value[3],
-					onChange:this.onChangeVec4Value
+					type: "number",
+					className: "style-scope shader-graph",
+					value: this.props.data.value[3],
+					onChange: this.onChangeVec4Value
 				})
 			);
 			break;
@@ -801,8 +807,7 @@ var Node = React.createClass({
 		this.props.updateNodeData(this.props.data.id, {
 			value: evt.target.value
 		});
-		var v = parseFloat(this.props.data.value);
-		this.props.data.node.value = isNaN(v) ? 0 : v;
+		this.setState(this.state);
 	},
 	onChangeVec2Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -811,10 +816,7 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[1].value
 			]
 		});
-		this.props.data.node.value = this.props.data.value.map(function(comp){
-			var v = parseFloat(comp);
-			return isNaN(v) ? 0 : v;
-		});
+		this.setState(this.state);
 	},
 	onChangeVec3Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -824,10 +826,7 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[2].value
 			]
 		});
-		this.props.data.node.value = this.props.data.value.map(function(comp){
-			var v = parseFloat(comp);
-			return isNaN(v) ? 0 : v;
-		});
+		this.setState(this.state);
 	},
 	onChangeVec4Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -838,10 +837,7 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[3].value
 			]
 		});
-		this.props.data.node.value = this.props.data.value.map(function(comp){
-			var v = parseFloat(comp);
-			return isNaN(v) ? 0 : v;
-		});
+		this.setState(this.state);
 	},
 	handleClickRemove: function(){
 		this.props.removeNode(this.props.data.id);
@@ -854,9 +850,9 @@ if ( typeof Editor === "undefined" ) {
 
 Editor.polymerElement({
 	ready: function(){
-		//setTimeout(function(){
+		setTimeout(function(){
 			this._editor = ReactDOM.render(React.createElement(NodeEditor, {shaderGraph: this}), this.$.content);
-		//}.bind(this), 1000);
+		}.bind(this), 1000);
 	},
 	updateShader: function() {
 		this._editor.updateShader();
