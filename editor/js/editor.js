@@ -425,9 +425,7 @@ var NodeEditor = React.createClass({
 			for(var key in data){
 				node[key] = data[key];
 			}
-			if (!batchRender) {
-				this.setState(this.state);
-			}
+			this.updateShader();
 		}
 	},
 	_splitPort: function(port) {
