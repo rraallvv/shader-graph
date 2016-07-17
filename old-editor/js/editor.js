@@ -158,8 +158,19 @@ var NodeEditor = React.createClass({
 		}.bind(this));
 	},
 	initialize: function(instance){
-		batchRender = true;
 		this.instance = instance;
+		batchRender = true;
+
+		// Find the main node
+		var fragColorNodeData = this.state.nodes.find(function(node){
+			return node.type === 'fragColor';
+		});
+
+		this.shader = new ShaderGraph.GraphShader({
+			fragMainNode: new ShaderGraph.FragColorNode({
+				id: fragColorNodeData && fragColorNodeData.id
+			})
+		});
 
 		// Add the main node
 		this.addNode({
@@ -173,18 +184,6 @@ var NodeEditor = React.createClass({
 	loadGraph: function(graph) {
 		this.instance.batch(function () {
 			batchRender = true;
-
-			// Find the main node
-			var fragColorNodeData = this.state.nodes.find(function(node){
-				return node.type === 'fragColor';
-			});
-
-			var shader = this.shader = new ShaderGraph.GraphShader({
-				fragMainNode: new ShaderGraph.FragColorNode({
-					id: fragColorNodeData && fragColorNodeData.id
-				})
-			});
-
 			var nodes = graph.nodes;
 			var ids = []
 			for (var i = 0; i < nodes.length; i++) {
@@ -246,60 +245,6 @@ var NodeEditor = React.createClass({
 		});
 	},
 	updateShader: function(){
-
-		// Find the main node
-		var fragColorNodeData = this.state.nodes.find(function(node){
-			return node.type === 'fragColor';
-		});
-
-		var shader = this.shader = new ShaderGraph.GraphShader({
-			fragMainNode: new ShaderGraph.FragColorNode({
-				id: fragColorNodeData && fragColorNodeData.id
-			})
-		});
-
-		// Add nodes that are not main nodes
-		this.state.nodes.filter(function(nodeData){
-			return nodeData.type !== 'fragColor';
-		}).forEach(function(nodeData){
-			var node = new ShaderGraph.Node.classes[nodeData.type]({
-				id: nodeData.id
-			});
-			this.shader.fragmentGraph.addNode(node);
-			switch(nodeData.type){
-			case 'value':
-				var v = parseFloat(nodeData.value);
-				node.value = isNaN(v) ? 0 : v;
-				break;
-			case 'vec2':
-			case 'vec3':
-			case 'vec4':
-				node.value = nodeData.value.map(function(comp){
-					var v = parseFloat(comp);
-					return isNaN(v) ? 0 : v;
-				});
-				break;
-			}
-		}, this);
-
-		// Links
-		this.state.links.slice(0).forEach(function (link){
-			var nA = this.shader.fragmentGraph.getNodeById(link.nodeA);
-			var nB = this.shader.fragmentGraph.getNodeById(link.nodeB);
-			if(!nA) console.warn('couldnt find node ' + link.nodeA);
-			if(!nB) console.warn('couldnt find node ' + link.nodeB);
-
-			if(!nB.canConnect(link.inputB, nA, link.outputA)){
-				console.warn(nB.errorMessage);
-
-				// If it cannot be rebuilt we may as well remove it from the datamodel
-				// TODO: either disconnect or keep a temporary(?) connection
-				//this.disconnect(link.nodeA, link.outputA, link.nodeB, link.inputB);
-				return;
-			}
-			nB.connect(link.inputB, nA, link.outputA);
-		}, this);
-
 		// window._times = (window._times || 0) + 1, console.log(window._times);
 		if (this.shader && this.props.shaderGraph && this.props.shaderGraph.onShaderUpdate) {
 			this.props.shaderGraph.onShaderUpdate(this.shader);
@@ -403,6 +348,7 @@ var NodeEditor = React.createClass({
 				});
 				break;
 			}
+
 			//data.node = node;
 		}
 
@@ -478,6 +424,13 @@ var NodeEditor = React.createClass({
 			for(var key in data){
 				node[key] = data[key];
 			}
+
+			// Update the value in the shader node 
+			var n = this.shader.fragmentGraph.getNodeById(id);
+			if (n) {
+				n.value = node.value;
+			}
+
 			this.updateShader();
 		}
 	},
