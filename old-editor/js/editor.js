@@ -500,34 +500,41 @@ var Port = React.createClass({
 		var el = ReactDOM.findDOMNode(this);
 		var instance = this.props.instance;
 
-		instance.makeSource(el, {
-			connectorStyle: {
-				strokeStyle: "black",
-				lineWidth: 2,
-				outlineColor: "transparent",
-				outlineWidth: 4
-			},
-			maxConnections: 1,
-			connectionType: this.props.type === "in" ? "basicLR" : "basicRL",
-			onMaxConnections: function (info, e) {
-				console.error("Maximum connections (" + info.maxConnections + ") reached");
-			},
-			extract: {
-				"action": "the-action"
-			}
-		});
+		if (el.offsetParent) {
+			instance.makeSource(el, {
+				connectorStyle: {
+					strokeStyle: "black",
+					lineWidth: 2,
+					outlineColor: "transparent",
+					outlineWidth: 4
+				},
+				// maxConnections: 1,
+				connectionType: this.props.type === "in" ? "basicLR" : "basicRL",
+				onMaxConnections: function (info, e) {
+					console.error("Maximum number of links (" + info.maxConnections + ") reached in source");
+				},
+				extract: {
+					"action": "the-action"
+				}
+			});
 
-		instance.makeTarget(el, {
-			dropOptions: { hoverClass: "dragHover" },
-			allowLoopback: false
-		});
+			instance.makeTarget(el, {
+				dropOptions: { hoverClass: "dragHover" },
+				allowLoopback: false,
+				// maxConnections: 1,
+				onMaxConnections: function (info, e) {
+					console.error("Maximum number of links (" + info.maxConnections + ") reached in target");
+				},
+			});
+		}
 	},
 	componentWillUnmount: function(){
 		var el = ReactDOM.findDOMNode(this);
 		var instance = this.props.instance;
 
+        instance.detachAllConnections(el);
 		instance.unmakeSource(el);
-		instance.makeTarget(el);
+		instance.unmakeTarget(el);
 	},
 	render: function(){
 		return React.createElement("div", {className:this.props.type + " style-scope shader-graph", key:this.props.portKey, id:this.props.portKey + this.props.id}, this.props.portKey);
