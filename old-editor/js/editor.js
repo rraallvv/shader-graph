@@ -308,17 +308,25 @@ var NodeEditor = React.createClass({
 	},
 	updateConnections: function(){
 		if(this.instance){
-			var instance = this.instance;
-			ignoreConnectionEvents = true;
-			instance.detachEveryConnection();
-			this.state.links.forEach(function(link){
-				instance.connect({
-					source: link.outputA + link.nodeA,
-					target: link.inputB + link.nodeB,
-					type: "basicRL"
-				});
-			}, this);
-			ignoreConnectionEvents = false;
+			this.instance.batch(function () {
+				var instance = this.instance;
+				ignoreConnectionEvents = true;
+				instance.detachEveryConnection();
+				this.state.links.forEach(function(link){
+					var srcId = link.outputA + link.nodeA;
+					var src = document.getElementById(srcId);
+					var tarId = link.inputB + link.nodeB;
+					var tar = document.getElementById(tarId);
+					if (src && tar) {
+						instance.connect({
+							source: srcId,
+							target: tarId,
+							type: "basicRL"
+						});
+					}
+				}, this);
+				ignoreConnectionEvents = false;
+			}.bind(this));
 		}
 	},
 	generateId: function(){
