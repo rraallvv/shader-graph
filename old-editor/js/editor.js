@@ -293,8 +293,9 @@ var NodeEditor = React.createClass({
 				console.warn(nB.errorMessage);
 
 				// If it cannot be rebuilt we may as well remove it from the datamodel
-				this.disconnect(link.nodeA, link.outputA, link.nodeB, link.inputB);
-				return false;
+				// TODO: either disconnect or keep a temporary(?) connection
+				//this.disconnect(link.nodeA, link.outputA, link.nodeB, link.inputB);
+				return;
 			}
 			nB.connect(link.inputB, nA, link.outputA);
 		}, this);
@@ -595,6 +596,17 @@ var NodeEditor = React.createClass({
 				outputA: outputA,
 				inputB: inputB
 			};
+		}
+
+		// remove existing links for input ports
+		var existing = [];
+
+		existing = existing.concat(this._getExistingConnections(nodeA, outputA));
+		existing = existing.concat(this._getExistingConnections(nodeB, inputB));
+
+		for (var i = 0; i < existing.length; i++) {
+			var info = existing[i];
+			this.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
 		}
 
 		state.links.push(link);
