@@ -155,6 +155,7 @@ var NodeEditor = React.createClass({
 		}.bind(this));
 	},
 	initialize: function(instance){
+		batchRender = true;
 		this.instance = instance;
 
 		// Add the main node
@@ -163,11 +164,24 @@ var NodeEditor = React.createClass({
 			pos: [600, 300]
 		});
 
+		batchRender = false;
 		this.setState(this.state);
 	},
 	loadGraph: function(graph) {
 		this.instance.batch(function () {
 			batchRender = true;
+
+			// Find the main node
+			var fragColorNodeData = this.state.nodes.find(function(node){
+				return node.type === 'fragColor';
+			});
+
+			var shader = this.shader = new ShaderGraph.GraphShader({
+				fragMainNode: new ShaderGraph.FragColorNode({
+					id: fragColorNodeData && fragColorNodeData.id
+				})
+			});
+
 			var nodes = graph.nodes;
 			var ids = []
 			for (var i = 0; i < nodes.length; i++) {
@@ -361,9 +375,34 @@ var NodeEditor = React.createClass({
 				break;
 			}
 		}
+
+		// Add nodes that are not main nodes
+		if (data.type !== "fragColor") {
+			var node = new ShaderGraph.Node.classes[data.type]({
+				id: data.id
+			});
+			this.shader.fragmentGraph.addNode(node);
+			switch(data.type){
+			case 'value':
+				var v = parseFloat(data.value);
+				node.value = isNaN(v) ? 0 : v;
+				break;
+			case 'vec2':
+			case 'vec3':
+			case 'vec4':
+				node.value = data.value.map(function(comp){
+					var v = parseFloat(comp);
+					return isNaN(v) ? 0 : v;
+				});
+				break;
+			}
+		}
+
 		var state = this.state;
 		state.nodes.push(data);
-		this.setState(state);
+		if (!batchRender) {
+			this.setState(state);
+		}
 		return data.id;
 	},
 	removeNode: function(id){
@@ -390,8 +429,9 @@ var NodeEditor = React.createClass({
 		if(idx !== -1){
 			 state.nodes.splice(idx, 1);
 		}
-		this.setState(state);
-
+		if (!batchRender) {
+			this.setState(state);
+		}
 		return true;
 	},
 	updateNodeData: function(id, data){
@@ -530,7 +570,9 @@ var NodeEditor = React.createClass({
 
 		state.links.push(link);
 
-		this.setState(state);
+		if (!batchRender) {
+			this.setState(state);
+		}
 
 		return true;
 	},
@@ -578,7 +620,9 @@ var NodeEditor = React.createClass({
 		});
 		*/
 
-		this.setState(state);
+		if (!batchRender) {
+			this.setState(state);
+		}
 	}
 });
 
