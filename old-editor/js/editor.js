@@ -300,9 +300,12 @@ var NodeEditor = React.createClass({
 			nB.connect(link.inputB, nA, link.outputA);
 		}, this);
 
-		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onShaderUpdate === "function" && this.props.shaderGraph.onShaderUpdate(this.shader);
+		// window._times = (window._times || 0) + 1, console.log(window._times);
+		if (this.shader && this.props.shaderGraph && this.props.shaderGraph.onShaderUpdate) {
+			this.props.shaderGraph.onShaderUpdate(this.shader);
+		}
 
-		return shader
+		return this.shader
 	},
 	updateConnections: function(){
 		if(this.instance){

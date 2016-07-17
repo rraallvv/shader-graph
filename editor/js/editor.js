@@ -247,7 +247,9 @@ var NodeEditor = React.createClass({
 	},
 	updateShader: function(){
 		// window._times = (window._times || 0) + 1, console.log(window._times);
-		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onShaderUpdate === "function" && this.props.shaderGraph.onShaderUpdate(this.shader);
+		if (this.shader && this.props.shaderGraph && this.props.shaderGraph.onShaderUpdate) {
+			this.props.shaderGraph.onShaderUpdate(this.shader);
+		}
 
 		return this.shader
 	},
