@@ -104,12 +104,15 @@ var NodeEditor = React.createClass({
 					return;
 				}
 
-				// If returned true or undefined onConnectionReleased release too, i.e. abort
-				if (typeof component.props.shaderGraph !== "undefined" && typeof component.props.shaderGraph.onConnectionReleased === "function") {
-					var aborted = component.props.shaderGraph.onConnectionReleased(e);
-					if (typeof aborted === "undefined" || aborted) {
-						return;
-					}
+				// If onConnectionReleased is not defined abort too
+				if (!component.props.shaderGraph || !component.props.shaderGraph.onConnectionReleased) {
+					return;
+				}
+
+				// Ask the callback if the temporary connection should be aborted 
+				var aborted = component.props.shaderGraph.onConnectionReleased(e);
+				if (typeof aborted === "undefined" || aborted) {
+					return;
 				}
 
 				// Create or reuse the temporarty link node
