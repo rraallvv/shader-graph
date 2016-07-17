@@ -400,6 +400,7 @@ var NodeEditor = React.createClass({
 				});
 				break;
 			}
+			//data.node = node;
 		}
 
 		var state = this.state;
