@@ -154,43 +154,46 @@ var NodeEditor = React.createClass({
 
 		}.bind(this));
 	},
-	_getConnectionInfo: function(info) {
-		var result = {};
-		var reg = /([^\d]+)(\d+)/;
-		if (typeof info.source !== "undefined") {
-			var attributes = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'];
-			if (attributes) {
-				result.nodeA = attributes.value;
-				result.outputA = info.source.innerHTML;
-			}
-		} else {
-			var m = info.sourceId.match(reg);
-			result.nodeA = m[2];
-			result.outputA = m[1];
-		}
-		if (typeof info.target !== "undefined") {
-			var attributes = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'];
-			if (attributes) {
-				result.nodeB = attributes.value;
-				result.inputB = info.target.innerHTML;
-			}
-		} else {
-			var m = info.targetId.match(reg);
-			result.nodeB = m[2];
-			result.inputB = m[1];
-		}
-		return result;
+	initialize: function(instance){
+		this.instance = instance;
+
+		// Add the main node
+		this.addNode({
+			type: ShaderGraph.FragColorNode.type,
+			pos: [600, 300]
+		});
+
+		this.setState(this.state);
 	},
-	_getExistingConnections: function(node, port) {
-		var id = port + node;
-		var con = this.instance.getConnections({target:id});
-		var existing = [];
-		if (con.length!=0 && this._isInput(node, port)) {
-			for (var i = 0; i < con.length; i++) {
-				existing.push(this._getConnectionInfo(con[i]));
+	loadGraph: function(graph) {
+		this.instance.batch(function () {
+			batchRender = true;
+			var nodes = graph.nodes;
+			var ids = []
+			for (var i = 0; i < nodes.length; i++) {
+				ids.push(this.addNode(nodes[i]));
 			}
-		}
-		return existing;
+			var links = graph.links;
+			for (var i = 0; i < links.length; i++) {
+				var portA = this._splitPort(links[i][0]);
+				var portB = this._splitPort(links[i][1]);
+				this.connect(ids[portA[0]], portA[1], ids[portB[0]], portB[1]);
+			}
+			batchRender = false;
+			this.setState(this.state);
+		}.bind(this));
+	},
+	clearGraph: function() {
+		this.instance.batch(function () {
+			batchRender = true;
+			var nodes = this.state.nodes.slice(0);
+			for (var i = 0; i < nodes.length; i++) {
+				var node = nodes[i];
+				this.removeNode(node.id);
+			}
+			batchRender = false;
+			this.setState(this.state);
+		}.bind(this));
 	},
 	render: function() {
 		var shader = this.updateShader();
@@ -211,6 +214,13 @@ var NodeEditor = React.createClass({
 	},
 	componentDidUpdate: function() {
 		this.updateConnections();
+	},
+	clearTempConnection: function() {
+		this._tempLink = null;
+		var el = document.getElementById("temp")
+		if (el) {
+			this.instance.detachAllConnections(el);
+		}
 	},
 	nodeTypes: function(){
 		return Object.keys(ShaderGraph.Node.classes).sort().filter(function(type){
@@ -275,47 +285,6 @@ var NodeEditor = React.createClass({
 		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onShaderUpdate === "function" && this.props.shaderGraph.onShaderUpdate(this.shader);
 
 		return shader
-	},
-	initialize: function(instance){
-		this.instance = instance;
-
-		// Add the main node
-		this.addNode({
-			type: ShaderGraph.FragColorNode.type,
-			pos: [600, 300]
-		});
-
-		this.setState(this.state);
-	},
-	loadGraph: function(graph) {
-		this.instance.batch(function () {
-			batchRender = true;
-			var nodes = graph.nodes;
-			var ids = []
-			for (var i = 0; i < nodes.length; i++) {
-				ids.push(this.addNode(nodes[i]));
-			}
-			var links = graph.links;
-			for (var i = 0; i < links.length; i++) {
-				var portA = this._splitPort(links[i][0]);
-				var portB = this._splitPort(links[i][1]);
-				this.connect(ids[portA[0]], portA[1], ids[portB[0]], portB[1]);
-			}
-			batchRender = false;
-			this.setState(this.state);
-		}.bind(this));
-	},
-	clearGraph: function() {
-		this.instance.batch(function () {
-			batchRender = true;
-			var nodes = this.state.nodes.slice(0);
-			for (var i = 0; i < nodes.length; i++) {
-				var node = nodes[i];
-				this.removeNode(node.id);
-			}
-			batchRender = false;
-			this.setState(this.state);
-		}.bind(this));
 	},
 	updateConnections: function(){
 		if(this.instance){
@@ -443,6 +412,54 @@ var NodeEditor = React.createClass({
 		}
 		var split = string.split('.');
 		return [parseInt(split[0]), parseInt(split[1])];
+	},
+	_getConnectionInfo: function(info) {
+		var result = {};
+		var reg = /([^\d]+)(\d+)/;
+		if (typeof info.source !== "undefined") {
+			var attributes = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'];
+			if (attributes) {
+				result.nodeA = attributes.value;
+				result.outputA = info.source.innerHTML;
+			}
+		} else {
+			var m = info.sourceId.match(reg);
+			result.nodeA = m[2];
+			result.outputA = m[1];
+		}
+		if (typeof info.target !== "undefined") {
+			var attributes = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'];
+			if (attributes) {
+				result.nodeB = attributes.value;
+				result.inputB = info.target.innerHTML;
+			}
+		} else {
+			var m = info.targetId.match(reg);
+			result.nodeB = m[2];
+			result.inputB = m[1];
+		}
+		return result;
+	},
+	_isInput: function(node, port) {
+		var id = port + node;
+		var el = document.getElementById(id);
+		return el && el.classList.contains("in");
+	},
+	_isOutput: function(node, port) {
+		var id = port + node;
+		var el = document.getElementById(id);
+		return el && el.classList.contains("out");
+	},
+	_getExistingConnections: function(node, port) {
+		var id = port + node;
+		var con = this.instance.getConnections({target:id});
+		var existing = [];
+		if (con.length!=0 && this._isInput(node, port)) {
+			for (var i = 0; i < con.length; i++) {
+				existing.push(this._getConnectionInfo(con[i]));
+			}
+		}
+		return existing;
 	},
 	connect: function(nodeA, outputA, nodeB, inputB){
 		if(arguments.length === 2) {
