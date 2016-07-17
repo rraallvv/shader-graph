@@ -146,7 +146,7 @@ var NodeEditor = React.createClass({
 		return React.createElement("div", {id: "canvas", className: "style-scope shader-graph"},
 			nodes.map(function(node) {
 				return React.createElement(Node, {
-					onClickRemove: node.type !== 'fragColor' ? this.removeNode : undefined,
+					removeNode: node.type !== 'fragColor' ? this.removeNode : undefined,
 					updateNodeData: this.updateNodeData,
 					instance: this.instance,
 					key: node.id,
@@ -562,7 +562,7 @@ var Node = React.createClass({
 			});
 		}, this) : undefined;
 
-		var removeButton = this.props.onClickRemove ? React.createElement("span", {
+		var removeButton = this.props.removeNode ? React.createElement("span", {
 			className: "glyphicon glyphicon-remove remove-button pull-right style-scope shader-graph",
 			onClick: this.handleClickRemove
 		}) : undefined;
@@ -670,7 +670,9 @@ var Node = React.createClass({
 	onChangeValue: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
 			value: evt.target.value
-		})
+		});
+		var v = parseFloat(this.props.data.value);
+		this.props.data.node.value = isNaN(v) ? 0 : v;
 	},
 	onChangeVec2Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -678,7 +680,11 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[0].value,
 				evt.target.parentNode.childNodes[1].value
 			]
-		})
+		});
+		this.props.data.node.value = this.props.data.value.map(function(comp){
+			var v = parseFloat(comp);
+			return isNaN(v) ? 0 : v;
+		});
 	},
 	onChangeVec3Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -687,7 +693,11 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[1].value,
 				evt.target.parentNode.childNodes[2].value
 			]
-		})
+		});
+		this.props.data.node.value = this.props.data.value.map(function(comp){
+			var v = parseFloat(comp);
+			return isNaN(v) ? 0 : v;
+		});
 	},
 	onChangeVec4Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -697,10 +707,14 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[2].value,
 				evt.target.parentNode.childNodes[3].value
 			]
-		})
+		});
+		this.props.data.node.value = this.props.data.value.map(function(comp){
+			var v = parseFloat(comp);
+			return isNaN(v) ? 0 : v;
+		});
 	},
 	handleClickRemove: function(){
-		this.props.onClickRemove(this.props.data.id);
+		this.props.removeNode(this.props.data.id);
 	}
 });
 

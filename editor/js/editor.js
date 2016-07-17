@@ -851,7 +851,9 @@ if ( typeof Editor === "undefined" ) {
 
 Editor.polymerElement({
 	ready: function(){
-		this._editor = ReactDOM.render(React.createElement(NodeEditor, {shaderGraph: this}), this.$.content);
+		//setTimeout(function(){
+			this._editor = ReactDOM.render(React.createElement(NodeEditor, {shaderGraph: this}), this.$.content);
+		//}.bind(this), 1000);
 	},
 	updateShader: function() {
 		this._editor.updateShader();
