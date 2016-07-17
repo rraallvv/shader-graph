@@ -6,7 +6,7 @@ var batchRender = false;
 var NodeEditor = React.createClass({
 	getInitialState: function(){
 		return {
-			connections: [],
+			links: [],
 			nodes: []
 		};
 	},
@@ -112,7 +112,7 @@ var NodeEditor = React.createClass({
 					}
 				}
 
-				// Create or reuse the temporarty connection node
+				// Create or reuse the temporarty link node
 				var nodeA = info.outputA;
 				var outputA = info.nodeA;
 				var isInput = component._isInput(outputA, nodeA);
@@ -135,7 +135,7 @@ var NodeEditor = React.createClass({
 				el.style.left = e.clientX - bounds.left;
 				el.style.top = e.clientY - bounds.top;
 
-				// Create the temporary connection
+				// Create the temporary link
 				instance.connect({
 					source: nodeA + outputA,
 					target: el.id,
@@ -149,7 +149,7 @@ var NodeEditor = React.createClass({
 
 		// suspend drawing and initialize.
 		instance.batch(function () {
-			// Connect initial connections
+			// Connect initial links
 			this.initialize(instance);
 
 		}.bind(this));
@@ -244,21 +244,21 @@ var NodeEditor = React.createClass({
 			}
 		}, this);
 
-		// Connections
-		this.state.connections.slice(0).forEach(function (conn){
-			var nA = this.shader.fragmentGraph.getNodeById(conn.nodeA);
-			var nB = this.shader.fragmentGraph.getNodeById(conn.nodeB);
-			if(!nA) console.warn('couldnt find node ' + conn.nodeA);
-			if(!nB) console.warn('couldnt find node ' + conn.nodeB);
+		// Links
+		this.state.links.slice(0).forEach(function (link){
+			var nA = this.shader.fragmentGraph.getNodeById(link.nodeA);
+			var nB = this.shader.fragmentGraph.getNodeById(link.nodeB);
+			if(!nA) console.warn('couldnt find node ' + link.nodeA);
+			if(!nB) console.warn('couldnt find node ' + link.nodeB);
 
-			if(!nB.canConnect(conn.inputB, nA, conn.outputA)){
+			if(!nB.canConnect(link.inputB, nA, link.outputA)){
 				console.warn(nB.errorMessage);
 
 				// If it cannot be rebuilt we may as well remove it from the datamodel
-				this.disconnect(conn.nodeA, conn.outputA, conn.nodeB, conn.inputB);
+				this.disconnect(link.nodeA, link.outputA, link.nodeB, link.inputB);
 				return false;
 			}
-			nB.connect(conn.inputB, nA, conn.outputA);
+			nB.connect(link.inputB, nA, link.outputA);
 		}, this);
 
 		typeof this.props.shaderGraph !== "undefined" && typeof this.props.shaderGraph.onShaderUpdate === "function" && this.props.shaderGraph.onShaderUpdate(this.shader);
@@ -311,10 +311,10 @@ var NodeEditor = React.createClass({
 			var instance = this.instance;
 			ignoreConnectionEvents = true;
 			instance.detachEveryConnection();
-			this.state.connections.forEach(function(conn){
+			this.state.links.forEach(function(link){
 				instance.connect({
-					source: conn.outputA + conn.nodeA,
-					target: conn.inputB + conn.nodeB,
+					source: link.outputA + link.nodeA,
+					target: link.inputB + link.nodeB,
 					type: "basicRL"
 				});
 			}, this);
@@ -388,13 +388,13 @@ var NodeEditor = React.createClass({
 			return false;
 		}
 
-		// Remove the connections connected
-		state.connections.filter(function(conn){
-			return conn.nodeA == id || conn.nodeB == id;
-		}).forEach(function(conn){
-			var idx = state.connections.indexOf(conn);
+		// Remove the links connected
+		state.links.filter(function(link){
+			return link.nodeA == id || link.nodeB == id;
+		}).forEach(function(link){
+			var idx = state.links.indexOf(link);
 			if(idx !== -1){
-				state.connections.splice(idx, 1);
+				state.links.splice(idx, 1);
 			}
 		});
 
@@ -470,7 +470,7 @@ var NodeEditor = React.createClass({
 			} else {
 				// make the connetion in opposite direction
 				nA.connect(outputA, nB, inputB);
-				state.connections.push({
+				state.links.push({
 					nodeA: nodeB,
 					nodeB: nodeA,
 					outputA: inputB,
@@ -480,7 +480,7 @@ var NodeEditor = React.createClass({
 		} else {
 			// make the connetion as is
 			nB.connect(inputB, nA, outputA);
-			state.connections.push({
+			state.links.push({
 				nodeA: nodeA,
 				nodeB: nodeB,
 				outputA: outputA,
@@ -497,17 +497,17 @@ var NodeEditor = React.createClass({
 		nodeB = Number(nodeB);
 
 		var state = this.state;
-		var connToRemove = state.connections.find(function(conn){
+		var connToRemove = state.links.find(function(link){
 			return (
-				conn.nodeA === nodeA &&
-				conn.nodeB === nodeB &&
-				conn.outputA === outputA &&
-				conn.inputB === inputB
+				link.nodeA === nodeA &&
+				link.nodeB === nodeB &&
+				link.outputA === outputA &&
+				link.inputB === inputB
 			);
 		});
-		var idx = state.connections.indexOf(connToRemove);
+		var idx = state.links.indexOf(connToRemove);
 		if(idx !== -1){
-			state.connections.splice(idx, 1);
+			state.links.splice(idx, 1);
 		}
 
 		// Test it!
@@ -515,23 +515,23 @@ var NodeEditor = React.createClass({
 		var nB = this.shader.fragmentGraph.getNodeById(nodeB);
 		nB.disconnect(inputB, nA, outputA);
 
-		// Delete any other invalid connections
+		// Delete any other invalid links
 		/*
-		var invalidConnections = this.shader.fragmentGraph.connections.filter(function(conn){
-			return !conn.isValid();
-		}).forEach(function(conn){
-			console.log('removing', conn)
-			var connToRemove = state.connections.find(function(connData){
+		var invalidConnections = this.shader.fragmentGraph.links.filter(function(link){
+			return !link.isValid();
+		}).forEach(function(link){
+			console.log('removing', link)
+			var connToRemove = state.links.find(function(connData){
 				return (
-					connData.nodeA === conn.fromNode &&
-					connData.nodeB === conn.toNode &&
-					connData.outputA === conn.fromPortKey &&
-					connData.inputB === conn.toPortKey
+					connData.nodeA === link.fromNode &&
+					connData.nodeB === link.toNode &&
+					connData.outputA === link.fromPortKey &&
+					connData.inputB === link.toPortKey
 				);
 			});
-			var idx = state.connections.indexOf(connToRemove);
+			var idx = state.links.indexOf(connToRemove);
 			if(idx !== -1){
-				state.connections.splice(idx, 1);
+				state.links.splice(idx, 1);
 			}
 		});
 		*/
