@@ -1,6 +1,8 @@
 (function(){
 
 var ignoreConnectionEvents = false;
+var batchRender = false;
+
 var NodeEditor = React.createClass({
 	getInitialState: function(){
 		return {
@@ -11,41 +13,43 @@ var NodeEditor = React.createClass({
 	componentDidMount: function(){
 		var component = this;
 
+		var curviness = function(v){
+			// link going forward
+			var df = 100;
+			const sf = 2;
+			// link going backwards
+			var db = 600;
+			const sb = 4;
+			// transition threshold
+			const th = 300;
+			// distance percentage
+			const c = 0.25;
+
+			var d0 = v[ 0 ];
+			var d1 = v[ 1 ];
+			var d = Math.sqrt( d0 * d0 + d1 * d1 );
+			// var d = v[0];
+
+			// fix distance
+			df = df + (d - df) / sf;
+			db = db + (d - db) / sb;
+
+			if ( v[ 0 ] > 0 ) { // forward
+				d = df;
+			} else if ( v[ 0 ] < -th  ) { // backwards
+				d = db;
+			} else { // transition
+				var t = v[ 0 ] / th;
+				d = (1 + t) * df - t * db;
+			}
+			// console.log(c * d);
+			return c * d;
+		};
+
 		// setup some defaults for jsPlumb.
 		var instance = jsPlumb.getInstance({
 			Endpoint: ["Dot", {radius: 0.00001}],
-			Connector: ["Bezier", {curviness: function(v){
-				// connection going forward
-				var df = 100;
-				const sf = 2;
-				// connection going backwards
-				var db = 600;
-				const sb = 4;
-				// transition threshold
-				const th = 300;
-				// distance percentage
-				const c = 0.25;
-
-				var d0 = v[ 0 ];
-				var d1 = v[ 1 ];
-				var d = Math.sqrt( d0 * d0 + d1 * d1 );
-				// var d = v[0];
-
-				// fix distance
-				df = df + (d - df) / sf;
-				db = db + (d - db) / sb;
-
-				if ( v[ 0 ] > 0 ) { // forward
-					d = df;
-				} else if ( v[ 0 ] < -th  ) { // backwards
-					d = db;
-				} else { // transition
-					var t = v[ 0 ] / th;
-					d = (1 + t) * df - t * db;
-				}
-				// console.log(c * d);
-				return c * d;
-			}, snapThreshold: 0.00001}],
+			Connector: ["Bezier", {curviness: curviness, snapThreshold: 0.00001}],
 			HoverPaintStyle: {
 				strokeStyle: "#ddd",
 				lineWidth: 2
@@ -76,57 +80,68 @@ var NodeEditor = React.createClass({
 			connector: "Bezier"
 		});
 
-		function getConnectionInfo(info){
-			var result = {};
-			var reg = /([^\d]+)(\d+)/;
-			if (typeof info.source !== "undefined") {
-				result.nodeA = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
-				result.outputA = info.source.innerHTML;
-			} else {
-				var m = info.sourceId.match(reg);
-				result.nodeA = m[2];
-				result.outputA = m[1];
-			}
-			if (typeof info.target !== "undefined") {
-				result.nodeB = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
-				result.inputB = info.target.innerHTML;
-			} else {
-				var m = info.targetId.match(reg);
-				result.nodeB = m[2];
-				result.inputB = m[1];
-			}
-			return result;
-		}
-
 		instance.bind("click", function (c) {
 			if(!ignoreConnectionEvents){
-				var info = getConnectionInfo(c);
+				var info = component._getConnectionInfo(c);
 				component.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
 				//instance.detach(c);
 			}
 		});
 
 		instance.bind("beforeDrop", function (c) {
-			var dst = c.targetId;
-			var con = instance.getConnections({target:dst});
-
-			var existing = [];
-			if (con.length!=0 && document.getElementById(dst).classList.contains("in")) {
-				for (var i = 0; i < con.length; i++) {
-					existing.push(getConnectionInfo(con[i]));
-				}
-			}
-
-			var info = getConnectionInfo(c);
-
 			if (!ignoreConnectionEvents) {
-				if (component.connect(info.nodeA, info.outputA, info.nodeB, info.inputB)) {
-					// disconnect existing connections if is input
-					for (var i = 0; i < existing.length; i++) {
-						info = existing[i];
-						component.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
+				var info = component._getConnectionInfo(c);
+				component.connect(info.nodeA, info.outputA, info.nodeB, info.inputB);
+			}
+		});
+
+		instance.bind("connectionAborted", function (c, e) {
+			if (!ignoreConnectionEvents) {
+				var info = component._tempLink = component._getConnectionInfo(c);
+
+				// If it was droped on a node just abort
+				if (typeof info.nodeB !== "undefined") {
+					return;
+				}
+
+				// If returned true or undefined onConnectionReleased release too, i.e. abort
+				if (typeof component.props.shaderGraph !== "undefined" && typeof component.props.shaderGraph.onConnectionReleased === "function") {
+					var aborted = component.props.shaderGraph.onConnectionReleased(e);
+					if (typeof aborted === "undefined" || aborted) {
+						return;
 					}
 				}
+
+				// Create or reuse the temporarty connection node
+				var nodeA = info.outputA;
+				var outputA = info.nodeA;
+				var isInput = component._isInput(outputA, nodeA);
+				var container = instance.getContainer();
+				var el = document.getElementById("temp");
+				if (el) {
+					component.instance.detachAllConnections(el);
+				} else {
+					el = document.createElement("span");
+					el.className = "temp " + isInput ? "in" : "out";
+					el.id = "temp";
+					el.style.position = "absolute";
+					el.style.width = 0;
+					el.style.height = 20;
+					Polymer.dom(container).appendChild(el);
+				}
+
+				// Get the click coordinates relative to the container
+				var bounds = container.getBoundingClientRect();
+				el.style.left = e.clientX - bounds.left;
+				el.style.top = e.clientY - bounds.top;
+
+				// Create the temporary connection
+				instance.connect({
+					source: nodeA + outputA,
+					target: el.id,
+					type: isInput ? "basicLR" : "basicRL"
+				});
+				instance.revalidate(el);
 			}
 		});
 
@@ -138,6 +153,33 @@ var NodeEditor = React.createClass({
 			this.initialize(instance);
 
 		}.bind(this));
+	},
+	_getConnectionInfo: function(info) {
+		var result = {};
+		var reg = /([^\d]+)(\d+)/;
+		if (typeof info.source !== "undefined") {
+			var attributes = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'];
+			if (attributes) {
+				result.nodeA = attributes.value;
+				result.outputA = info.source.innerHTML;
+			}
+		} else {
+			var m = info.sourceId.match(reg);
+			result.nodeA = m[2];
+			result.outputA = m[1];
+		}
+		if (typeof info.target !== "undefined") {
+			var attributes = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'];
+			if (attributes) {
+				result.nodeB = attributes.value;
+				result.inputB = info.target.innerHTML;
+			}
+		} else {
+			var m = info.targetId.match(reg);
+			result.nodeB = m[2];
+			result.inputB = m[1];
+		}
+		return result;
 	},
 	render: function() {
 		var shader = this.updateShader();
