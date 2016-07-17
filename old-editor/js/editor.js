@@ -1,15 +1,147 @@
 (function(){
 
 var ignoreConnectionEvents = false;
-var App = React.createClass({
+var NodeEditor = React.createClass({
 	getInitialState: function(){
 		return {
 			connections: [],
 			nodes: []
 		};
 	},
+	componentDidMount: function(){
+		var component = this;
+
+		// setup some defaults for jsPlumb.
+		var instance = jsPlumb.getInstance({
+			Endpoint: ["Dot", {radius: 0.00001}],
+			Connector: ["Bezier", {curviness: function(v){
+				// connection going forward
+				var df = 100;
+				const sf = 2;
+				// connection going backwards
+				var db = 600;
+				const sb = 4;
+				// transition threshold
+				const th = 300;
+				// distance percentage
+				const c = 0.25;
+
+				var d0 = v[ 0 ];
+				var d1 = v[ 1 ];
+				var d = Math.sqrt( d0 * d0 + d1 * d1 );
+				// var d = v[0];
+
+				// fix distance
+				df = df + (d - df) / sf;
+				db = db + (d - db) / sb;
+
+				if ( v[ 0 ] > 0 ) { // forward
+					d = df;
+				} else if ( v[ 0 ] < -th  ) { // backwards
+					d = db;
+				} else { // transition
+					var t = v[ 0 ] / th;
+					d = (1 + t) * df - t * db;
+				}
+				// console.log(c * d);
+				return c * d;
+			}, snapThreshold: 0.00001}],
+			HoverPaintStyle: {
+				strokeStyle: "#ddd",
+				lineWidth: 2
+			},
+			ConnectionOverlays: [
+				/*
+				[ "Arrow", {
+					location: 0.5,
+					id: "arrow",
+					length: 10,
+					width: 10,
+					foldback: 1
+				} ]
+				*/
+			],
+			Container: "canvas"
+		});
+
+		this.props.shaderGraph.jsPlumbInstance = instance;
+
+		instance.registerConnectionType("basicRL", {
+			anchors: ["Right", "Left"],
+			connector: "Bezier"
+		});
+
+		instance.registerConnectionType("basicLR", {
+			anchors: ["Left", "Right"],
+			connector: "Bezier"
+		});
+
+		function getConnectionInfo(info){
+			var result = {};
+			var reg = /([^\d]+)(\d+)/;
+			if (typeof info.source !== "undefined") {
+				result.nodeA = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
+				result.outputA = info.source.innerHTML;
+			} else {
+				var m = info.sourceId.match(reg);
+				result.nodeA = m[2];
+				result.outputA = m[1];
+			}
+			if (typeof info.target !== "undefined") {
+				result.nodeB = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
+				result.inputB = info.target.innerHTML;
+			} else {
+				var m = info.targetId.match(reg);
+				result.nodeB = m[2];
+				result.inputB = m[1];
+			}
+			return result;
+		}
+
+		instance.bind("click", function (c) {
+			if(!ignoreConnectionEvents){
+				var info = getConnectionInfo(c);
+				component.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
+				//instance.detach(c);
+			}
+		});
+
+		instance.bind("beforeDrop", function (c) {
+			var dst = c.targetId;
+			var con = instance.getConnections({target:dst});
+
+			var existing = [];
+			if (con.length!=0 && document.getElementById(dst).classList.contains("in")) {
+				for (var i = 0; i < con.length; i++) {
+					existing.push(getConnectionInfo(con[i]));
+				}
+			}
+
+			var info = getConnectionInfo(c);
+
+			if (!ignoreConnectionEvents) {
+				if (component.connect(info.nodeA, info.outputA, info.nodeB, info.inputB)) {
+					// disconnect existing connections if is input
+					for (var i = 0; i < existing.length; i++) {
+						info = existing[i];
+						component.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
+					}
+				}
+			}
+		});
+
+		console.log('Mount node editor')
+
+		// suspend drawing and initialize.
+		instance.batch(function () {
+			// Connect initial connections
+			this.initialize(instance);
+
+		}.bind(this));
+	},
 	render: function() {
 		var shader = this.updateShader();
+		var nodes = this.state.nodes;
 		this.updateConnections();
 		return React.createElement("div", {className: "row style-scope shader-graph"},
 			React.createElement("div", {id: "sidebar", className: "col-xs-3 style-scope shader-graph"},
@@ -18,19 +150,19 @@ var App = React.createClass({
 				)
 			),
 			React.createElement("div", {className: "col-xs-9 style-scope shader-graph"},
-				React.createElement(NodeEditor, {
-					updateShader: this.updateShader,
-					instance: this.instance,
-					shader: shader,
-					nodes: this.state.nodes,
-					connections: this.state.connections,
-					connect: this.connect,
-					disconnect: this.disconnect,
-					updateNodeData: this.updateNodeData,
-					initialize: this.initialize,
-					onClickRemoveNode: this.removeNode,
-					shaderGraph: this.props.shaderGraph
-				})
+				React.createElement("div", {id: "canvas", className: "style-scope shader-graph"},
+					nodes.map(function(node) {
+						return React.createElement(Node, {
+							updateShader: this.updateShader,
+							onClickRemove: node.type !== 'fragColor' ? this.removeNode : undefined,
+							updateNodeData: this.updateNodeData,
+							instance: this.instance,
+							key: node.id,
+							data: node,
+							shader: shader
+						});
+					}, this)
+				)
 			)
 		);
 	},
@@ -593,157 +725,6 @@ var Preview = React.createClass({
 	}
 });
 
-var NodeEditor = React.createClass({
-	componentDidMount: function(){
-
-		var component = this;
-
-		// setup some defaults for jsPlumb.
-		var instance = jsPlumb.getInstance({
-			Endpoint: ["Dot", {radius: 0.00001}],
-			Connector: ["Bezier", {curviness: function(v){
-				// connection going forward
-				var df = 100;
-				const sf = 2;
-				// connection going backwards
-				var db = 600;
-				const sb = 4;
-				// transition threshold
-				const th = 300;
-				// distance percentage
-				const c = 0.25;
-
-				var d0 = v[ 0 ];
-				var d1 = v[ 1 ];
-				var d = Math.sqrt( d0 * d0 + d1 * d1 );
-				// var d = v[0];
-
-				// fix distance
-				df = df + (d - df) / sf;
-				db = db + (d - db) / sb;
-
-				if ( v[ 0 ] > 0 ) { // forward
-					d = df;
-				} else if ( v[ 0 ] < -th  ) { // backwards
-					d = db;
-				} else { // transition
-					var t = v[ 0 ] / th;
-					d = (1 + t) * df - t * db;
-				}
-				// console.log(c * d);
-				return c * d;
-			}, snapThreshold: 0.00001}],
-			HoverPaintStyle: {
-				strokeStyle: "#ddd",
-				lineWidth: 2
-			},
-			ConnectionOverlays: [
-				/*
-				[ "Arrow", {
-					location: 0.5,
-					id: "arrow",
-					length: 10,
-					width: 10,
-					foldback: 1
-				} ]
-				*/
-			],
-			Container: "canvas"
-		});
-
-		this.props.shaderGraph.jsPlumbInstance = instance;
-
-		instance.registerConnectionType("basicRL", {
-			anchors: ["Right", "Left"],
-			connector: "Bezier"
-		});
-
-		instance.registerConnectionType("basicLR", {
-			anchors: ["Left", "Right"],
-			connector: "Bezier"
-		});
-
-		function getConnectionInfo(info){
-			var result = {};
-			var reg = /([^\d]+)(\d+)/;
-			if (typeof info.source !== "undefined") {
-				result.nodeA = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
-				result.outputA = info.source.innerHTML;
-			} else {
-				var m = info.sourceId.match(reg);
-				result.nodeA = m[2];
-				result.outputA = m[1];
-			}
-			if (typeof info.target !== "undefined") {
-				result.nodeB = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'].value;
-				result.inputB = info.target.innerHTML;
-			} else {
-				var m = info.targetId.match(reg);
-				result.nodeB = m[2];
-				result.inputB = m[1];
-			}
-			return result;
-		}
-
-		instance.bind("click", function (c) {
-			if(!ignoreConnectionEvents){
-				var info = getConnectionInfo(c);
-				component.props.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
-				//instance.detach(c);
-			}
-		});
-
-		instance.bind("beforeDrop", function (c) {
-			var dst = c.targetId;
-			var con = instance.getConnections({target:dst});
-
-			var existing = [];
-			if (con.length!=0 && document.getElementById(dst).classList.contains("in")) {
-				for (var i = 0; i < con.length; i++) {
-					existing.push(getConnectionInfo(con[i]));
-				}
-			}
-
-			var info = getConnectionInfo(c);
-
-			if (!ignoreConnectionEvents) {
-				if (component.props.connect(info.nodeA, info.outputA, info.nodeB, info.inputB)) {
-					// disconnect existing connections if is input
-					for (var i = 0; i < existing.length; i++) {
-						info = existing[i];
-						component.props.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
-					}
-				}
-			}
-		});
-
-		console.log('Mount node editor')
-
-		// suspend drawing and initialize.
-		instance.batch(function () {
-			// Connect initial connections
-			this.props.initialize(instance);
-
-		}.bind(this));
-	},
-	render: function() {
-		var nodes = this.props.nodes;
-		return React.createElement("div", {id: "canvas", className: "style-scope shader-graph"},
-			nodes.map(function(node) {
-				return React.createElement(Node, {
-					updateShader: this.props.updateShader,
-					onClickRemove: node.type !== 'fragColor' ? this.props.onClickRemoveNode : undefined,
-					updateNodeData: this.props.updateNodeData,
-					instance: this.props.instance,
-					key: node.id,
-					data: node,
-					shader: this.props.shader
-				});
-			}, this)
-		);
-	}
-});
-
 var Port = React.createClass({
 	componentDidMount: function(){
 		var el = ReactDOM.findDOMNode(this);
@@ -960,7 +941,7 @@ if ( typeof Editor === "undefined" ) {
 Editor.polymerElement({
 	ready: function(){
 		setTimeout(function(){
-			this._editor = ReactDOM.render(React.createElement(App, {shaderGraph: this}), this.$.content);
+			this._editor = ReactDOM.render(React.createElement(NodeEditor, {shaderGraph: this}), this.$.content);
 		}.bind(this), 1000);
 	},
 	updateShader: function() {
