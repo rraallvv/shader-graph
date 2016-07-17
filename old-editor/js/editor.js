@@ -184,7 +184,7 @@ var NodeEditor = React.createClass({
 	render: function() {
 		var shader = this.updateShader();
 		var nodes = this.state.nodes;
-		this.updateConnections();
+
 		return React.createElement("div", {id: "canvas", className: "style-scope shader-graph"},
 			nodes.map(function(node) {
 				return React.createElement(Node, {
@@ -197,6 +197,9 @@ var NodeEditor = React.createClass({
 				});
 			}, this)
 		);
+	},
+	componentDidUpdate: function() {
+		this.updateConnections();
 	},
 	nodeTypes: function(){
 		return Object.keys(ShaderGraph.Node.classes).sort().filter(function(type){
