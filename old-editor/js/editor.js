@@ -851,8 +851,7 @@ var Node = React.createClass({
 		this.props.updateNodeData(this.props.data.id, {
 			value: evt.target.value
 		});
-		var v = parseFloat(this.props.data.value);
-		this.props.data.node.value = isNaN(v) ? 0 : v;
+		this.setState(this.state);
 	},
 	onChangeVec2Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -861,10 +860,7 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[1].value
 			]
 		});
-		this.props.data.node.value = this.props.data.value.map(function(comp){
-			var v = parseFloat(comp);
-			return isNaN(v) ? 0 : v;
-		});
+		this.setState(this.state);
 	},
 	onChangeVec3Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -874,10 +870,7 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[2].value
 			]
 		});
-		this.props.data.node.value = this.props.data.value.map(function(comp){
-			var v = parseFloat(comp);
-			return isNaN(v) ? 0 : v;
-		});
+		this.setState(this.state);
 	},
 	onChangeVec4Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -888,10 +881,7 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[3].value
 			]
 		});
-		this.props.data.node.value = this.props.data.value.map(function(comp){
-			var v = parseFloat(comp);
-			return isNaN(v) ? 0 : v;
-		});
+		this.setState(this.state);
 	},
 	handleClickRemove: function(){
 		this.props.removeNode(this.props.data.id);
