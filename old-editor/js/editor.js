@@ -406,6 +406,22 @@ var NodeEditor = React.createClass({
 		if (!batchRender) {
 			this.setState(state);
 		}
+
+		// If there is a temporary link attach it to the new node
+		if (this._tempLink) {
+			var nodeA = this._tempLink.nodeA;
+			var portA = this._tempLink.outputA;
+			var nodeB = data.id;
+			if (this._isOutput(nodeA, portA)) {
+				var portB = ShaderGraph.Node.classes[data.type].prototype.getInputPorts()[0];
+				this.connect(nodeB, portB, nodeA, portA);
+			} else if (this._isInput(nodeA, portA)) {
+				var portB = ShaderGraph.Node.classes[data.type].prototype.getOutputPorts()[0];
+				this.connect(nodeB, portB, nodeA, portA);
+			}
+			this.clearTempConnection();
+		}
+
 		return data.id;
 	},
 	removeNode: function(id){
