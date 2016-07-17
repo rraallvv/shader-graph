@@ -196,18 +196,18 @@ var NodeEditor = React.createClass({
 		}.bind(this));
 	},
 	render: function() {
-		var shader = this.updateShader();
 		var nodes = this.state.nodes;
+		var shader = this.updateShader();
 
-		return React.createElement("div", {id: "canvas", className: "style-scope shader-graph"},
+		return React.createElement("div", {id:"canvas", className:"style-scope shader-graph"},
 			nodes.map(function(node) {
 				return React.createElement(Node, {
-					removeNode: node.type !== 'fragColor' ? this.removeNode : undefined,
-					updateNodeData: this.updateNodeData,
-					instance: this.instance,
-					key: node.id,
-					data: node,
-					shader: shader
+					removeNode:node.type !== 'fragColor' ? this.removeNode : undefined,
+					updateNodeData:this.updateNodeData,
+					instance:this.instance,
+					key:node.id,
+					data:node,
+					shader:shader
 				});
 			}, this)
 		);
@@ -501,6 +501,8 @@ var NodeEditor = React.createClass({
 
 		var state = this.state;
 
+		var link;
+
 		if(!nB.canConnect(inputB, nA, outputA)){
 			if (!nA.canConnect(outputA, nB, inputB)) {
 				console.warn(nB.errorMessage);
@@ -508,23 +510,25 @@ var NodeEditor = React.createClass({
 			} else {
 				// make the connetion in opposite direction
 				nA.connect(outputA, nB, inputB);
-				state.links.push({
+				link = {
 					nodeA: nodeB,
 					nodeB: nodeA,
 					outputA: inputB,
 					inputB: outputA
-				});
+				};
 			}
 		} else {
 			// make the connetion as is
 			nB.connect(inputB, nA, outputA);
-			state.links.push({
+			link = {
 				nodeA: nodeA,
 				nodeB: nodeB,
 				outputA: outputA,
 				inputB: inputB
-			});
+			};
 		}
+
+		state.links.push(link);
 
 		this.setState(state);
 
