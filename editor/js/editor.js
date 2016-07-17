@@ -112,7 +112,7 @@ var NodeEditor = React.createClass({
 					}
 				}
 
-				// Create or reuse the temporarty connection node
+				// Create or reuse the temporarty link node
 				var nodeA = info.outputA;
 				var outputA = info.nodeA;
 				var isInput = component._isInput(outputA, nodeA);
@@ -135,7 +135,7 @@ var NodeEditor = React.createClass({
 				el.style.left = e.clientX - bounds.left;
 				el.style.top = e.clientY - bounds.top;
 
-				// Create the temporary connection
+				// Create the temporary link
 				instance.connect({
 					source: nodeA + outputA,
 					target: el.id,
@@ -354,7 +354,7 @@ var NodeEditor = React.createClass({
 			this.setState(state);
 		}
 
-		// If there is a temporary connection attach it to the new node
+		// If there is a temporary link attach it to the new node
 		if (this._tempLink) {
 			var nodeA = this._tempLink.nodeA;
 			var portA = this._tempLink.outputA;
@@ -546,7 +546,7 @@ var NodeEditor = React.createClass({
 			};
 		}
 
-		// remove existing connections for input ports
+		// remove existing links for input ports
 		var existing = [];
 
 		existing = existing.concat(this._getExistingConnections(nodeA, outputA));
