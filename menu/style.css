@@ -1,9 +1,9 @@
 :host {
 	color: #595959;
 	font-family: "Roboto", sans-serif;
-	font-size: 16px;
+	font-size: 15px;
 	font-weight: 300;
-	line-height: 1.5;
+	/*line-height: 1.5;*/
 }
 
 .menu {
@@ -52,13 +52,26 @@
 .menu-item {
 	cursor: default;
 	display: block;
-	padding: 4px 12px;
+	padding: 2px 12px;
 	color: #0066aa;
 	text-decoration: none;
 }
+
+.menu-item span {
+	background-color: #f9f8c4;
+	text-decoration: underline;
+	text-decoration-color: #e7d215;
+	-webkit-text-decoration-color: #e7d215;
+}
+
 .menu-item-hover {
 	color: #fff;
 	background-color: #0066aa;
+}
+
+.menu-item-hover span {
+	background-color: #7e94e6;
+	text-decoration: underline;
 }
 
 .search {
@@ -68,9 +81,4 @@
 	border: solid 1px #dfdfdf;
 	display: inline-block;
 	outline: 0;
-}
-
-input[type="text"] {
-    font-size:16px;
-	padding: 4px 10px;
 }

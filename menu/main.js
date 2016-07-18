@@ -128,13 +128,23 @@ Editor.polymerElement({
 			if (type.length) {
 				found = false;
 				for (var j = 0; j < result.length; j++) {
-					if (item.innerHTML === result[j].type) {
+					if (item.type === result[j].type) {
 						found = true;
 						break;
 					}
 				}
 			}
 			if (found) {
+				var replace = "";
+				for (var j = 0; j < item.type.length; j++) {
+					var c = item.type[j];
+					if (type.indexOf(c) > -1) {
+						replace += "<span class=\"style-scope search-menu\">" + c + "</span>";
+					} else {
+						replace += c;
+					}
+				}
+				item.innerHTML = replace;
 				item.style.display = "block";
 			} else {
 				item.style.display = "none";
