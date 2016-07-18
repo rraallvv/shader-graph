@@ -58,19 +58,19 @@ Editor.polymerElement({
 				self.toggleMenuOff();
 				e.stopPropagation();
 			};
-			a.onmouseover = function () {
-				self.clearHoveredMenuItems();
-				this.isHovered = true;
-				this.classList.add(contextMenuItemHoverClassName);
-			};
-			a.onmouseout = function () {
+			a.onmouseout = function (e) {
 				this.isHovered = false;
 				this.classList.remove(contextMenuItemHoverClassName);
 			};
 			a.onmousemove = function (e) {
-				if (!this.isHovered) {
-					this.onmouseover(e);
-				};
+				// Doubles as onmouseover because of some issue with the mouse events and the menu scroll
+				if (!this.isHovered && self.oldScreenX !== e.screenX && self.oldScreenY !== e.screenY) {
+					self.clearHoveredMenuItems();
+					this.isHovered = true;
+					this.classList.add(contextMenuItemHoverClassName);
+				}
+				self.oldScreenX = e.screenX;
+				self.oldScreenY = e.screenY;
 			};
 			menu.appendChild(a);
 		}
@@ -283,6 +283,10 @@ Editor.polymerElement({
 	},
 	toggleMenuOn: function() {
 		if ( menuState !== 1 ) {
+			var e = window.event;
+			this.oldScreenX = e.screenX;
+			this.oldScreenY = e.screenY;
+
 			menuState = 1;
 			this.$[searchClassName].innerHTML = "";
 			menu.classList.add( contextMenuActiveClassName );
