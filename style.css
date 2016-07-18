@@ -38,9 +38,12 @@ body {
 /* graph */
 
 .graph {
+	width: 1024px;
+	height: 768px;
 	padding: 15px;
 	display: flex;
 	justify-content: space-between;
+	border: solid 1px red;
 }
 
 /* context menu */

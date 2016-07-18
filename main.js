@@ -7,10 +7,6 @@ var preview = document.getElementById("preview");
 var menu = document.getElementById("context-menu")
 
 window.addEventListener('WebComponentsReady', function(e) {
-	// Build the context menu from the list of available nodes
-	var nodeTypes = shaderGraph.nodeList();
-	menu.buildMenu(nodeTypes);
-
 	menu.onItemSelected = function(name) {
 		var pos = menu.getPosition();
 		shaderGraph.addNode({
@@ -26,6 +22,10 @@ window.addEventListener('WebComponentsReady', function(e) {
 	// Update the shader when the preview is loaded
 	preview.onload = function(){
 		shaderGraph.updateShader();
+
+		// Also build the context menu from the list of available nodes
+		var nodeTypes = shaderGraph.nodeList();
+		menu.buildMenu(nodeTypes);
 	};
 
 	shaderGraph.onShaderUpdate = function(shader){
