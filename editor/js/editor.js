@@ -807,7 +807,7 @@ var Node = React.createClass({
 		this.props.updateNodeData(this.props.data.id, {
 			value: evt.target.value
 		});
-		this.setState(this.state);
+		this.setState({});
 	},
 	onChangeVec2Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -816,7 +816,7 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[1].value
 			]
 		});
-		this.setState(this.state);
+		this.setState({});
 	},
 	onChangeVec3Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -826,7 +826,7 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[2].value
 			]
 		});
-		this.setState(this.state);
+		this.setState({});
 	},
 	onChangeVec4Value: function(evt){
 		this.props.updateNodeData(this.props.data.id, {
@@ -837,7 +837,7 @@ var Node = React.createClass({
 				evt.target.parentNode.childNodes[3].value
 			]
 		});
-		this.setState(this.state);
+		this.setState({});
 	},
 	handleClickRemove: function(){
 		this.props.removeNode(this.props.data.id);
