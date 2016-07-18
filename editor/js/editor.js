@@ -134,9 +134,10 @@ var NodeEditor = React.createClass({
 				}
 
 				// Get the click coordinates relative to the container
+				var zoom = component.instance.getZoom();
 				var bounds = container.getBoundingClientRect();
-				el.style.left = e.clientX - bounds.left;
-				el.style.top = e.clientY - bounds.top;
+				el.style.left = (e.clientX - bounds.left) / zoom;
+				el.style.top = (e.clientY - bounds.top) / zoom;
 
 				// Create the temporary link
 				instance.connect({
@@ -895,6 +896,9 @@ Editor.polymerElement({
 			sy + ", " +
 			tx + ", " +
 			ty + ")";
+		if (this._editor) {
+			this._editor.instance.setZoom(sx);
+		}
 	}
 });
 
