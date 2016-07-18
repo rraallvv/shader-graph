@@ -850,6 +850,7 @@ if ( typeof Editor === "undefined" ) {
 
 Editor.polymerElement({
 	ready: function(){
+		this._t = {sx: 1, sy: 1, tx: 0, ty: 0};
 		setTimeout(function(){
 			this._editor = ReactDOM.render(React.createElement(NodeEditor, {shaderGraph: this}), this.$.content);
 		}.bind(this), 1000);
@@ -873,19 +874,27 @@ Editor.polymerElement({
 		var pos = e.pos || [0, 0];
 		pos[0] -= b.left;
 		pos[1] -= b.top;
+		pos[0] /= this._t.sx;
+		pos[1] /= this._t.sy;
 		e.pos = pos;
 		this._editor.addNode(e);
 	},
 	clearTempConnection: function() {
 		this._editor.clearTempConnection();
 	},
-	setTransform: function( s, r, n, t ){
-		// s = 1, r = 1, n = 0, t = 0;
+	setTransform: function( sx, sy, tx, ty ){
+		tx = Math.round(tx + 0.5 * this.offsetWidth * (sx - 1));
+		ty = Math.round(ty + 0.5 * this.offsetHeight * (sy - 1));
+		this._t.sx = sx;
+		this._t.sy = sy;
+		this._t.tx = tx;
+		this._t.ty = ty;
+		// sx = 1, sy = 1, tx = 0, ty = 0;
 		this.style.transform = "matrix(" +
-			s + ", 0, 0, " +
-			r + ", " +
-			Math.round(n + 0.5 * this.offsetWidth * (s - 1)) + ", " +
-			Math.round(t + 0.5 * this.offsetHeight * (r - 1)) + ")";
+			sx + ", 0, 0, " +
+			sy + ", " +
+			tx + ", " +
+			ty + ")";
 	}
 });
 
