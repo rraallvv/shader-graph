@@ -226,7 +226,8 @@ Editor.polymerElement({
 				this.innerHTML = items[i].type;
 				self.placeCaretAtEnd(this);
 				var offsetHeight = items[i].offsetHeight;
-				var offsetTop = Math.floor(items[i].offsetTop / offsetHeight) * offsetHeight;
+				var offsetTop = items[i].offsetTop - items[0].offsetTop;
+				offsetTop = Math.floor(offsetTop / offsetHeight) * offsetHeight;
 				container.scrollTop = Math.min(container.scrollTop, offsetTop);
 				container.scrollTop = Math.max(container.scrollTop, offsetTop + offsetHeight - container.clientHeight);
 				e.preventDefault();
