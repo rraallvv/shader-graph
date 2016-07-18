@@ -1,11 +1,10 @@
 :host {
 	position: absolute;
+	display: flex;
+	justify-content: space-between;
 	margin: 0px;
 	height: 768px;
 	width: 1024px;
-	border-width: 1px;
-	border-color: red;
-	border-style: solid;
 }
 .inputs {
 	width: 50%;
