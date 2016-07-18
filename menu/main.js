@@ -246,7 +246,7 @@ Editor.polymerElement({
 	},
 	_initClickListener: function() {
 		var self = this;
-		document.addEventListener( "click", function(e) {
+		document.addEventListener( "mousedown", function(e) {
 			var clickeElIsLink = self.clickInsideElement( e, contextMenuClassName );
 
 			if ( clickeElIsLink ) {
