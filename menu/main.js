@@ -10,16 +10,12 @@ var contextMenuActiveClassName = "menu-active";
 
 var searchClassName = "search";
 
-var clickCoordsX;
-var clickCoordsY;
+var position;
 
 var menu;
 var menuState = 0;
 var menuWidth;
 var menuHeight;
-
-var clientRight;
-var clientBottom;
 
 var nodeTypes = [];
 
@@ -304,34 +300,28 @@ Editor.polymerElement({
 		}
 	},
 	positionMenu: function(e) {
-		var doc = document.documentElement;
-		var clientLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
-		var clientTop = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+		position = this._getMousePosition(e);
 
-		var pos = this._getMousePosition(e);
-		clickCoordsX = pos.x - clientLeft;
-		clickCoordsY = pos.y - clientTop;
+		var el = document.getElementsByClassName(this.activateForClass)[0];
+		var bounds = el.getBoundingClientRect();
 
 		menuWidth = menu.offsetWidth + 4;
 		menuHeight = menu.offsetHeight + 4;
 
-		clientRight = clientLeft + window.innerWidth;
-		clientBottom = clientTop + window.innerHeight;
-
-		if ( (clientRight - clickCoordsX - clientLeft) < menuWidth ) {
-			menu.style.left = clientRight - menuWidth /*- this.offsetLeft*/ + "px";
+		if ( position.x + menuWidth > bounds.right ) {
+			menu.style.left = bounds.width - menuWidth + "px";
 		} else {
-			menu.style.left = clickCoordsX + clientLeft /*- this.offsetLeft*/ + "px";
+			menu.style.left = position.x - bounds.left + "px";
 		}
 
-		if ( (clientBottom - clickCoordsY - clientTop) < menuHeight ) {
-			menu.style.top = clientBottom - menuHeight /*- this.offsetTop*/ + "px";
+		if ( position.y + menuHeight > bounds.bottom ) {
+			menu.style.top = bounds.height - menuHeight + "px";
 		} else {
-			menu.style.top = clickCoordsY + clientTop /*- this.offsetTop*/ + "px";
+			menu.style.top = position.y - bounds.top + "px";
 		}
 	},
 	getPosition: function() {
-		return {x: clickCoordsX, y: clickCoordsY};
+		return position;
 	}
 });
 
