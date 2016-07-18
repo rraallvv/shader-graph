@@ -883,6 +883,12 @@ Editor.polymerElement({
 	clearTempConnection: function() {
 		this._editor.clearTempConnection();
 	},
+	resize: function(w, h) {
+		if (w && h) {
+			this.style.width = w;
+			this.style.height = h;
+		}
+	},
 	setTransform: function( sx, sy, tx, ty ){
 		tx = Math.round(tx + 0.5 * this.offsetWidth * (sx - 1));
 		ty = Math.round(ty + 0.5 * this.offsetHeight * (sy - 1));
@@ -891,7 +897,7 @@ Editor.polymerElement({
 		this._t.tx = tx;
 		this._t.ty = ty;
 		// sx = 1, sy = 1, tx = 0, ty = 0;
-		this.style.transform = "matrix(" +
+		this.$.content.style.transform = "matrix(" +
 			sx + ", 0, 0, " +
 			sy + ", " +
 			tx + ", " +
