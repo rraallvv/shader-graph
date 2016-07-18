@@ -247,18 +247,8 @@ Editor.polymerElement({
 	_initClickListener: function() {
 		var self = this;
 		document.addEventListener( "mousedown", function(e) {
-			var clickeElIsLink = self.clickInsideElement( e, contextMenuClassName );
-
-			if ( clickeElIsLink ) {
-				e.preventDefault();
-				if (!self.clickInsideElement( e, searchClassName )) {
-					self.toggleMenuOff();
-				}
-			} else {
-				var button = e.which || e.button;
-				if ( button === 1 ) {
-					self.toggleMenuOff();
-				}
+			if ( e.which === 1 && !self.clickInsideElement( e, contextMenuClassName ) ) {
+				self.toggleMenuOff();
 			}
 		});
 	},
