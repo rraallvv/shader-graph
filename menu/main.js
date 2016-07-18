@@ -232,15 +232,20 @@ Editor.polymerElement({
 	_initContextListener: function() {
 		var self = this;
 		document.addEventListener( "contextmenu", function(e) {
-			var inContext = self.clickInsideElement( e, self.activateForClass );
-
-			if ( inContext ) {
+			if ( e.which === 3 && self.clickInsideElement( e, self.activateForClass ) ) {
 				e.preventDefault();
+				self.openMenu = true;
+			}
+			self.toggleMenuOff();
+		});
+		document.addEventListener( "mousemove", function(e) {
+			self.openMenu = false;
+		});
+		document.addEventListener( "mouseup", function(e) {
+			if (e.which === 3 && self.openMenu) {
 				self.toggleMenuOn();
 				self.positionMenu(e);
-			} else {
-				inContext = null;
-				self.toggleMenuOff();
+				self.openMenu = false;
 			}
 		});
 	},
