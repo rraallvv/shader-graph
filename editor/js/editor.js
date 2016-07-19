@@ -149,6 +149,13 @@ var NodeEditor = React.createClass({
 			}
 		});
 
+		instance.bind("beforeDrag", function (c, e) {
+			component.clearTempConnection();
+			if (component.props.shaderGraph && component.props.shaderGraph.onConnectionStarted) {
+				component.props.shaderGraph.onConnectionStarted(e);
+			}
+		});
+
 		console.log('Mount node editor')
 
 		// suspend drawing and initialize.
