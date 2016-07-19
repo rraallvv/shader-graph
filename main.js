@@ -19,13 +19,13 @@ window.addEventListener('WebComponentsReady', function(e) {
 		shaderGraph.clearTempConnection();
 	};
 
-	// Update the shader when the preview is loaded
-	preview.onload = function(){
-		shaderGraph.updateShader();
-
-		// Also build the context menu from the list of available nodes
+	// Build the context menu when the graph editor be ready
+	shaderGraph.onReady = function(){
 		var nodeTypes = shaderGraph.nodeList();
 		menu.buildMenu(nodeTypes);
+
+		//shaderGraph.loadGraph(demos[1]);
+		//shaderGraph.updateShader();
 	};
 
 	shaderGraph.onShaderUpdate = function(shader){

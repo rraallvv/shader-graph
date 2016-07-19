@@ -13,6 +13,8 @@ var NodeEditor = React.createClass({
 	componentDidMount: function(){
 		var component = this;
 
+		this.props.shaderGraph._editor = this;
+
 		var curviness = function(v){
 			// link going forward
 			var df = 100;
@@ -156,14 +158,18 @@ var NodeEditor = React.createClass({
 			}
 		});
 
-		console.log('Mount node editor')
-
 		// suspend drawing and initialize.
 		instance.batch(function () {
 			// Connect initial links
 			this.initialize(instance);
 
 		}.bind(this));
+
+		console.log('Graph editor ready');
+
+		if (this.props.shaderGraph && this.props.shaderGraph.onReady) {
+			this.props.shaderGraph.onReady();
+		}
 	},
 	initialize: function(instance){
 		this.instance = instance;
@@ -860,8 +866,8 @@ Editor.polymerElement({
 	ready: function(){
 		this._t = {sx: 1, sy: 1, tx: 0, ty: 0};
 		setTimeout(function(){
-			this._editor = ReactDOM.render(React.createElement(NodeEditor, {shaderGraph: this}), this.$.content);
-		}.bind(this), 1000);
+			ReactDOM.render(React.createElement(NodeEditor, {shaderGraph: this}), this.$.content);
+		}.bind(this), 2000);
 	},
 	updateShader: function() {
 		this._editor.updateShader();
