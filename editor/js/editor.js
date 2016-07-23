@@ -668,82 +668,34 @@ var Node = React.createClass({
 
 		var extra;
 
-		switch(this.props.data.type){
+		switch (this.props.data.type) {
 		case 'value':
-			extra = React.createElement("input", {
-				type: "number",
-				className: "style-scope shader-graph",
-				value: this.props.data.value,
-				onChange: this.onChangeValue
-			});
-			break;
 		case 'vec2':
-			extra = React.createElement("div", null,
-				React.createElement("input", {
-					type: "number",
-					className: "style-scope shader-graph",
-					value: this.props.data.value[0],
-					onChange: this.onChangeVec2Value
-				}),
-				React.createElement("input", {
-					type: "number",
-					className: "style-scope shader-graph",
-					value: this.props.data.value[1],
-					onChange: this.onChangeVec2Value
-				})
-			);
-			break;
 		case 'vec3':
-			extra = React.createElement("div", null,
-				React.createElement("input", {
-					type: "number",
-					className: "style-scope shader-graph",
-					value: this.props.data.value[0],
-					onChange: this.onChangeVec3Value
-				}),
-				React.createElement("input", {
-					type: "number",
-					className: "style-scope shader-graph",
-					value: this.props.data.value[1],
-					onChange: this.onChangeVec3Value
-				}),
-				React.createElement("input", {
-					type: "number",
-					className: "style-scope shader-graph",
-					value: this.props.data.value[2],
-					onChange: this.onChangeVec3Value
-				})
-			);
-			break;
 		case 'vec4':
-			extra = React.createElement("div", null,
-				React.createElement("input", {
+			var inputs;
+			if (this.props.data.value.length > 1) {
+				inputs = [];
+				for (var i = 0; i < this.props.data.value.length; i++) {
+					inputs.push(React.createElement("input", {
+						type: "number",
+						className: "style-scope shader-graph",
+						value: this.props.data.value[i],
+						onChange: this.onChangeValue,
+						key: i
+					}));
+				}
+			} else {
+				inputs = React.createElement("input", {
 					type: "number",
 					className: "style-scope shader-graph",
-					value: this.props.data.value[0],
-					onChange: this.onChangeVec4Value
-				}),
-				React.createElement("input", {
-					type: "number",
-					className: "style-scope shader-graph",
-					value: this.props.data.value[1],
-					onChange: this.onChangeVec4Value
-				}),
-				React.createElement("input", {
-					type: "number",
-					className: "style-scope shader-graph",
-					value: this.props.data.value[2],
-					onChange: this.onChangeVec4Value
-				}),
-				React.createElement("input", {
-					type: "number",
-					className: "style-scope shader-graph",
-					value: this.props.data.value[3],
-					onChange: this.onChangeVec4Value
-				})
-			);
+					value: this.props.data.value,
+					onChange: this.onChangeValue
+				});
+			}
+			extra = React.createElement("div", null, inputs);
 			break;
-		};
+		}
 
 		var nodeStyle = {
 			left: this.props.data.pos[0],
@@ -760,38 +712,17 @@ var Node = React.createClass({
 		);
 	},
 	onChangeValue: function(evt){
+		var value;
+		if (evt.target.parentNode.childNodes.length > 1) {
+			value = [];
+			for (var i = 0; i < evt.target.parentNode.childNodes.length; i++) {
+				value.push(evt.target.parentNode.childNodes[i].value);
+			}
+		} else {
+			value = evt.target.value;
+		}
 		this.props.updateNodeData(this.props.data.id, {
-			value: evt.target.value
-		});
-		this.setState({});
-	},
-	onChangeVec2Value: function(evt){
-		this.props.updateNodeData(this.props.data.id, {
-			value: [
-				evt.target.parentNode.childNodes[0].value,
-				evt.target.parentNode.childNodes[1].value
-			]
-		});
-		this.setState({});
-	},
-	onChangeVec3Value: function(evt){
-		this.props.updateNodeData(this.props.data.id, {
-			value: [
-				evt.target.parentNode.childNodes[0].value,
-				evt.target.parentNode.childNodes[1].value,
-				evt.target.parentNode.childNodes[2].value
-			]
-		});
-		this.setState({});
-	},
-	onChangeVec4Value: function(evt){
-		this.props.updateNodeData(this.props.data.id, {
-			value: [
-				evt.target.parentNode.childNodes[0].value,
-				evt.target.parentNode.childNodes[1].value,
-				evt.target.parentNode.childNodes[2].value,
-				evt.target.parentNode.childNodes[3].value
-			]
+			value: value
 		});
 		this.setState({});
 	},
