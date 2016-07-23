@@ -648,21 +648,31 @@ var Node = React.createClass({
 		var shader = this.props.shader;
 		var node = shader.fragmentGraph.getNodeById(this.props.data.id);
 		var inputs = node ? node.getInputPorts().map(function(key){
-			return React.createElement(Port, {
-				type: "in",
-				id: this.props.data.id,
-				instance: this.props.instance,
+			return React.createElement("shader-port", {
+				id: key + this.props.data.id,
 				key: key,
-				portKey: key
+				ref: function (ref) {
+					if (ref) {
+						ref.type = "in";
+						ref.instance = this.props.instance;
+						ref.portKey = key;
+						ref.className = "in style-scope shader-graph";
+					}
+				}.bind(this),
 			});
 		}, this) : undefined;
 		var outputs = node ? node.getOutputPorts().map(function(key){
-			return React.createElement(Port, {
-				type: "out",
-				id: this.props.data.id,
+			return React.createElement("shader-port", {
+				id: key + this.props.data.id,
 				key: key,
-				instance: this.props.instance,
-				portKey: key
+				ref: function (ref) {
+					if (ref) {
+						ref.type = "out";
+						ref.instance = this.props.instance;
+						ref.portKey = key;
+						ref.className = "out style-scope shader-graph"; 
+					}
+				}.bind(this),
 			});
 		}, this) : undefined;
 

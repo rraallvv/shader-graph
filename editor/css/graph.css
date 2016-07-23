@@ -79,6 +79,7 @@
 .w .in {
 	cursor: pointer;
 	margin: 3px;
+	display: block;
 }
 .w .out {
 	text-align: right;
