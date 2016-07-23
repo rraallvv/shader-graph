@@ -655,11 +655,10 @@ var Node = React.createClass({
 					if (ref) {
 						ref.type = "in";
 						ref.instance = this.props.instance;
-						ref.portKey = key;
 						ref.className = "in style-scope shader-graph";
 					}
 				}.bind(this),
-			});
+			}, key);
 		}, this) : undefined;
 		var outputs = node ? node.getOutputPorts().map(function(key){
 			return React.createElement("shader-port", {
@@ -669,11 +668,10 @@ var Node = React.createClass({
 					if (ref) {
 						ref.type = "out";
 						ref.instance = this.props.instance;
-						ref.portKey = key;
-						ref.className = "out style-scope shader-graph"; 
+						ref.className = "out style-scope shader-graph";
 					}
 				}.bind(this),
-			});
+			}, key);
 		}, this) : undefined;
 
 		var removeButton = this.props.removeNode ? React.createElement("span", {
