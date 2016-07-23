@@ -380,6 +380,7 @@ var NodeEditor = React.createClass({
 			if (this._isOutput(nodeA, portA)) {
 				var portB = ShaderGraph.Node.classes[data.type].prototype.getInputPorts()[0];
 				this.connect(nodeB, portB, nodeA, portA);
+				// this.connect(nodeA, portA, nodeB, portB);
 			} else if (this._isInput(nodeA, portA)) {
 				var portB = ShaderGraph.Node.classes[data.type].prototype.getOutputPorts()[0];
 				this.connect(nodeB, portB, nodeA, portA);
@@ -647,32 +648,30 @@ var Node = React.createClass({
 	render: function() {
 		var shader = this.props.shader;
 		var node = shader.fragmentGraph.getNodeById(this.props.data.id);
-		var inputs = node ? node.getInputPorts().map(function(key){
-			return React.createElement("shader-port", {
-				id: key + this.props.data.id,
-				key: key,
-				ref: function (ref) {
-					if (ref) {
-						ref.type = "in";
-						ref.instance = this.props.instance;
-						ref.className = "in style-scope shader-graph";
-					}
-				}.bind(this),
-			}, key);
-		}, this) : undefined;
-		var outputs = node ? node.getOutputPorts().map(function(key){
-			return React.createElement("shader-port", {
-				id: key + this.props.data.id,
-				key: key,
-				ref: function (ref) {
-					if (ref) {
-						ref.type = "out";
-						ref.instance = this.props.instance;
-						ref.className = "out style-scope shader-graph";
-					}
-				}.bind(this),
-			}, key);
-		}, this) : undefined;
+
+		var inputs = node ? React.createElement("shader-rack", {
+			ref: function (ref) {
+				if (ref) {
+					ref.id = this.props.data.id;
+					ref.type = "in";
+					ref.className = "inputs style-scope shader-graph";
+					ref.ports = node.getInputPorts();
+					ref.instance = this.props.instance;
+				}
+			}.bind(this),
+		}): undefined;
+
+		var outputs = node ? React.createElement("shader-rack", {
+			ref: function (ref) {
+				if (ref) {
+					ref.id = this.props.data.id;
+					ref.type = "out";
+					ref.className = "outputs style-scope shader-graph";
+					ref.ports = node.getOutputPorts();
+					ref.instance = this.props.instance;
+				}
+			}.bind(this),
+		}): undefined;
 
 		var removeButton = this.props.removeNode ? React.createElement("span", {
 			className: "glyphicon glyphicon-remove remove-button pull-right style-scope shader-graph",
@@ -770,12 +769,8 @@ var Node = React.createClass({
 			),
 			extra,
 			React.createElement("div", null,
-				React.createElement("div", {className:"inputs style-scope shader-graph"},
-					inputs
-				),
-				React.createElement("div", {className:"outputs style-scope shader-graph"},
-					outputs
-				)
+				inputs,
+				outputs
 			)
 		);
 	},

@@ -1,0 +1,22 @@
+<link rel="import" href="shader-port.html">
+
+<dom-module id="shader-rack">
+	<template>
+		<style>
+			.out,
+			.in {
+				cursor: pointer;
+				margin: 3px;
+				display: block;
+			}
+			.out {
+				text-align: right;
+			}
+		</style>
+		<template is="dom-repeat" items="{{ports}}">
+			<shader-port id="{{item}}{{id}}" type="{{type}}" class$="{{type}}" instance={{instance}}>{{item}}</shader-port>
+		</template>
+    </template>
+
+	<script src="js/rack.js"></script>
+</dom-module>

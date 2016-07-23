@@ -5,18 +5,8 @@ if ( typeof Editor === "undefined" ) {
 }
 
 Editor.polymerElement({
-	detached: function() {
-		this.instance = null;
-	},
-	_instance: function(instance) {
-		if (this.instance) {
-			this.instance.detachAllConnections(this);
-			this.instance.unmakeSource(this);
-			this.instance.unmakeTarget(this);
-		}
-
-		this.instance = instance;
-
+	attached: function() {
+		var instance = this.instance;
 		if (instance && this.offsetParent) {
 			instance.makeSource(this, {
 				connectorStyle: {
@@ -45,12 +35,17 @@ Editor.polymerElement({
 			});
 		}
 	},
+	detached: function() {
+		var instance = this.instance;
+		if (instance) {
+			instance.detachAllConnections(this);
+			instance.unmakeSource(this);
+			instance.unmakeTarget(this);
+		}
+	},
 	properties: {
 		type: String,
-		instance: {
-			type: Object,
-			observer: "_instance"
-		},
+		instance: Object,
 		className: String
 	}
 });
