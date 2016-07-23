@@ -9,10 +9,13 @@ Editor.polymerElement({
 	},
 	properties: {
 		id: String,
-		type: String,
 		instance: Object,
 		className: String,
-		ports: {
+		inputs: {
+			type: Object,
+			value: function(){return [];}
+		},
+		outputs: {
 			type: Object,
 			value: function(){return [];}
 		}

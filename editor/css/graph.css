@@ -6,14 +6,6 @@
 	height: 768px;
 	width: 1024px;
 }
-.inputs {
-	width: 50%;
-	float: left;
-}
-.outputs {
-	width: 50%;
-	float: right;
-}
 .list-group-item {
 	padding: 3px 9px;
 }

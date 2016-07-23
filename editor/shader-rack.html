@@ -3,6 +3,17 @@
 <dom-module id="shader-rack">
 	<template>
 		<style>
+			:host {
+				display: block;
+			}
+			.inputs {
+				width: 50%;
+				float: left;
+			}
+			.outputs {
+				width: 50%;
+				float: right;
+			}
 			.out,
 			.in {
 				cursor: pointer;
@@ -13,9 +24,16 @@
 				text-align: right;
 			}
 		</style>
-		<template is="dom-repeat" items="{{ports}}">
-			<shader-port id="{{item}}{{id}}" type="{{type}}" class$="{{type}}" instance={{instance}}>{{item}}</shader-port>
-		</template>
+		<div class="inputs">
+			<template is="dom-repeat" items="{{inputs}}">
+				<shader-port id="{{item}}{{id}}" type="in" class="in" instance={{instance}}>{{item}}</shader-port>
+			</template>
+		</div>
+		<div class="outputs">
+			<template is="dom-repeat" items="{{outputs}}">
+				<shader-port id="{{item}}{{id}}" type="out" class="out" instance={{instance}}>{{item}}</shader-port>
+			</template>
+		</div>
     </template>
 
 	<script src="js/rack.js"></script>

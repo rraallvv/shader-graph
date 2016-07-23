@@ -649,25 +649,13 @@ var Node = React.createClass({
 		var shader = this.props.shader;
 		var node = shader.fragmentGraph.getNodeById(this.props.data.id);
 
-		var inputs = node ? React.createElement("shader-rack", {
+		var ports = node ? React.createElement("shader-rack", {
 			ref: function (ref) {
 				if (ref) {
 					ref.id = this.props.data.id;
-					ref.type = "in";
-					ref.className = "inputs style-scope shader-graph";
-					ref.ports = node.getInputPorts();
-					ref.instance = this.props.instance;
-				}
-			}.bind(this),
-		}): undefined;
-
-		var outputs = node ? React.createElement("shader-rack", {
-			ref: function (ref) {
-				if (ref) {
-					ref.id = this.props.data.id;
-					ref.type = "out";
-					ref.className = "outputs style-scope shader-graph";
-					ref.ports = node.getOutputPorts();
+					ref.className = "style-scope shader-graph";
+					ref.inputs = node.getInputPorts();
+					ref.outputs = node.getOutputPorts();
 					ref.instance = this.props.instance;
 				}
 			}.bind(this),
@@ -768,10 +756,7 @@ var Node = React.createClass({
 				removeButton
 			),
 			extra,
-			React.createElement("div", null,
-				inputs,
-				outputs
-			)
+			ports
 		);
 	},
 	onChangeValue: function(evt){
