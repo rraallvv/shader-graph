@@ -136,13 +136,24 @@ Editor.polymerElement({
 			}
 			if (found) {
 				var replace = "";
+				var format = false;
 				for (var j = 0; j < item.type.length; j++) {
 					var c = item.type[j];
 					if (type.indexOf(c) > -1) {
-						replace += "<span class=\"style-scope search-menu\">" + c + "</span>";
+						if (!format) {
+							replace += "<span class=\"style-scope search-menu\">";
+							format = true;
+						}
 					} else {
-						replace += c;
+						if (format) {
+							replace += "</span>";
+							format = false;
+						}
 					}
+					replace += c;
+				}
+				if (format) {
+					replace += "</span>";
 				}
 				item.innerHTML = replace;
 				item.style.display = "block";
