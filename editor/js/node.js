@@ -22,7 +22,12 @@ Editor.polymerElement({
 		extra: Object
 	},
 	_onValueChange: function(e) {
-		this.onChange(this.extra.map(function(item) { return parseFloat(item.value); }));
+		var value = this.extra.map(function(item) {
+			return parseFloat(item.value);
+		});
+		this.updateNodeData(parseFloat(this.id), {
+			value: value
+		});
 	}
 });
 

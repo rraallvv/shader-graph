@@ -704,16 +704,10 @@ var Node = React.createClass({
 					ref.outputs = node.getOutputPorts();
 					ref.instance = this.props.instance;
 					ref.extra = extra;
-					ref.onChange = this.onChangeValue;
+					ref.updateNodeData = this.props.updateNodeData;
 				}
 			}.bind(this),
 		}): undefined;
-	},
-	onChangeValue: function(value){
-		this.props.updateNodeData(this.props.data.id, {
-			value: value
-		});
-		this.setState({});
 	},
 	handleClickRemove: function(){
 		this.props.removeNode(this.props.data.id);
