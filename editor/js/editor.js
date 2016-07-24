@@ -646,11 +646,6 @@ var NodeEditor = React.createClass({
 });
 
 var Node = React.createClass({
-	componentDidMount: function(){
-		var el = ReactDOM.findDOMNode(this);
-		var instance = this.props.instance;
-		instance.draggable(el);
-	},
 	render: function() {
 		var shader = this.props.shader;
 		var node = shader.fragmentGraph.getNodeById(this.props.data.id);

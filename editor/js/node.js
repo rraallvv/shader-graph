@@ -5,7 +5,10 @@ if ( typeof Editor === "undefined" ) {
 }
 
 Editor.polymerElement({
-	ready: function() {
+	attached: function() {
+		if (this.instance) {
+			this.instance.draggable(this);
+		}
 	},
 	properties: {
 		id: String,
