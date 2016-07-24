@@ -698,7 +698,6 @@ var Node = React.createClass({
 				if (ref) {
 					ref.type = this.props.data.type;
 					ref.removeNode = this.props.removeNode;
-					ref.handleClickRemove = this.handleClickRemove;
 					ref.className = "w node-type-" + this.props.data.type + " style-scope shader-graph";
 					ref.inputs = node.getInputPorts();
 					ref.outputs = node.getOutputPorts();
@@ -708,9 +707,6 @@ var Node = React.createClass({
 				}
 			}.bind(this),
 		}): undefined;
-	},
-	handleClickRemove: function(){
-		this.props.removeNode(this.props.data.id);
 	}
 });
 

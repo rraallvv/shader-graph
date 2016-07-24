@@ -21,13 +21,16 @@ Editor.polymerElement({
 		},
 		extra: Object
 	},
-	_onValueChange: function(e) {
+	_onValueChange: function() {
 		var value = this.extra.map(function(item) {
 			return parseFloat(item.value);
 		});
 		this.updateNodeData(parseFloat(this.id), {
 			value: value
 		});
+	},
+	_onRemoveNode: function(){
+		this.removeNode(parseFloat(this.id));
 	}
 });
 
