@@ -685,7 +685,7 @@ var Node = React.createClass({
 			break;
 		}
 
-		var ports = node ? React.createElement("shader-rack", {
+		var ports = node ? React.createElement("shader-node", {
 			ref: function (ref) {
 				if (ref) {
 					ref.id = this.props.data.id;
