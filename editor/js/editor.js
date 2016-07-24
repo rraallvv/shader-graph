@@ -229,63 +229,63 @@ var NodeEditor = React.createClass({
 		var nodes = this.state.nodes;
 		var shader = this.updateShader();
 
-		return React.createElement("div", {id:"canvas", className:"style-scope shader-graph"},
-			nodes.map(function(data) {
-				var node = shader.fragmentGraph.getNodeById(data.id);
+		var content = nodes.map(function(data) {
+			var node = shader.fragmentGraph.getNodeById(data.id);
 
-				var extra;
+			var extra;
 
-				switch (data.type) {
-				case 'value':
-				case 'vec2':
-				case 'vec3':
-				case 'vec4':
-					if (data.value.length > 1) {
-						extra = [];
-						for (var i = 0; i < data.value.length; i++) {
-							extra.push(
-								{
-									type: "number",
-									className: "style-scope shader-graph",
-									value: data.value[i],
-								}
-							);
-						}
-					} else {
-						extra = [
+			switch (data.type) {
+			case 'value':
+			case 'vec2':
+			case 'vec3':
+			case 'vec4':
+				if (data.value.length > 1) {
+					extra = [];
+					for (var i = 0; i < data.value.length; i++) {
+						extra.push(
 							{
 								type: "number",
 								className: "style-scope shader-graph",
-								value: data.value,
+								value: data.value[i],
 							}
-						];
+						);
 					}
-					break;
-				}
-
-				return node ? React.createElement("shader-node", {
-					style: {
-						left: data.pos[0],
-						top: data.pos[1]
-					},
-					"data-node-id": data.id,
-					id: data.id,
-					key:data.id,
-					ref: function (ref) {
-						if (ref) {
-							ref.type = data.type;
-							ref.removeNode = data.type !== 'fragColor' ? this.removeNode : undefined;
-							ref.className = "w node-type-" + data.type + " style-scope shader-graph";
-							ref.inputs = node.getInputPorts();
-							ref.outputs = node.getOutputPorts();
-							ref.instance = this.instance;
-							ref.extra = extra;
-							ref.updateNodeData = this.updateNodeData;
+				} else {
+					extra = [
+						{
+							type: "number",
+							className: "style-scope shader-graph",
+							value: data.value,
 						}
-					}.bind(this),
-				}): undefined;
-			}, this)
-		);
+					];
+				}
+				break;
+			}
+
+			return node ? React.createElement("shader-node", {
+				style: {
+					left: data.pos[0],
+					top: data.pos[1]
+				},
+				"data-node-id": data.id,
+				id: data.id,
+				key:data.id,
+				ref: function (ref) {
+					if (ref) {
+						ref.type = data.type;
+						ref.removeNode = data.type !== 'fragColor' ? this.removeNode : undefined;
+						ref.className = "w node-type-" + data.type + " style-scope shader-graph";
+						ref.inputs = node.getInputPorts();
+						ref.outputs = node.getOutputPorts();
+						ref.instance = this.instance;
+						ref.extra = extra;
+						ref.updateNodeData = this.updateNodeData;
+					}
+				}.bind(this),
+			}): undefined;
+		}, this);
+
+		return React.createElement("div", {id:"canvas", className:"style-scope shader-graph"}, content);
 	},
 	componentDidUpdate: function() {
 		this.updateConnections();
