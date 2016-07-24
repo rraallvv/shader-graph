@@ -689,6 +689,9 @@ var Node = React.createClass({
 			ref: function (ref) {
 				if (ref) {
 					ref.id = this.props.data.id;
+					ref.type = this.props.data.type;
+					ref.removeNode = this.props.removeNode;
+					ref.handleClickRemove = this.handleClickRemove;
 					ref.className = "style-scope shader-graph";
 					ref.inputs = node.getInputPorts();
 					ref.outputs = node.getOutputPorts();
@@ -699,21 +702,12 @@ var Node = React.createClass({
 			}.bind(this),
 		}): undefined;
 
-		var removeButton = this.props.removeNode ? React.createElement("span", {
-			className: "glyphicon glyphicon-remove remove-button pull-right style-scope shader-graph",
-			onClick: this.handleClickRemove
-		}) : undefined;
-
 		var nodeStyle = {
 			left: this.props.data.pos[0],
 			top: this.props.data.pos[1]
 		};
 
 		return React.createElement("div", {className:"w node-type-" + this.props.data.type + " style-scope shader-graph", style:nodeStyle, "data-node-id":this.props.data.id},
-			React.createElement("div", {className:"title style-scope shader-graph"},
-				this.props.data.type,
-				removeButton
-			),
 			ports
 		);
 	},

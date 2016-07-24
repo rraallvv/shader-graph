@@ -23,7 +23,21 @@
 			.out {
 				text-align: right;
 			}
+			.title {
+				cursor: move;
+				text-align: center;
+				padding: 5px;
+				background-color: #222;
+				color: #9d9d9d;
+			}
 		</style>
+
+		<div class="title">
+			{{type}}
+			<template is="dom-if" if="{{removeNode}}">
+				<span class="glyphicon glyphicon-remove remove-button pull-right style-scope shader-graph" on-click="handleClickRemove"></span>
+			</template>
+		</div>
 
 		<template is="dom-if" if="{{extra}}">
 			<div>
