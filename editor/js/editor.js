@@ -432,6 +432,12 @@ var NodeEditor = React.createClass({
 		return true;
 	},
 	updateNodeData: function(id, data){
+		if (!data) {
+			return;
+		}
+		if (data.value && data.value.length === 1) {
+			data.value = data.value[0];
+		}
 		var node = this.state.nodes.find(function(node){
 			return node.id === id;
 		});
@@ -649,6 +655,36 @@ var Node = React.createClass({
 		var shader = this.props.shader;
 		var node = shader.fragmentGraph.getNodeById(this.props.data.id);
 
+		var extra;
+
+		switch (this.props.data.type) {
+		case 'value':
+		case 'vec2':
+		case 'vec3':
+		case 'vec4':
+			if (this.props.data.value.length > 1) {
+				extra = [];
+				for (var i = 0; i < this.props.data.value.length; i++) {
+					extra.push(
+						{
+							type: "number",
+							className: "style-scope shader-graph",
+							value: this.props.data.value[i],
+						}
+					);
+				}
+			} else {
+				extra = [
+					{
+						type: "number",
+						className: "style-scope shader-graph",
+						value: this.props.data.value,
+					}
+				];
+			}
+			break;
+		}
+
 		var ports = node ? React.createElement("shader-rack", {
 			ref: function (ref) {
 				if (ref) {
@@ -657,6 +693,8 @@ var Node = React.createClass({
 					ref.inputs = node.getInputPorts();
 					ref.outputs = node.getOutputPorts();
 					ref.instance = this.props.instance;
+					ref.extra = extra;
+					ref.onChange = this.onChangeValue;
 				}
 			}.bind(this),
 		}): undefined;
@@ -665,37 +703,6 @@ var Node = React.createClass({
 			className: "glyphicon glyphicon-remove remove-button pull-right style-scope shader-graph",
 			onClick: this.handleClickRemove
 		}) : undefined;
-
-		var extra;
-
-		switch (this.props.data.type) {
-		case 'value':
-		case 'vec2':
-		case 'vec3':
-		case 'vec4':
-			var inputs;
-			if (this.props.data.value.length > 1) {
-				inputs = [];
-				for (var i = 0; i < this.props.data.value.length; i++) {
-					inputs.push(React.createElement("input", {
-						type: "number",
-						className: "style-scope shader-graph",
-						value: this.props.data.value[i],
-						onChange: this.onChangeValue,
-						key: i
-					}));
-				}
-			} else {
-				inputs = React.createElement("input", {
-					type: "number",
-					className: "style-scope shader-graph",
-					value: this.props.data.value,
-					onChange: this.onChangeValue
-				});
-			}
-			extra = React.createElement("div", null, inputs);
-			break;
-		}
 
 		var nodeStyle = {
 			left: this.props.data.pos[0],
@@ -707,20 +714,10 @@ var Node = React.createClass({
 				this.props.data.type,
 				removeButton
 			),
-			extra,
 			ports
 		);
 	},
-	onChangeValue: function(evt){
-		var value;
-		if (evt.target.parentNode.childNodes.length > 1) {
-			value = [];
-			for (var i = 0; i < evt.target.parentNode.childNodes.length; i++) {
-				value.push(evt.target.parentNode.childNodes[i].value);
-			}
-		} else {
-			value = evt.target.value;
-		}
+	onChangeValue: function(value){
 		this.props.updateNodeData(this.props.data.id, {
 			value: value
 		});
