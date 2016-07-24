@@ -230,15 +230,60 @@ var NodeEditor = React.createClass({
 		var shader = this.updateShader();
 
 		return React.createElement("div", {id:"canvas", className:"style-scope shader-graph"},
-			nodes.map(function(node) {
-				return React.createElement(Node, {
-					removeNode:node.type !== 'fragColor' ? this.removeNode : undefined,
-					updateNodeData:this.updateNodeData,
-					instance:this.instance,
-					key:node.id,
-					data:node,
-					shader:shader
-				});
+			nodes.map(function(data) {
+				var node = shader.fragmentGraph.getNodeById(data.id);
+
+				var extra;
+
+				switch (data.type) {
+				case 'value':
+				case 'vec2':
+				case 'vec3':
+				case 'vec4':
+					if (data.value.length > 1) {
+						extra = [];
+						for (var i = 0; i < data.value.length; i++) {
+							extra.push(
+								{
+									type: "number",
+									className: "style-scope shader-graph",
+									value: data.value[i],
+								}
+							);
+						}
+					} else {
+						extra = [
+							{
+								type: "number",
+								className: "style-scope shader-graph",
+								value: data.value,
+							}
+						];
+					}
+					break;
+				}
+
+				return node ? React.createElement("shader-node", {
+					style: {
+						left: data.pos[0],
+						top: data.pos[1]
+					},
+					"data-node-id": data.id,
+					id: data.id,
+					key:data.id,
+					ref: function (ref) {
+						if (ref) {
+							ref.type = data.type;
+							ref.removeNode = data.type !== 'fragColor' ? this.removeNode : undefined;
+							ref.className = "w node-type-" + data.type + " style-scope shader-graph";
+							ref.inputs = node.getInputPorts();
+							ref.outputs = node.getOutputPorts();
+							ref.instance = this.instance;
+							ref.extra = extra;
+							ref.updateNodeData = this.updateNodeData;
+						}
+					}.bind(this),
+				}): undefined;
 			}, this)
 		);
 	},
@@ -321,6 +366,8 @@ var NodeEditor = React.createClass({
 		}
 		if (typeof data.id === "undefined") {
 			data.id = this.generateId();
+		} else if (typeof data.id !== "number") {
+			data.id = parseInt(data.id);
 		}
 		if (typeof data.pos === "undefined") {
 			data.pos = [0, 0];
@@ -642,66 +689,6 @@ var NodeEditor = React.createClass({
 		if (!batchRender) {
 			this.setState(state);
 		}
-	}
-});
-
-var Node = React.createClass({
-	render: function() {
-		var shader = this.props.shader;
-		var node = shader.fragmentGraph.getNodeById(this.props.data.id);
-
-		var extra;
-
-		switch (this.props.data.type) {
-		case 'value':
-		case 'vec2':
-		case 'vec3':
-		case 'vec4':
-			if (this.props.data.value.length > 1) {
-				extra = [];
-				for (var i = 0; i < this.props.data.value.length; i++) {
-					extra.push(
-						{
-							type: "number",
-							className: "style-scope shader-graph",
-							value: this.props.data.value[i],
-						}
-					);
-				}
-			} else {
-				extra = [
-					{
-						type: "number",
-						className: "style-scope shader-graph",
-						value: this.props.data.value,
-					}
-				];
-			}
-			break;
-		}
-
-		var nodeStyle = {
-			left: this.props.data.pos[0],
-			top: this.props.data.pos[1]
-		};
-
-		return node ? React.createElement("shader-node", {
-			style: nodeStyle,
-			"data-node-id": this.props.data.id,
-			id: this.props.data.id,
-			ref: function (ref) {
-				if (ref) {
-					ref.type = this.props.data.type;
-					ref.removeNode = this.props.removeNode;
-					ref.className = "w node-type-" + this.props.data.type + " style-scope shader-graph";
-					ref.inputs = node.getInputPorts();
-					ref.outputs = node.getOutputPorts();
-					ref.instance = this.props.instance;
-					ref.extra = extra;
-					ref.updateNodeData = this.props.updateNodeData;
-				}
-			}.bind(this),
-		}): undefined;
 	}
 });
 
