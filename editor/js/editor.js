@@ -467,7 +467,7 @@ var NodeEditor = React.createClass({
 		var result = {};
 		var reg = /([^\d]+)(\d+)/;
 		if (typeof info.source !== "undefined") {
-			var attributes = info.source.parentNode.parentNode.parentNode.attributes['data-node-id'];
+			var attributes = info.source.parentNode.parentNode.attributes['data-node-id'];
 			if (attributes) {
 				result.nodeA = attributes.value;
 				result.outputA = info.source.innerHTML;
@@ -478,7 +478,7 @@ var NodeEditor = React.createClass({
 			result.outputA = m[1];
 		}
 		if (typeof info.target !== "undefined") {
-			var attributes = info.target.parentNode.parentNode.parentNode.attributes['data-node-id'];
+			var attributes = info.target.parentNode.parentNode.attributes['data-node-id'];
 			if (attributes) {
 				result.nodeB = attributes.value;
 				result.inputB = info.target.innerHTML;
@@ -685,14 +685,21 @@ var Node = React.createClass({
 			break;
 		}
 
-		var ports = node ? React.createElement("shader-node", {
+		var nodeStyle = {
+			left: this.props.data.pos[0],
+			top: this.props.data.pos[1]
+		};
+
+		return node ? React.createElement("shader-node", {
+			style: nodeStyle,
+			"data-node-id": this.props.data.id,
+			id: this.props.data.id,
 			ref: function (ref) {
 				if (ref) {
-					ref.id = this.props.data.id;
 					ref.type = this.props.data.type;
 					ref.removeNode = this.props.removeNode;
 					ref.handleClickRemove = this.handleClickRemove;
-					ref.className = "style-scope shader-graph";
+					ref.className = "w node-type-" + this.props.data.type + " style-scope shader-graph";
 					ref.inputs = node.getInputPorts();
 					ref.outputs = node.getOutputPorts();
 					ref.instance = this.props.instance;
@@ -701,15 +708,6 @@ var Node = React.createClass({
 				}
 			}.bind(this),
 		}): undefined;
-
-		var nodeStyle = {
-			left: this.props.data.pos[0],
-			top: this.props.data.pos[1]
-		};
-
-		return React.createElement("div", {className:"w node-type-" + this.props.data.type + " style-scope shader-graph", style:nodeStyle, "data-node-id":this.props.data.id},
-			ports
-		);
 	},
 	onChangeValue: function(value){
 		this.props.updateNodeData(this.props.data.id, {
