@@ -6,6 +6,11 @@ if ( typeof Editor === "undefined" ) {
 
 Editor.polymerElement({
 	ready: function() {
+	},
+	properties: {
+		list: {
+			type: Array,
+		}
 	}
 });
 

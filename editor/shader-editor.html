@@ -10,7 +10,11 @@
 				background-color: lightgray;
 			}
 		</style>
-		<div></div>
+		<div>
+			<template is="dom-repeat" items="{{list}}">
+				<div id="{{item.id}}">{{item.type}}</div>
+			</template>
+		</div>
 	</template>
 
 	<script src="js/editor.js"></script>

@@ -285,7 +285,15 @@ var NodeEditor = React.createClass({
 			}): undefined;
 		}, this);
 
-		return React.createElement("shader-editor", {id:"canvas", className:"style-scope shader-graph"}, content);
+		return React.createElement("shader-editor", {
+			id:"canvas",
+			className:"style-scope shader-graph",
+			ref: function (ref) {
+				if (ref) {
+					ref.list = nodes.slice(0);
+				}
+			}.bind(this)
+		});
 	},
 	componentDidUpdate: function() {
 		this.updateConnections();
