@@ -200,6 +200,10 @@ Editor.polymerElement({
 		}.bind(this));
 
 		console.log('Graph editor ready');
+
+		if (this.onReady) {
+			this.onReady();
+		}
 	},
 	initialize: function(instance){
 		this.instance = instance;
