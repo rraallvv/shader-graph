@@ -156,7 +156,7 @@ Editor.polymerElement({
 				var outputA = info.nodeA;
 				var isInput = component._isInput(outputA, nodeA);
 				var container = instance.getContainer();
-				var el = document.getElementById("temp");
+				var el = component.querySelector("#temp");
 				if (el) {
 					component.instance.detachAllConnections(el);
 				} else {
@@ -320,7 +320,7 @@ Editor.polymerElement({
 	},
 	clearTempConnection: function() {
 		this._tempLink = null;
-		var el = document.getElementById("temp")
+		var el = this.querySelector("#temp")
 		if (el) {
 			this.instance.detachAllConnections(el);
 		}
@@ -350,9 +350,9 @@ Editor.polymerElement({
 				instance.detachEveryConnection();
 				this.state.links.forEach(function(link){
 					var srcId = link.outputA + link.nodeA;
-					var src = document.getElementById(srcId);
+					var src = this.querySelector("#" + srcId);
 					var tarId = link.inputB + link.nodeB;
-					var tar = document.getElementById(tarId);
+					var tar = this.querySelector("#" + tarId);
 					if (src && tar) {
 						instance.connect({
 							source: srcId,
@@ -570,12 +570,12 @@ Editor.polymerElement({
 	},
 	_isInput: function(node, port) {
 		var id = port + node;
-		var el = document.getElementById(id);
+		var el = this.querySelector("#" + id);
 		return el && el.classList.contains("in");
 	},
 	_isOutput: function(node, port) {
 		var id = port + node;
-		var el = document.getElementById(id);
+		var el = this.querySelector("#" + id);
 		return el && el.classList.contains("out");
 	},
 	_getExistingConnections: function(node, port) {
