@@ -22,7 +22,9 @@ Editor.polymerElement({
 			type: Object,
 			value: function(){return [];}
 		},
-		extra: Object
+		extra: Object,
+		updateNodeData: Object,
+		removeNode: Object
 	},
 	_onValueChange: function() {
 		var value = this.extra.map(function(item) {

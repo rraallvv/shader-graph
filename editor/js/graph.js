@@ -262,27 +262,20 @@ var NodeEditor = React.createClass({
 				break;
 			}
 
-			return node ? React.createElement("shader-node", {
-				style: {
-					left: data.pos[0],
-					top: data.pos[1]
-				},
-				"data-node-id": data.id,
+			return node ? {
+				style: "left:" + data.pos[0] + "px; top:" + data.pos[1] + "px;",
+				dataNodeId: data.id,
 				id: data.id,
-				key:data.id,
-				ref: function (ref) {
-					if (ref) {
-						ref.type = data.type;
-						ref.removeNode = data.type !== 'fragColor' ? this.removeNode : undefined;
-						ref.className = "w node-type-" + data.type + " style-scope shader-graph";
-						ref.inputs = node.getInputPorts();
-						ref.outputs = node.getOutputPorts();
-						ref.instance = this.instance;
-						ref.extra = extra;
-						ref.updateNodeData = this.updateNodeData;
-					}
-				}.bind(this),
-			}): undefined;
+				key: data.id,
+				type: data.type,
+				removeNode: data.type !== 'fragColor' ? this.removeNode : undefined,
+				className: "w node-type-" + data.type + " style-scope shader-graph",
+				inputs: node.getInputPorts(),
+				outputs: node.getOutputPorts(),
+				instance: this.instance,
+				extra: extra,
+				updateNodeData: this.updateNodeData
+			} : undefined;
 		}, this);
 
 		return React.createElement("shader-editor", {
@@ -290,7 +283,7 @@ var NodeEditor = React.createClass({
 			className:"style-scope shader-graph",
 			ref: function (ref) {
 				if (ref) {
-					ref.list = nodes.slice(0);
+					ref.nodes = content;
 				}
 			}.bind(this)
 		});

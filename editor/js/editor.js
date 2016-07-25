@@ -8,7 +8,7 @@ Editor.polymerElement({
 	ready: function() {
 	},
 	properties: {
-		list: {
+		nodes: {
 			type: Array,
 		}
 	}

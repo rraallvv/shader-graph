@@ -7,14 +7,26 @@
 	<template>
 		<style>
 			:host {
+				position: absolute;
 				background-color: lightgray;
 			}
 		</style>
-		<div>
-			<template is="dom-repeat" items="{{list}}">
-				<div id="{{item.id}}">{{item.type}}</div>
-			</template>
-		</div>
+		<template is="dom-repeat" items="{{nodes}}">
+			<shader-node
+				id$="{{item.id}}"
+				key="{{item.key}}"
+				type="{{item.type}}"
+				instance={{item.instance}}
+				class$="{{item.className}}"
+				inputs={{item.inputs}}
+				outputs={{item.outputs}}
+				extra={{item.extra}}
+				style$={{item.style}}
+				data-node-id$="{{item.dataNodeId}}"
+				remove-node={{item.removeNode}}
+				update-node-data={{item.updateNodeData}}
+				></shader-node>
+		</template>
 	</template>
 
 	<script src="js/editor.js"></script>
