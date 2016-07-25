@@ -13,9 +13,7 @@
 
 		<template is="dom-if" if="{{extra}}">
 			<div>
-				<template is="dom-repeat" items="{{extra}}">
-					<input type="{{item.type}}" class$="{{item.className}}" value="{{item.value::change}}" on-change="_onValueChange"></input>
-				</template>
+				<template is="dom-repeat" items="{{extra}}"><input type="{{item.type}}" class$="{{item.className}}" value="{{item.value::change}}" on-change="_onValueChange"></input></template>
 			</div>
 		</template>
 
