@@ -40,6 +40,7 @@ Editor.polymerElement({
 		this._initClickListener();
 		this._initKeydownListener();
 		this._initResizeListener();
+		fuse = new Fuse(nodeTypes, fuseOptions);
 	},
 	properties: {
 		activateForClass: String
@@ -47,7 +48,6 @@ Editor.polymerElement({
 	buildMenu: function(items) {
 		var self = this;
 		nodeTypes = items.slice(0);
-		fuse = new Fuse(nodeTypes, fuseOptions);
 		var menu = Polymer.dom(this.$[contextMenuItemsClassName]);
 		for (var i = 0; i < nodeTypes.length; i++) {
 			var a = document.createElement("a");
