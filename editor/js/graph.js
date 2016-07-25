@@ -3,17 +3,51 @@
 var ignoreConnectionEvents = false;
 var batchRender = false;
 
-var NodeEditor = React.createClass({
-	getInitialState: function(){
-		return {
+if ( typeof Editor === "undefined" ) {
+	window.Editor = { polymerElement: Polymer, log: console.log };
+}
+
+Editor.polymerElement({
+	ready: function(){
+		this._t = {sx: 1, sy: 1, tx: 0, ty: 0};
+		this.state = {
 			links: [],
 			nodes: []
 		};
 	},
-	componentDidMount: function(){
+	addNode: function(e) {
+		var b = graph.querySelector("#canvas").getBoundingClientRect();
+		var pos = e.pos || [0, 0];
+		pos[0] -= b.left;
+		pos[1] -= b.top;
+		pos[0] /= this._t.sx;
+		pos[1] /= this._t.sy;
+		e.pos = pos;
+		this._addNode(e);
+	},
+	resize: function(w, h) {
+		if (w && h) {
+			this.style.width = w;
+			this.style.height = h;
+		}
+	},
+	setTransform: function( sx, sy, tx, ty ){
+		tx = Math.round(tx + 0.5 * this.offsetWidth * (sx - 1));
+		ty = Math.round(ty + 0.5 * this.offsetHeight * (sy - 1));
+		this._t.sx = sx;
+		this._t.sy = sy;
+		this._t.tx = tx;
+		this._t.ty = ty;
+		// sx = 1, sy = 1, tx = 0, ty = 0;
+		this.$.content.style.transform = "matrix(" +
+			sx + ", 0, 0, " +
+			sy + ", " +
+			tx + ", " +
+			ty + ")";
+		this.instance.setZoom(sx);
+	},
+	attached: function() {
 		var component = this;
-
-		this.props.shaderGraph._editor = this;
 
 		var curviness = function(v){
 			// link going forward
@@ -70,7 +104,7 @@ var NodeEditor = React.createClass({
 			Container: "canvas"
 		});
 
-		this.props.shaderGraph.jsPlumbInstance = instance;
+		this.jsPlumbInstance = instance;
 
 		instance.registerConnectionType("basicRL", {
 			anchors: ["Right", "Left"],
@@ -107,12 +141,12 @@ var NodeEditor = React.createClass({
 				}
 
 				// If onConnectionReleased is not defined abort too
-				if (!component.props.shaderGraph || !component.props.shaderGraph.onConnectionReleased) {
+				if (!component || !component.onConnectionReleased) {
 					return;
 				}
 
 				// Ask the callback if the temporary connection should be aborted 
-				var aborted = component.props.shaderGraph.onConnectionReleased(e);
+				var aborted = component.onConnectionReleased(e);
 				if (typeof aborted === "undefined" || aborted) {
 					return;
 				}
@@ -153,8 +187,8 @@ var NodeEditor = React.createClass({
 
 		instance.bind("beforeDrag", function (c, e) {
 			component.clearTempConnection();
-			if (component.props.shaderGraph && component.props.shaderGraph.onConnectionStarted) {
-				component.props.shaderGraph.onConnectionStarted(e);
+			if (component && component.onConnectionStarted) {
+				component.onConnectionStarted(e);
 			}
 		});
 
@@ -166,10 +200,6 @@ var NodeEditor = React.createClass({
 		}.bind(this));
 
 		console.log('Graph editor ready');
-
-		if (this.props.shaderGraph && this.props.shaderGraph.onReady) {
-			this.props.shaderGraph.onReady();
-		}
 	},
 	initialize: function(instance){
 		this.instance = instance;
@@ -187,7 +217,7 @@ var NodeEditor = React.createClass({
 		});
 
 		// Add the main node
-		this.addNode({
+		this._addNode({
 			type: ShaderGraph.FragColorNode.type,
 			pos: [600, 300]
 		});
@@ -201,7 +231,8 @@ var NodeEditor = React.createClass({
 			var nodes = graph.nodes;
 			var ids = []
 			for (var i = 0; i < nodes.length; i++) {
-				ids.push(this.addNode(nodes[i]));
+				var id = this._addNode(nodes[i]);
+				ids.push(id);
 			}
 			var links = graph.links;
 			for (var i = 0; i < links.length; i++) {
@@ -225,7 +256,8 @@ var NodeEditor = React.createClass({
 			this.setState(this.state);
 		}.bind(this));
 	},
-	render: function() {
+	setState: function(state) {
+		this.state = state;
 		var nodes = this.state.nodes;
 		var shader = this.updateShader();
 
@@ -268,25 +300,19 @@ var NodeEditor = React.createClass({
 				id: data.id,
 				key: data.id,
 				type: data.type,
-				removeNode: data.type !== 'fragColor' ? this.removeNode : undefined,
 				className: "w node-type-" + data.type + " style-scope shader-graph",
 				inputs: node.getInputPorts(),
 				outputs: node.getOutputPorts(),
 				instance: this.instance,
 				extra: extra,
-				updateNodeData: this.updateNodeData
+				removeNode: data.type !== 'fragColor' ? this.removeNode.bind(this) : undefined,
+				updateNodeData: this.updateNodeData.bind(this)
 			} : undefined;
 		}, this);
 
-		return React.createElement("shader-editor", {
-			id:"canvas",
-			className:"style-scope shader-graph",
-			ref: function (ref) {
-				if (ref) {
-					ref.nodes = content;
-				}
-			}.bind(this)
-		});
+		this.nodes = content;
+
+		this.componentDidUpdate();
 	},
 	componentDidUpdate: function() {
 		this.updateConnections();
@@ -309,8 +335,8 @@ var NodeEditor = React.createClass({
 	},
 	updateShader: function(){
 		// window._times = (window._times || 0) + 1, console.log(window._times);
-		if (this.shader && this.props.shaderGraph && this.props.shaderGraph.onShaderUpdate) {
-			this.props.shaderGraph.onShaderUpdate(this.shader);
+		if (this.shader && this.onShaderUpdate) {
+			this.onShaderUpdate(this.shader);
 		}
 
 		return this.shader
@@ -344,7 +370,7 @@ var NodeEditor = React.createClass({
 		}
 		return this.idCounter++;
 	},
-	addNode: function(options, extra){
+	_addNode: function(options, extra){
 		var data = extra || {};
 		if (typeof options === "string") {
 			data.type = options;
@@ -692,67 +718,6 @@ var NodeEditor = React.createClass({
 
 		if (!batchRender) {
 			this.setState(state);
-		}
-	}
-});
-
-if ( typeof Editor === "undefined" ) {
-	window.Editor = { polymerElement: Polymer, log: console.log };
-}
-
-Editor.polymerElement({
-	ready: function(){
-		this._t = {sx: 1, sy: 1, tx: 0, ty: 0};
-		setTimeout(function(){
-			ReactDOM.render(React.createElement(NodeEditor, {shaderGraph: this}), this.$.content);
-		}.bind(this), 2000);
-	},
-	updateShader: function() {
-		this._editor.updateShader();
-	},
-	nodeTypes: function() {
-		return this._editor.nodeTypes();
-	},
-	loadGraph: function(data) {
-		this._editor.loadGraph(data);
-	},
-	clearGraph: function() {
-		this._editor.clearGraph();
-	},
-	addNode: function(e) {
-		var b = graph.querySelector("#canvas").getBoundingClientRect();
-		var pos = e.pos || [0, 0];
-		pos[0] -= b.left;
-		pos[1] -= b.top;
-		pos[0] /= this._t.sx;
-		pos[1] /= this._t.sy;
-		e.pos = pos;
-		this._editor.addNode(e);
-	},
-	clearTempConnection: function() {
-		this._editor.clearTempConnection();
-	},
-	resize: function(w, h) {
-		if (w && h) {
-			this.style.width = w;
-			this.style.height = h;
-		}
-	},
-	setTransform: function( sx, sy, tx, ty ){
-		tx = Math.round(tx + 0.5 * this.offsetWidth * (sx - 1));
-		ty = Math.round(ty + 0.5 * this.offsetHeight * (sy - 1));
-		this._t.sx = sx;
-		this._t.sy = sy;
-		this._t.tx = tx;
-		this._t.ty = ty;
-		// sx = 1, sy = 1, tx = 0, ty = 0;
-		this.$.content.style.transform = "matrix(" +
-			sx + ", 0, 0, " +
-			sy + ", " +
-			tx + ", " +
-			ty + ")";
-		if (this._editor) {
-			this._editor.instance.setZoom(sx);
 		}
 	}
 });
