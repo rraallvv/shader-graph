@@ -14,6 +14,9 @@ Editor.polymerElement({
 			links: [],
 			nodes: []
 		};
+		this.$.template.addEventListener("dom-change", function(event){
+			this.updateConnections();
+		}.bind(this));
 	},
 	addNode: function(e) {
 		var b = graph.querySelector("#canvas").getBoundingClientRect();
@@ -315,8 +318,6 @@ Editor.polymerElement({
 		}, this);
 
 		this.nodes = content;
-
-		this.updateConnections();
 	},
 	clearTempConnection: function() {
 		this._tempLink = null;

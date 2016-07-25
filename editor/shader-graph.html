@@ -6,7 +6,7 @@
 
 	<template>
 		<div id="canvas" class="container-full style-scope shader-graph">
-			<template is="dom-repeat" items="{{nodes}}">
+			<template id="template" is="dom-repeat" items="{{nodes}}">
 				<shader-node
 					id$="{{item.id}}"
 					key="{{item.key}}"
