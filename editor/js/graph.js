@@ -348,20 +348,27 @@ Editor.polymerElement({
 			this.instance.batch(function () {
 				var instance = this.instance;
 				ignoreConnectionEvents = true;
-				instance.detachEveryConnection();
+				var missing = false;
+				var connections = [];
 				this.state.links.forEach(function(link){
 					var srcId = link.outputA + link.nodeA;
 					var src = this.querySelector("#" + srcId);
 					var tarId = link.inputB + link.nodeB;
 					var tar = this.querySelector("#" + tarId);
 					if (src && tar) {
-						instance.connect({
-							source: srcId,
-							target: tarId,
-							type: "basicRL"
-						});
+						connections.push({source: srcId, target: tarId, type: "basicRL"});
+					} else {
+						missing = true;
 					}
 				}, this);
+				if (missing) {
+					setTimeout(function() { this.updateConnections(); }.bind(this), 100);
+				} else {
+					instance.detachEveryConnection();
+					connections.forEach(function(link) {
+						instance.connect(link);
+					}, this);
+				}
 				ignoreConnectionEvents = false;
 			}.bind(this));
 		}
