@@ -299,9 +299,12 @@ var NodeEditor = React.createClass({
 		}
 	},
 	nodeTypes: function(){
-		return Object.keys(ShaderGraph.Node.classes).sort().filter(function(type){
+		var types = Object.keys(ShaderGraph.Node.classes).sort().filter(function(type){
 			// Should not list the main node
 			return type !== 'fragColor' && type !== 'position';
+		});
+		return types.map(function (type) {
+			return { type: type };
 		});
 	},
 	updateShader: function(){
@@ -708,9 +711,7 @@ Editor.polymerElement({
 		this._editor.updateShader();
 	},
 	nodeTypes: function() {
-		return this._editor.nodeTypes().map(function (type) {
-			return { type: type };
-		});
+		return this._editor.nodeTypes();
 	},
 	loadGraph: function(data) {
 		this._editor.loadGraph(data);
