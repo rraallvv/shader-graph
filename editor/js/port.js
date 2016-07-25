@@ -45,8 +45,7 @@ Editor.polymerElement({
 	},
 	properties: {
 		type: String,
-		instance: Object,
-		className: String
+		instance: Object
 	}
 });
 
