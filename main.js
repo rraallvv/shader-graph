@@ -7,6 +7,15 @@ var preview = document.getElementById("preview");
 var menu = document.getElementById("context-menu")
 
 var demos = [
+	{ name: "Color",
+		nodes: [
+			{type:"fragColor", pos:[650, 130]},
+			{type:"vec4", pos:[100, 100], value:[1,0,0,1]}
+		],
+		links: [
+			[1, 0]
+		]
+	},
 	{ name: "Pattern",
 		nodes: [
 			{type:"fragColor", pos:[650, 130]},
