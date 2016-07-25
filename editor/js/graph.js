@@ -39,7 +39,7 @@ Editor.polymerElement({
 		this._t.tx = tx;
 		this._t.ty = ty;
 		// sx = 1, sy = 1, tx = 0, ty = 0;
-		this.$.content.style.transform = "matrix(" +
+		this.$.canvas.style.transform = "matrix(" +
 			sx + ", 0, 0, " +
 			sy + ", " +
 			tx + ", " +
