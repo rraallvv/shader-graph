@@ -316,9 +316,6 @@ Editor.polymerElement({
 
 		this.nodes = content;
 
-		this.componentDidUpdate();
-	},
-	componentDidUpdate: function() {
 		this.updateConnections();
 	},
 	clearTempConnection: function() {
