@@ -707,7 +707,7 @@ Editor.polymerElement({
 	updateShader: function() {
 		this._editor.updateShader();
 	},
-	nodeList: function() {
+	nodeTypes: function() {
 		return this._editor.nodeTypes().map(function (type) {
 			return { type: type };
 		});

@@ -21,7 +21,7 @@ window.addEventListener('WebComponentsReady', function(e) {
 
 	// Build the context menu when the graph editor be ready
 	shaderGraph.onReady = function(){
-		var nodeTypes = shaderGraph.nodeList();
+		var nodeTypes = shaderGraph.nodeTypes();
 		menu.buildMenu(nodeTypes);
 
 		//shaderGraph.loadGraph(demos[1]);
