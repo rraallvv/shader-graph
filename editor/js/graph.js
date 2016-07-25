@@ -295,7 +295,7 @@ Editor.polymerElement({
 			}
 
 			return node ? {
-				style: "left:" + data.pos[0] + "px; top:" + data.pos[1] + "px;",
+				pos: data.pos,
 				dataNodeId: data.id,
 				id: data.id,
 				key: data.id,
