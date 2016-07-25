@@ -77,6 +77,8 @@ cc.Class({
         this.parameters.resolution.y = ( this.node.getContentSize().height );
     },
 	updateShader: function updateShader() {
+		//cc.game.emit(cc.game.EVENT_SHOW, cc.game);
+
 		var linked = false;
 		this._program = new cc.GLProgram();
 		if (cc.sys.isNative) {
@@ -106,6 +108,9 @@ cc.Class({
 		} else {
 			this.setProgram(this.node._sgNode, cc.shaderCache.programForKey("ShaderPositionTextureColor"));
 		}
+
+		cc.director.render(cc.director._deltaTime);
+		cc.game.emit(cc.game.EVENT_HIDE, cc.game);
 	},
 	setProgram: function setProgram(node, program) {
 		if (cc.sys.isNative) {
