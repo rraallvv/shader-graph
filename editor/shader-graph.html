@@ -1,4 +1,3 @@
-<link rel="import" href="shader-editor.html">
 <link rel="import" href="shader-node.html">
 
 <dom-module id="shader-graph">
@@ -6,7 +5,24 @@
 	<link rel="import" type="css" href="css/graph.css">
 
 	<template>
-		<shader-editor id="canvas" class="container-full style-scope shader-graph" nodes={{nodes}}>loading...</div>
+		<div id="canvas" class="container-full style-scope shader-graph">
+			<template is="dom-repeat" items="{{nodes}}">
+				<shader-node
+					id$="{{item.id}}"
+					key="{{item.key}}"
+					type="{{item.type}}"
+					instance={{item.instance}}
+					class$="{{item.className}}"
+					inputs={{item.inputs}}
+					outputs={{item.outputs}}
+					extra={{item.extra}}
+					style$={{item.style}}
+					data-node-id$="{{item.dataNodeId}}"
+					remove-node={{item.removeNode}}
+					update-node-data={{item.updateNodeData}}
+					></shader-node>
+			</template>
+		</div>
 	</template>
 
 	<script src="js/external/jsplumb.js"></script>
