@@ -86,11 +86,13 @@ window.addEventListener('WebComponentsReady', function(e) {
 	};
 
 	// Build the context menu when the graph editor be ready
-	var nodeTypes = shaderGraph.nodeTypes();
-	menu.buildMenu(nodeTypes);
+	// shaderGraph.onReady = function(){
+		var nodeTypes = shaderGraph.nodeTypes();
+		menu.buildMenu(nodeTypes);
 
-	shaderGraph.loadGraph(demos[1]);
-	//shaderGraph.updateShader();
+		shaderGraph.loadGraph(demos[1]);
+		//shaderGraph.updateShader();
+	// };
 
 	shaderGraph.onShaderUpdate = function(shader){
 		var shaderDef = shader.buildShader()
