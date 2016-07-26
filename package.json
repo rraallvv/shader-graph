@@ -15,9 +15,6 @@
   "license": "MIT",
   "devDependencies": {
     "Polymer": "^1.2.0",
-    "grunt": "^0.4.5",
-    "grunt-contrib-nodeunit": "^0.4.1",
-    "grunt-contrib-watch": "^0.6.1",
     "webcomponents.js": "^0.7.2",
     "webpack": "^1.12.2"
   },
