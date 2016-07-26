@@ -152,6 +152,7 @@ Editor.polymerElement({
 
 				// If it was droped on a node just abort
 				if (typeof info.nodeB !== "undefined") {
+					component.clearTempConnection();
 					return;
 				}
 
