@@ -47,7 +47,9 @@ Editor.polymerElement({
 			sy + ", " +
 			tx + ", " +
 			ty + ")";
-		this.instance.setZoom(sx);
+		if (this.instance) {
+			this.instance.setZoom(sx);
+		}
 	},
 	attached: function() {
 		var component = this;
