@@ -20,6 +20,12 @@ cc.Class({
 		}
 	},
 	onLoad: function onLoad() {
+		/*
+		cc.eventManager.addCustomListener(cc.Director.EVENT_AFTER_DRAW, function() {
+			cc.game.emit(cc.game.EVENT_HIDE, cc.game);
+		});
+		*/
+
 		this.parameters = {
             startTime: Date.now(),
             time: 0.0,
@@ -109,6 +115,7 @@ cc.Class({
 			this.setProgram(this.node._sgNode, cc.shaderCache.programForKey("ShaderPositionTextureColor"));
 		}
 
+        cc.director.visit(cc.director._deltaTime);
 		cc.director.render(cc.director._deltaTime);
 		cc.game.emit(cc.game.EVENT_HIDE, cc.game);
 	},
