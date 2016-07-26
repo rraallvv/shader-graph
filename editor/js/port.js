@@ -9,12 +9,6 @@ Editor.polymerElement({
 		var instance = this.instance;
 		if (instance && this.offsetParent) {
 			instance.makeSource(this, {
-				connectorStyle: {
-					strokeStyle: "black",
-					lineWidth: 2,
-					outlineColor: "transparent",
-					outlineWidth: 4
-				},
 				// maxConnections: 1,
 				connectionType: this.type === "in" ? "basicLR" : "basicRL",
 				onMaxConnections: function (info, e) {

@@ -52,15 +52,7 @@ input {
 	display: node;
 }
 .w {
-	padding: 0;
-	position: absolute;
 	z-index: 4;
-	border: 1px solid black;
-	background-color: white;
-	font-size: 11px;
-	min-width: 100px;
-	border-radius: 4px;
-	color: #555;
 }
 .w .out,
 .w .in {
@@ -79,7 +71,7 @@ input {
 	color: #9d9d9d;
 }
 .w:hover {
-	background-color: #ddd;
+	/*background-color: #ddd;*/
 }
 .jsplumb-source-hover,
 .jsplumb-target-hover {

@@ -99,8 +99,13 @@ Editor.polymerElement({
 
 		// setup some defaults for jsPlumb.
 		var instance = jsPlumb.getInstance({
-			Endpoint: ["Dot", {radius: 0.00001}],
+			Endpoint: ["Dot", {radius: 3}],
+            EndpointStyle: { fillStyle: "white" },
 			Connector: ["Bezier", {curviness: curviness, snapThreshold: 0.00001}],
+            PaintStyle: {
+				strokeStyle: "white",
+				lineWidth: 2
+			},
 			HoverPaintStyle: {
 				strokeStyle: "#ddd",
 				lineWidth: 2

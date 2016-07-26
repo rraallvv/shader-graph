@@ -1,6 +1,16 @@
 :host {
 	position: absolute;
 	display: block;
+	padding: 0;
+	z-index: 4;
+	border: 1px solid black;
+	font-size: 11px;
+	min-width: 100px;
+	border-radius: 4px;
+	color: #9d9d9d;
+	box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+	background: rgba(32,32,32,0.6);
+    background: linear-gradient(rgba(32,32,32,0.6), rgba(64,64,64,0.6));
 }
 .node-type-vec2 input {
 	width: 50px;
@@ -25,15 +35,23 @@
 	margin: 3px;
 	display: block;
 }
+.in {
+	text-align: left;
+	padding-left: 8px;
+	margin-left: 5px;
+}
 .out {
 	text-align: right;
+	padding-right: 8px;
+	margin-right: 5px;
 }
 .title {
 	cursor: move;
 	text-align: center;
-	padding: 5px;
-	background-color: #222;
+	padding: 4px;
 	color: #9d9d9d;
+	background: rgba(16,16,16,0.1);
+	/*background: linear-gradient(rgba(32,32,32,0.6), rgba(64,64,64,0.6));*/
 }
 .remove-button {
 	position: relative;
