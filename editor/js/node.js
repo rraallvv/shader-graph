@@ -50,8 +50,10 @@ Editor.polymerElement({
 		this.removeNode(parseFloat(this.id));
 	},
 	_pos: function(pos) {
+		// if (pos) {
 		this.style.left = pos[0];
 		this.style.top = pos[1];
+		// }
 	}
 });
 

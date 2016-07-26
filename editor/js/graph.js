@@ -52,6 +52,16 @@ Editor.polymerElement({
 		}
 	},
 	attached: function() {
+		this._attachedDeferred();
+	},
+	_attachedDeferred: function() {
+		if (!document.contains(this) || !this.offsetParent) {
+			setTimeout(function(){
+				this._attachedDeferred();
+			}.bind(this), 100);
+			return;
+		}
+
 		var component = this;
 
 		var curviness = function(v){
@@ -357,6 +367,7 @@ Editor.polymerElement({
 					var src = this.querySelector("#" + srcId);
 					var tarId = link.inputB + link.nodeB;
 					var tar = this.querySelector("#" + tarId);
+					//if (document.contains(src) && document.contains(tar)) {
 					if (src && tar) {
 						connections.push({source: srcId, target: tarId, type: "basicRL"});
 					} else {
