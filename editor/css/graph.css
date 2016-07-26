@@ -6,18 +6,6 @@
 	height: 768px;
 	width: 1024px;
 }
-.list-group-item {
-	padding: 3px 9px;
-}
-.node-type-vec2 input {
-	width: 50px;
-}
-.node-type-vec3 input {
-	width: 35px;
-}
-.node-type-vec4 input {
-	width: 30px;
-}
 
 /* Bootstrap */
 

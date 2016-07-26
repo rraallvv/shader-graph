@@ -307,7 +307,7 @@ Editor.polymerElement({
 				id: data.id,
 				key: data.id,
 				type: data.type,
-				className: "w node-type-" + data.type + " style-scope shader-graph",
+				className: "w style-scope shader-graph",
 				inputs: node.getInputPorts(),
 				outputs: node.getOutputPorts(),
 				instance: this.instance,
