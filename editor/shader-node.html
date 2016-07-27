@@ -11,13 +11,12 @@
 			</template>
 		</div>
 
-		<template is="dom-if" if="{{extra}}">
-			<div class$="node-type-{{type}}">
-				<template is="dom-repeat" items="{{extra}}"><input type="{{item.type}}" class$="{{item.className}}" value="{{item.value::change}}" on-change="_onValueChange"></input></template>
-			</div>
-		</template>
-
 		<div class="inputs">
+			<template is="dom-if" if="{{extra}}">
+				<div class$="node-type-{{type}}">
+					<template is="dom-repeat" items="{{extra}}"><editor-unit-input class$="{{item.className}}" input-value="{{item.value}}"></editor-unit-input></template>
+				</div>
+			</template>
 			<template is="dom-repeat" items="{{inputs}}">
 				<shader-port id="{{item}}{{id}}" type="in" class="in" instance={{instance}}>{{item}}</shader-port>
 			</template>

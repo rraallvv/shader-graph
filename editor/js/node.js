@@ -29,7 +29,10 @@ Editor.polymerElement({
 			type: Object,
 			value: function(){return [];}
 		},
-		extra: Object,
+		extra: {
+			type: Object,
+			value: function(){return [];}
+		},
 		updateNodeData: Object,
 		removeNode: Object,
 		pos: {
@@ -38,13 +41,18 @@ Editor.polymerElement({
 			observer: "_pos"
 		}
 	},
+	observers: [
+		'_onValueChange(extra.*)'
+	],
 	_onValueChange: function() {
 		var value = this.extra.map(function(item) {
 			return parseFloat(item.value);
 		});
-		this.updateNodeData(parseFloat(this.id), {
-			value: value
-		});
+		if (this.updateNodeData) {
+			this.updateNodeData(parseFloat(this.id), {
+				value: value
+			});
+		}
 	},
 	_onRemoveNode: function(){
 		this.removeNode(parseFloat(this.id));

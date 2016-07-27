@@ -13,18 +13,6 @@
 	height: 768px;
 	width: 1024px;
 }
-:host input[type=button] {
-	-webkit-appearance: button;
-	cursor: pointer
-}
-:host input[disabled] {
-	cursor: default
-}
-input {
-	margin: 0;
-	font: inherit;
-	color: inherit
-}
 @font-face {
 	font-family: 'Glyphicons Halflings';
 	src: url(../fonts/glyphicons-halflings-regular.eot);
