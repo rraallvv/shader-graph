@@ -38,7 +38,7 @@ http.createServer(function(request, response) {
 	if (!file) {
 		console.log("500: " + uri);
 		response.writeHead(500, {"Content-Type": "text/plain"});
-		response.write(err + "\n");
+		response.write("500 Not Found\n");
 		response.end();
 		return;
 	}
