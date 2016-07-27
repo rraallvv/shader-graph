@@ -305,8 +305,6 @@ Editor.polymerElement({
 					for (var i = 0; i < data.value.length; i++) {
 						extra.push(
 							{
-								type: "number",
-								className: "style-scope shader-graph",
 								value: data.value[i],
 							}
 						);
@@ -314,8 +312,6 @@ Editor.polymerElement({
 				} else {
 					extra = [
 						{
-							type: "number",
-							className: "style-scope shader-graph",
 							value: data.value,
 						}
 					];
@@ -329,7 +325,7 @@ Editor.polymerElement({
 				id: data.id,
 				key: data.id,
 				type: data.type,
-				className: "w style-scope shader-graph",
+				className: "w",
 				inputs: node.getInputPorts(),
 				outputs: node.getOutputPorts(),
 				instance: this.instance,

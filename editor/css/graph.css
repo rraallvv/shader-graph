@@ -42,25 +42,6 @@
 .w {
 	z-index: 4;
 }
-.w .out,
-.w .in {
-	cursor: pointer;
-	margin: 3px;
-	display: block;
-}
-.w .out {
-	text-align: right;
-}
-.w .title {
-	cursor: move;
-	text-align: center;
-	padding: 5px;
-	background-color: #222;
-	color: #9d9d9d;
-}
-.w:hover {
-	/*background-color: #ddd;*/
-}
 .jsplumb-source-hover,
 .jsplumb-target-hover {
 	background-color: #ddd;
