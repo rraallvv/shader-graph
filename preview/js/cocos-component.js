@@ -75,6 +75,9 @@ cc.Class({
 			}
 		});
 
+        cc.director.visit(cc.director._deltaTime);
+		cc.director.render(cc.director._deltaTime);
+		cc.game.emit(cc.game.EVENT_HIDE, cc.game);
 		cc.eventManager.dispatchCustomEvent("preview_did_load");
 	},
 	updateGLParameters(){
