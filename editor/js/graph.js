@@ -126,13 +126,16 @@ Editor.polymerElement({
 
 		this.jsPlumbInstance = instance;
 
+		var leftAnchor = [0, 0.5, -1, 0, 1, 2];
+		var rightAnchor = [1, 0.5, 1, 0, 1, 2];
+
 		instance.registerConnectionType("basicRL", {
-			anchors: ["Right", "Left"],
+			anchors: [rightAnchor, leftAnchor],
 			connector: "Bezier"
 		});
 
 		instance.registerConnectionType("basicLR", {
-			anchors: ["Left", "Right"],
+			anchors: [leftAnchor, rightAnchor],
 			connector: "Bezier"
 		});
 
