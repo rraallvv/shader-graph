@@ -27,6 +27,12 @@ Editor.polymerElement({
 					console.error("Maximum number of links (" + info.maxConnections + ") reached in target");
 				},
 			});
+
+			instance.addEndpoint(this, {
+                endpoint: ["Dot", { radius: 3 }],
+				paintStyle:{ strokeStyle:"white", lineWidth:1 },
+				anchor: this.type === "in" ? instance.leftAnchor : instance.rightAnchor,
+			});
 		}
 	},
 	detached: function() {
