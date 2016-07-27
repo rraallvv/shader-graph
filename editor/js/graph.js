@@ -331,7 +331,8 @@ Editor.polymerElement({
 				instance: this.instance,
 				extra: extra,
 				removeNode: data.type !== 'fragColor' ? this.removeNode.bind(this) : undefined,
-				updateNodeData: this.updateNodeData.bind(this)
+				updateNodeData: this.updateNodeData.bind(this),
+				selected: true
 			} : undefined;
 		}, this);
 

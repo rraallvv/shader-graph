@@ -39,6 +39,11 @@ Editor.polymerElement({
 			type: Array,
 			value: function() { return [0,0]; },
 			observer: "_pos"
+		},
+		selected: {
+			type: Boolean,
+			value: false,
+			observer: "_selected"
 		}
 	},
 	observers: [
@@ -62,6 +67,13 @@ Editor.polymerElement({
 		this.style.left = pos[0];
 		this.style.top = pos[1];
 		// }
+	},
+	_selected: function(selected){
+		if (true) {
+			this.classList.add("selected");
+		} else {
+			this.classList.remove("selected");
+		}
 	}
 });
 
