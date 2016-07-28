@@ -14,9 +14,7 @@ Editor.polymerElement({
 			links: [],
 			nodes: []
 		};
-		this.$.template.addEventListener("dom-change", function(event){
-			this.updateConnections();
-		}.bind(this));
+		this.$.template.addEventListener("dom-change", this.domChange.bind(this));
 	},
 	addNode: function(e) {
 		var b = graph.querySelector("#canvas").getBoundingClientRect();
@@ -780,6 +778,9 @@ Editor.polymerElement({
 				top <= node.offsetTop + node.offsetHeight;
 			node.selected = selected;
 		}
+	},
+	domChange: function(event){
+		this.updateConnections();
 	}
 });
 
