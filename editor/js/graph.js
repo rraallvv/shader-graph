@@ -749,25 +749,35 @@ Editor.polymerElement({
 		}
 	},
 	updateSelectRect: function( left, top, width, height ){
-		var ox = (0.5 * (this.offsetWidth - (this._t.sx * this.offsetWidth)) + this._t.tx) / this._t.sx;
-		left = left / this._t.sx - ox;
-		width = width / this._t.sx;
+		var nodes = this.querySelectorAll("shader-node");
 
-		var oy = (0.5 * (this.offsetHeight - (this._t.sy * this.offsetHeight)) + this._t.ty) / this._t.sy;
-		top = top / this._t.sy - oy;
-		height = height / this._t.sy;
+		if (!left || !top || !width || !height) {
+			// Deselect all nodes if selection rect is undefined
+			for(var i = 0; i < nodes.length; i++) {
+				nodes[i].selected = false;
+			}
+			return;
+		}
+
+		// Apply the local transformation to the selection rect
+		left -= 0.5 * (this.offsetWidth - (this._t.sx * this.offsetWidth)) + this._t.tx;
+		left /= this._t.sx;
+		width /= this._t.sx;
+
+		top -= 0.5 * (this.offsetHeight - (this._t.sy * this.offsetHeight)) + this._t.ty;
+		top /= this._t.sy;
+		height /= this._t.sy;
 
 		var right = left + width;
 		var bottom = top + height;
-		var nodes = this.querySelectorAll("shader-node");
+
+		// Find and mark as selected all the nodes insersecting the selection rect
 		for(var i = 0; i < nodes.length; i++) {
 			var node = nodes[i];
-			offsetRight = node.offsetLeft + node.offsetWidth;
-			offsetBottom = node.offsetTop + node.offsetHeight;
 			var selected = node.offsetLeft <= right &&
-				left <= offsetRight &&
+				left <= node.offsetLeft + node.offsetWidth &&
 				node.offsetTop <= bottom &&
-				top <= offsetBottom;
+				top <= node.offsetTop + node.offsetHeight;
 			node.selected = selected;
 		}
 	}
