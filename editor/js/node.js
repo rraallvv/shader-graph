@@ -20,7 +20,6 @@ Editor.polymerElement({
 	properties: {
 		id: String,
 		instance: Object,
-		className: String,
 		inputs: {
 			type: Object,
 			value: function(){return [];}
@@ -42,7 +41,7 @@ Editor.polymerElement({
 		},
 		selected: {
 			type: Boolean,
-			value: false,
+			value: function() { return false; },
 			observer: "_selected"
 		}
 	},
@@ -69,7 +68,7 @@ Editor.polymerElement({
 		}
 	},
 	_selected: function(selected){
-		if (true) {
+		if (selected) {
 			this.classList.add("selected");
 		} else {
 			this.classList.remove("selected");

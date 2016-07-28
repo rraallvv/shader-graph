@@ -332,7 +332,6 @@ Editor.polymerElement({
 				extra: extra,
 				removeNode: data.type !== 'fragColor' ? this.removeNode.bind(this) : undefined,
 				updateNodeData: this.updateNodeData.bind(this),
-				selected: true
 			} : undefined;
 		}, this);
 
@@ -747,6 +746,29 @@ Editor.polymerElement({
 
 		if (!batchRender) {
 			this.setState(state);
+		}
+	},
+	updateSelectRect: function( left, top, width, height ){
+		var ox = (0.5 * (this.offsetWidth - (this._t.sx * this.offsetWidth)) + this._t.tx) / this._t.sx;
+		left = left / this._t.sx - ox;
+		width = width / this._t.sx;
+
+		var oy = (0.5 * (this.offsetHeight - (this._t.sy * this.offsetHeight)) + this._t.ty) / this._t.sy;
+		top = top / this._t.sy - oy;
+		height = height / this._t.sy;
+
+		var right = left + width;
+		var bottom = top + height;
+		var nodes = this.querySelectorAll("shader-node");
+		for(var i = 0; i < nodes.length; i++) {
+			var node = nodes[i];
+			offsetRight = node.offsetLeft + node.offsetWidth;
+			offsetBottom = node.offsetTop + node.offsetHeight;
+			var selected = node.offsetLeft <= right &&
+				left <= offsetRight &&
+				node.offsetTop <= bottom &&
+				top <= offsetBottom;
+			node.selected = selected;
 		}
 	}
 });
