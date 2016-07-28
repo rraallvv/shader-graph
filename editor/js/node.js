@@ -49,13 +49,15 @@ Editor.polymerElement({
 		'_onValueChange(extra.*)'
 	],
 	_onValueChange: function() {
-		var value = this.extra.map(function(item) {
-			return parseFloat(item.value);
-		});
-		if (this.updateNodeData) {
-			this.updateNodeData(parseFloat(this.id), {
-				value: value
+		if (this.extra) {
+			var value = this.extra.map(function(item) {
+				return parseFloat(item.value);
 			});
+			if (this.updateNodeData) {
+				this.updateNodeData(parseFloat(this.id), {
+					value: value
+				});
+			}
 		}
 	},
 	_onRemoveNode: function(){

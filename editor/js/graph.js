@@ -494,6 +494,8 @@ Editor.polymerElement({
 		return data.id;
 	},
 	removeNode: function(id){
+		id = parseInt(id);
+
 		var state = this.state;
 
 		var nodeToRemove = state.nodes.find(function(node){
@@ -511,6 +513,7 @@ Editor.polymerElement({
 			if(!nA) throw new Error('couldnt find node ' + link.nodeA);
 			var nB = this.shader.fragmentGraph.getNodeById(link.nodeB);
 			if(!nB) throw new Error('couldnt find node ' + link.nodeB);
+
 			nA.disconnect(link.outputA, nB, link.inputB);
 
 			var idx = state.links.indexOf(link);
@@ -747,6 +750,7 @@ Editor.polymerElement({
 		}
 	},
 	updateSelectRect: function( left, top, width, height ){
+		this.selection = [];
 		var nodes = this.querySelectorAll("shader-node");
 
 		if (!left || !top || !width || !height) {
@@ -777,6 +781,16 @@ Editor.polymerElement({
 				node.offsetTop <= bottom &&
 				top <= node.offsetTop + node.offsetHeight;
 			node.selected = selected;
+			if (selected) {
+				this.selection.push(node.id);
+			}
+		}
+	},
+	removeSelection: function() {
+		if (this.selection) {
+			this.selection.forEach(function(id){
+				this.removeNode(id);
+			}, this);
 		}
 	},
 	domChange: function(event){
