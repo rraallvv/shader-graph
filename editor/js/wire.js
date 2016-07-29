@@ -39,15 +39,15 @@ Editor.polymerElement({
 		var height = Math.abs( posA[ 1 ] - posB[ 1 ] );
 
 		// Bounding box with wire and connector circle
-		var bb = this._bezierBoundingBox( posA[ 0 ], posA[ 1 ],
-			posA[ 0 ] + this.curviness, posA[ 1 ],
-			posB[ 0 ] - this.curviness, posB[ 1 ],
-			posB[ 0 ], posB[ 1 ] );
+		var bb = this._bezierBoundingBox( posA[ 0 ] - left, posA[ 1 ] - top,
+			posA[ 0 ] - left + this.curviness, posA[ 1 ] - top,
+			posB[ 0 ] - left - this.curviness, posB[ 1 ] - top,
+			posB[ 0 ] - left, posB[ 1 ] - top );
 
 		var radiusx2 = 2 * this.radius;
 
-		left = Math.min(left - this.radius, left - bb.min.x);
-		top = Math.min(top - this.radius, top - bb.min.y);
+		left = Math.min(left - this.radius, left + bb.min.x);
+		top = Math.min(top - this.radius, top + bb.min.y);
 		width = Math.max(width + radiusx2, bb.max.x - bb.min.x);
 		height = Math.max(height + radiusx2, bb.max.y - bb.min.y);
 
