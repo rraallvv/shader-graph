@@ -5,6 +5,10 @@ if ( typeof Editor === "undefined" ) {
 }
 
 Editor.polymerElement({
+	ready: function() {
+		this.$.A.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
+		this.$.B.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
+	},
 	created: function() {
 		// Get connector styling
 		var style = this._getStyleRule("svg.shader-wire circle.shader-wire") || {};
@@ -148,6 +152,23 @@ Editor.polymerElement({
 		min: { x: Math.min.apply( 0, xvalues ), y: Math.min.apply( 0, yvalues ) },
 		max: { x: Math.max.apply( 0, xvalues ), y: Math.max.apply( 0, yvalues ) }
 		};
+	},
+	_onDragConnector: function( e ) {
+		if (3 === e.which || 2 === e.which) {
+			return true;
+		}
+		e.stopPropagation();
+		var self = this;
+		this.style.cursor = "pointer";
+		Editor.UI.DomUtils.startDrag("pointer", e, function( o, dx, dy ) {
+			if (e.target.id === "A") {
+				self.posA = [self.posA[0] - dx, self.posA[1] - dy];
+			} else {
+				self.posB = [self.posB[0] + dx, self.posB[1] + dy];
+			}
+		}, function( e ) {
+			self.style.cursor = "";
+		});
 	}
 });
 
