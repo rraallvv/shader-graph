@@ -62,11 +62,12 @@ Editor.polymerElement({
 		this.style.width = width + "px";
 		this.style.height = height + "px";
 
-		// Get relative positions
-		var aX = posA[0] - left;
-		var aY = posA[1] - top;
-		var bX = posB[0] - left;
-		var bY = posB[1] - top;
+		// Get relative positions (round them to stop the not moving
+		// connector being slightly moved out of position).
+		var aX = Math.round(posA[0] - left);
+		var aY = Math.round(posA[1] - top);
+		var bX = Math.round(posB[0] - left);
+		var bY = Math.round(posB[1] - top);
 
 		// Conector A position
 		this.$.A.setAttribute("cx", aX);
