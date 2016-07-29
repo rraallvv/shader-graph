@@ -8,6 +8,10 @@ Editor.polymerElement({
 	ready: function() {
 		this.$.A.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
 		this.$.B.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
+		this.style.pointerEvents = "none";
+		this.$.A.style.pointerEvents = "all";
+		this.$.B.style.pointerEvents = "all";
+		this.$.W.style.pointerEvents = "all";
 	},
 	created: function() {
 		// Get connector styling
