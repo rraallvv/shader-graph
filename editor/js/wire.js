@@ -158,20 +158,22 @@ Editor.polymerElement({
 	},
 	_onDragConnector: function( e ) {
 		if (3 === e.which || 2 === e.which) {
-			return true;
+			return;
 		}
 		e.stopPropagation();
-		var self = this;
 		this.style.cursor = "pointer";
-		Editor.UI.DomUtils.startDrag("pointer", e, function( o, dx, dy ) {
-			if (e.target.id === "A") {
-				self.posA = [self.posA[0] + dx, self.posA[1] + dy];
+		var el = e.target;
+		Editor.UI.DomUtils.startDrag("pointer", e, function( e, dx, dy ) {
+			el.classList.add("dragging");
+			if (el.id === "A") {
+				this.posA = [this.posA[0] + dx, this.posA[1] + dy];
 			} else {
-				self.posB = [self.posB[0] + dx, self.posB[1] + dy];
+				this.posB = [this.posB[0] + dx, this.posB[1] + dy];
 			}
-		}, function( e ) {
-			self.style.cursor = "";
-		});
+		}.bind(this), function( e ) {
+			el.classList.remove("dragging");
+			this.style.cursor = "";
+		}.bind(this));
 	}
 });
 

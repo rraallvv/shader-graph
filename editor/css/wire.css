@@ -1,6 +1,5 @@
 :host {
 	position: absolute;
-	background: rgba(255,255,255,0.25);
 }
 svg path {
 	stroke: blue;
@@ -14,6 +13,11 @@ svg circle {
 	stroke: white;
 	r: 3px;
 }
+
+svg circle.dragging {
+	display: none;
+}
+
 svg circle#A {
 	fill: rgba(255,0,0,0.25);
 }
