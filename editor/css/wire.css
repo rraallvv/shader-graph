@@ -16,6 +16,11 @@ svg path:hover {
 }
 svg circle {
 	stroke: white;
-	fill: rgba(255,0,0,0.25);
 	r: 10px;
+}
+svg circle#A {
+	fill: rgba(255,0,0,0.25);
+}
+svg circle#B {
+	fill: rgba(255,255,0,0.25);
 }

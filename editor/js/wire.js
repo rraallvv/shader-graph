@@ -25,11 +25,11 @@ Editor.polymerElement({
 	properties: {
 		posA: {
 			type: Array,
-			value: function() { return [300,0]; },
+			value: function() { return [200, -100]; },
 		},
 		posB: {
 			type: Array,
-			value: function() { return [100,100]; },
+			value: function() { return [400, 300]; },
 		}
 	},
 	observers: [
@@ -62,30 +62,30 @@ Editor.polymerElement({
 		this.style.width = width + "px";
 		this.style.height = height + "px";
 
-		// Add bounding box offset
-		posA[0] -= left;
-		posA[1] -= top;
-		posB[0] -= left;
-		posB[1] -= top;
+		// Get relative positions
+		var aX = posA[0] - left;
+		var aY = posA[1] - top;
+		var bX = posB[0] - left;
+		var bY = posB[1] - top;
 
 		// Conector A position
-		this.$.A.setAttribute("cx", posA[0]);
-		this.$.A.setAttribute("cy", posA[1]);
+		this.$.A.setAttribute("cx", aX);
+		this.$.A.setAttribute("cy", aY);
 
 		// Conector B position
-		this.$.B.setAttribute("cx", posB[0]);
-		this.$.B.setAttribute("cy", posB[1]);
+		this.$.B.setAttribute("cx", bX);
+		this.$.B.setAttribute("cy", bY);
 
 		// Wire position
 		this.$.W.setAttribute("d", "M " +
 			// A
-			posA[0] + " " + posA[1] + " " +
+			aX + " " + aY + " " +
 			// control A
-			" C " + (posA[0] + this.curviness) + " " + posA[1] + " " +
+			" C " + (aX + this.curviness) + " " + aY + " " +
 			// control B
-			(posB[0] - this.curviness) + " " + posB[1] + " " +
+			(bX - this.curviness) + " " + bY + " " +
 			// B
-			posB[0] + " " + posB[1]);
+			bX + " " + bY);
 	},
 	_getStyleRule: function(selector) {
 		for (var i = 0; i < document.styleSheets.length; i++) {
@@ -162,7 +162,7 @@ Editor.polymerElement({
 		this.style.cursor = "pointer";
 		Editor.UI.DomUtils.startDrag("pointer", e, function( o, dx, dy ) {
 			if (e.target.id === "A") {
-				self.posA = [self.posA[0] - dx, self.posA[1] - dy];
+				self.posA = [self.posA[0] + dx, self.posA[1] + dy];
 			} else {
 				self.posB = [self.posB[0] + dx, self.posB[1] + dy];
 			}
