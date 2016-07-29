@@ -23,8 +23,6 @@ Editor.polymerElement({
 		// Get path styling
 		style = this._getStyleRule(".wire." + this.tagName) || {};
 		this.strokeWidth = parseFloat(style["stroke-width"] || 1);
-
-		this.curviness = 200;
 	},
 	properties: {
 		posA: {
@@ -47,9 +45,10 @@ Editor.polymerElement({
 		var height = Math.abs( posA[ 1 ] - posB[ 1 ] );
 
 		// Bounding box with wire and connector circle
+		var curviness = this._curviness(posA, posB);
 		var bb = this._bezierBoundingBox( posA[ 0 ] - left, posA[ 1 ] - top,
-			posA[ 0 ] - left + this.curviness, posA[ 1 ] - top,
-			posB[ 0 ] - left - this.curviness, posB[ 1 ] - top,
+			posA[ 0 ] - left + curviness, posA[ 1 ] - top,
+			posB[ 0 ] - left - curviness, posB[ 1 ] - top,
 			posB[ 0 ] - left, posB[ 1 ] - top );
 
 		var radiusx2 = 2 * this.radius;
@@ -86,9 +85,9 @@ Editor.polymerElement({
 			// A
 			aX + " " + aY + " " +
 			// control A
-			" C " + (aX + this.curviness) + " " + aY + " " +
+			" C " + (aX + curviness) + " " + aY + " " +
 			// control B
-			(bX - this.curviness) + " " + bY + " " +
+			(bX - curviness) + " " + bY + " " +
 			// B
 			bX + " " + bY);
 	},
@@ -178,6 +177,38 @@ Editor.polymerElement({
 			el.classList.remove("dragging");
 			this.style.cursor = "";
 		}.bind(this));
+	},
+	_curviness: function(posA, posB) {
+		// link going forward
+		var df = 100;
+		const sf = 2;
+		// link going backwards
+		var db = 600;
+		const sb = 4;
+		// transition threshold
+		const th = 300;
+		// distance percentage
+		const c = 0.25;
+
+		var d0 = posB[0] - posA[0];
+		var d1 = posB[1] - posA[1];
+		var d = Math.sqrt( d0 * d0 + d1 * d1 );
+		// var d = v[0];
+
+		// fix distance
+		df = df + (d - df) / sf;
+		db = db + (d - db) / sb;
+
+		if ( d0 > 0 ) { // forward
+			d = df;
+		} else if ( d0 < -th  ) { // backwards
+			d = db;
+		} else { // transition
+			var t = d0 / th;
+			d = (1 + t) * df - t * db;
+		}
+		// console.log(c * d);
+		return c * d;
 	}
 });
 
