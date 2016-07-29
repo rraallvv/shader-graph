@@ -50,10 +50,10 @@ Editor.polymerElement({
 
 		var radiusx2 = 2 * this.radius;
 
-		left = Math.min(left - this.radius, left + bb.min.x);
-		top = Math.min(top - this.radius, top + bb.min.y);
-		width = Math.max(width + radiusx2, bb.max.x - bb.min.x);
-		height = Math.max(height + radiusx2, bb.max.y - bb.min.y);
+		left = Math.min(left - this.radius, left + bb.left);
+		top = Math.min(top - this.radius, top + bb.top);
+		width = Math.max(width + radiusx2, bb.right - bb.left);
+		height = Math.max(height + radiusx2, bb.bottom - bb.top);
 
 		// Element position and size
 		this.style.left = left + "px";
@@ -149,8 +149,10 @@ Editor.polymerElement({
 		yvalues.push( y0, y3 );
 
 		return {
-		min: { x: Math.min.apply( 0, xvalues ), y: Math.min.apply( 0, yvalues ) },
-		max: { x: Math.max.apply( 0, xvalues ), y: Math.max.apply( 0, yvalues ) }
+			left: Math.min.apply( 0, xvalues ),
+			top: Math.min.apply( 0, yvalues ),
+			right: Math.max.apply( 0, xvalues ),
+			bottom: Math.max.apply( 0, yvalues )
 		};
 	},
 	_onDragConnector: function( e ) {
