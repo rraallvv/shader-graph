@@ -1,9 +1,10 @@
 :host {
 	position: absolute;
-	left: 0px;
-	top: 0px;
-	width: 100px;
-	height: 100px;
+	outline: dashed 1px rgba(255,0,0,0.5);
+}
+svg {
+	position: absolute;
+	/*background: rgba(0,255,255,0.25);*/
 }
 svg path {
 	stroke: blue;
@@ -15,6 +16,6 @@ svg path:hover {
 }
 svg circle {
 	stroke: white;
-	fill: red;
+	fill: rgba(255,0,0,0.25);
 	r: 10px;
 }
