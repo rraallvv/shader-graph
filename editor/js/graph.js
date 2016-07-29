@@ -751,13 +751,14 @@ Editor.polymerElement({
 	},
 	updateSelectRect: function( left, top, width, height ){
 		this.selection = [];
-		var nodes = this.querySelectorAll("shader-node");
+		var els = this.querySelectorAll("shader-node");
 
 		if (!left || !top || !width || !height) {
 			// Deselect all nodes if selection rect is undefined
-			for(var i = 0; i < nodes.length; i++) {
-				nodes[i].selected = false;
+			for(var i = 0; i < els.length; i++) {
+				els[i].selected = false;
 			}
+			this.instance.clearDragSelection();
 			return;
 		}
 
@@ -774,15 +775,18 @@ Editor.polymerElement({
 		var bottom = top + height;
 
 		// Find and mark as selected all the nodes insersecting the selection rect
-		for(var i = 0; i < nodes.length; i++) {
-			var node = nodes[i];
-			var selected = node.offsetLeft <= right &&
-				left <= node.offsetLeft + node.offsetWidth &&
-				node.offsetTop <= bottom &&
-				top <= node.offsetTop + node.offsetHeight;
-			node.selected = selected;
+		for(var i = 0; i < els.length; i++) {
+			var el = els[i];
+			var selected = el.offsetLeft <= right &&
+				left <= el.offsetLeft + el.offsetWidth &&
+				el.offsetTop <= bottom &&
+				top <= el.offsetTop + el.offsetHeight;
+			el.selected = selected;
 			if (selected) {
-				this.selection.push(node.id);
+				this.instance.addToDragSelection(el);
+				this.selection.push(el.id);
+			} else {
+				this.instance.removeFromDragSelection(el);
 			}
 		}
 	},
