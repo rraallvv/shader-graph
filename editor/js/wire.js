@@ -50,9 +50,9 @@ Editor.polymerElement({
 
 		var radiusx2 = 2 * this.radius;
 
-		left = Math.min(left - this.radius, left + bb.left);
+		left = Math.min(left - this.radius, left + bb.left - 0.5 * this.strokeWidth);
 		top = Math.min(top - this.radius, top + bb.top);
-		width = Math.max(width + radiusx2, bb.right - bb.left);
+		width = Math.max(width + radiusx2, bb.right - bb.left + this.strokeWidth);
 		height = Math.max(height + radiusx2, bb.bottom - bb.top);
 
 		// Element position and size
