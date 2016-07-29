@@ -11,17 +11,17 @@ Editor.polymerElement({
 		this.style.pointerEvents = "none";
 		this.$.A.style.pointerEvents = "all";
 		this.$.B.style.pointerEvents = "all";
-		this.$.W.style.pointerEvents = "all";
+		this.$.W.style.pointerEvents = "visibleStroke";
 	},
 	created: function() {
 		// Get connector styling
-		var style = this._getStyleRule("svg.shader-wire circle.shader-wire") || {};
+		var style = this._getStyleRule(".connector." + this.tagName) || {};
 		var strokeWidth = parseFloat(style["stroke-width"] || 1);
 		var radius = parseFloat(style.r || 0);
 		this.radius = strokeWidth + radius;
 
 		// Get path styling
-		style = this._getStyleRule("svg.shader-wire path.shader-wire") || {};
+		style = this._getStyleRule(".wire." + this.tagName) || {};
 		this.strokeWidth = parseFloat(style["stroke-width"] || 1);
 
 		this.curviness = 200;
@@ -94,11 +94,11 @@ Editor.polymerElement({
 	},
 	_getStyleRule: function(selector) {
 		for (var i = 0; i < document.styleSheets.length; i++) {
-			var mysheet = document.styleSheets[i];
-			var myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
-			for (var j = 0; j < myrules.length; j++) {
-				if (myrules[j].selectorText && myrules[j].selectorText.toLowerCase() === selector) {
-					return myrules[j].style;
+			var sheet = document.styleSheets[i];
+			var rules = sheet.cssRules ? sheet.cssRules : sheet.rules;
+			for (var j = 0; j < rules.length; j++) {
+				if (rules[j].selectorText && rules[j].selectorText.toLowerCase() === selector.toLowerCase()) {
+					return rules[j].style;
 				}
 			}
 

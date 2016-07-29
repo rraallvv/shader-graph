@@ -1,22 +1,22 @@
 :host {
 	position: absolute;
 }
-svg path {
-	stroke: blue;
-	stroke-width: 3px;
-	fill: transparent;
-}
-svg path:hover {
-	stroke: red;
-}
-svg circle {
+.wire {
 	stroke: white;
-	fill: red;
+	stroke-width: 2px;
+	fill: none;
+}
+.wire:hover {
+	stroke: #ddd;
+}
+.connector {
+	stroke: none;
+	fill: white;
 	r: 3px;
 }
-svg circle:hover {
-	fill: white;
+.connector:hover {
+	fill: #ddd;
 }
-svg circle.dragging {
+.connector.dragging {
 	display: none;
 }
