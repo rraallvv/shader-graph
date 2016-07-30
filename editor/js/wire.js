@@ -98,11 +98,11 @@ Editor.polymerElement({
 		this.hW = hW;
 		this.overlay = overlay;
 
-		hA.addEventListener("mouseenter", function() { this._onEnter(iA); }.bind(this));
-		hA.addEventListener("mouseout", function() { this._onOut(iA); }.bind(this));
+		document.addEventListener("mousemove", function(e) { this._onMove(e, hA, iA); }.bind(this));
+		//hA.addEventListener("mouseout", function() { this._onOut(iA); }.bind(this));
 
-		hB.addEventListener("mouseenter", function() { this._onEnter(iB); }.bind(this));
-		hB.addEventListener("mouseout", function() { this._onOut(iB); }.bind(this));
+		document.addEventListener("mousemove", function(e) { this._onMove(e, hB, iB); }.bind(this));
+		//hB.addEventListener("mouseout", function() { this._onOut(iB); }.bind(this));
 
 		hW.addEventListener("mouseenter", function() { this._onEnter(iW); }.bind(this));
 		hW.addEventListener("mouseout", function() { this._onOut(iW); }.bind(this));
@@ -315,6 +315,22 @@ Editor.polymerElement({
 		}
 		// console.log(c * d);
 		return c * d;
+	},
+	_onMove: function(e, hel, el) {
+		if (this._clickInsideElement( e, hel )) {
+			e.stopPropagation();
+			if (!el.highlighted) {
+				el.classList.add("enter");
+				this.style.cursor = this.enterConnectorCursor;
+				el.highlighted = true;
+			}
+		} else {
+			if (el.highlighted) {
+				el.classList.remove("enter");
+				this.style.cursor = "";
+				el.highlighted = false;
+			}
+		}
 	},
 	_onEnter: function(el) {
 		el.classList.add("enter");
