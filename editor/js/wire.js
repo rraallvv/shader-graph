@@ -14,13 +14,20 @@ Editor.polymerElement({
 		this.$.W.style.pointerEvents = "visibleStroke";
 	},
 	created: function() {
-		// Get connector styling
+		// Get the connector styling
 		var style = this._getStyleRule(".connector." + this.tagName) || {};
 		var strokeWidth = parseFloat(style["stroke-width"] || 1);
 		var radius = parseFloat(style.r || 0);
 		this.radius = strokeWidth + radius;
 
-		// Get path styling
+		// Get the connector hover styling
+		style = this._getStyleRule(".connector." + this.tagName + ":hover") || {};
+		this.hoverCursor = style.cursor || "default";
+
+		style = this._getStyleRule(".connector.dragging." + this.tagName) || {};
+		this.draggingCursor = style.cursor || this.hoverCursor;
+
+		// Get the wire styling
 		style = this._getStyleRule(".wire." + this.tagName) || {};
 		this.wireWidth = parseFloat(style["stroke-width"] || 1);
 	},
@@ -35,7 +42,7 @@ Editor.polymerElement({
 		}
 	},
 	observers: [
-		'_onPosChange(posA, posB)'
+		"_onPosChange(posA, posB)"
 	],
 	_onPosChange(posA, posB) {
 		// Bounding box for connectors
@@ -172,9 +179,9 @@ Editor.polymerElement({
 			return;
 		}
 		e.stopPropagation();
-		this.style.cursor = "pointer";
+		this.style.cursor = this.draggingCursor;
 		var el = e.target;
-		Editor.UI.DomUtils.startDrag("pointer", e, function( e, dx, dy ) {
+		Editor.UI.DomUtils.startDrag(this.draggingCursor, e, function( e, dx, dy ) {
 			el.classList.add("dragging");
 			if (el.id === "A") {
 				this.posA = [this.posA[0] + dx, this.posA[1] + dy];

@@ -16,6 +16,7 @@
 }
 .connector:hover {
 	fill: #ddd;
+	cursor: pointer;
 }
 .connector.dragging {
 	display: none;
