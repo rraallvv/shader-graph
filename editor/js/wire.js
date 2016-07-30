@@ -16,7 +16,7 @@ Editor.polymerElement({
 	created: function() {
 		// Get the connector styling
 		var style = this._getStyleRule(".connector." + this.tagName) || {};
-		var strokeWidth = parseFloat(style["stroke-width"] || 1);
+		var strokeWidth = parseFloat(style.strokeWidth || 1);
 		var radius = parseFloat(style.r || 0);
 		this.radius = strokeWidth + radius;
 
@@ -29,7 +29,7 @@ Editor.polymerElement({
 
 		// Get the wire styling
 		style = this._getStyleRule(".wire." + this.tagName) || {};
-		this.wireWidth = parseFloat(style["stroke-width"] || 1);
+		this.wireWidth = parseFloat(style.strokeWidth || 1);
 	},
 	properties: {
 		posA: {
@@ -100,7 +100,6 @@ Editor.polymerElement({
 	},
 	_getStyleRule: function(selector) {
 		if (!this.styleCache) {
-			Editor.log("!");
 			this.styleCache = {};
 			for (var i = 0; i < document.styleSheets.length; i++) {
 				var sheet = document.styleSheets[i];
