@@ -4,6 +4,12 @@ var ignoreConnectionEvents = false;
 var batchRender = false;
 
 Editor.polymerElement({
+	properties: {
+		scale: {
+			type: Number,
+			value: 1
+		}
+	},
 	ready: function(){
 		this._t = {sx: 1, sy: 1, tx: 0, ty: 0};
 		this.state = {
@@ -11,12 +17,6 @@ Editor.polymerElement({
 			nodes: []
 		};
 		this.$.template.addEventListener("dom-change", this.domChange.bind(this));
-	},
-	properties: {
-		scale: {
-			type: Number,
-			value: 1
-		}
 	},
 	addNode: function(e) {
 		var b = graph.querySelector("#canvas").getBoundingClientRect();
@@ -291,7 +291,12 @@ Editor.polymerElement({
 		var nodes = this.state.nodes;
 		var shader = this.updateShader();
 
-		var content = nodes.map(function(data) {
+		this.links = [
+			{posA:[0, 0], posB:[100, 100]},
+			{posA:[300, 300], posB:[100, 50]}
+		];
+
+		this.nodes =  nodes.map(function(data) {
 			var node = shader.fragmentGraph.getNodeById(data.id);
 
 			var extra;
@@ -335,8 +340,6 @@ Editor.polymerElement({
 				updateData: this.updateData.bind(this),
 			} : undefined;
 		}, this);
-
-		this.nodes = content;
 	},
 	clearTempConnection: function() {
 		this._tempLink = null;

@@ -1,6 +1,23 @@
 (function(){
 
 Editor.polymerElement({
+	properties: {
+		posA: {
+			type: Array,
+			value: function() { return [200, -100]; },
+		},
+		posB: {
+			type: Array,
+			value: function() { return [400, 300]; },
+		},
+		scale: {
+			type: Number,
+			value: 1
+		}
+	},
+	observers: [
+		"_onPosChange(posA, posB)"
+	],
 	ready: function() {
 		this.style.pointerEvents = "none";
 
@@ -98,23 +115,6 @@ Editor.polymerElement({
 		this.hW = hW;
 		this.overlay = overlay;
 	},
-	properties: {
-		posA: {
-			type: Array,
-			value: function() { return [200, -100]; },
-		},
-		posB: {
-			type: Array,
-			value: function() { return [400, 300]; },
-		},
-		scale: {
-			type: Number,
-			value: 1
-		}
-	},
-	observers: [
-		"_onPosChange(posA, posB)"
-	],
 	_onPosChange(posA, posB) {
 		// Bounding box for connectors
 		var left = Math.min( posA[ 0 ], posB[ 0 ] );

@@ -1,10 +1,14 @@
 <link rel="import" href="shader-node.html">
+<link rel="import" href="shader-wire.html">
 
 <dom-module id="shader-graph">
 	<link rel="import" type="css" href="css/graph.css">
 
 	<template>
 		<div id="canvas" class="container-full">
+			<template id="template" is="dom-repeat" items="{{links}}">
+				<shader-wire pos-a="{{item.posA}}" pos-b="{{item.posB}}"></shader-wire>
+			</template>
 			<template id="template" is="dom-repeat" items="{{nodes}}">
 				<shader-node
 					id$="{{item.id}}"
