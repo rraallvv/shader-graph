@@ -16,6 +16,12 @@ Editor.polymerElement({
 		};
 		this.$.template.addEventListener("dom-change", this.domChange.bind(this));
 	},
+	properties: {
+		scale: {
+			type: Number,
+			value: 1
+		}
+	},
 	addNode: function(e) {
 		var b = graph.querySelector("#canvas").getBoundingClientRect();
 		var pos = e.pos || [0, 0];
@@ -45,6 +51,7 @@ Editor.polymerElement({
 			sy + ", " +
 			tx + ", " +
 			ty + ")";
+		this.scale = sx;
 		if (this.instance) {
 			this.instance.setZoom(sx);
 		}

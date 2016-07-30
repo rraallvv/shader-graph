@@ -97,8 +97,8 @@ Editor.polymerElement({
 		hW.addEventListener("mouseenter", this._onEnterWire.bind( this ), false);
 		hW.addEventListener("mouseout", this._onOutWire.bind( this ), false);
 
-		hA.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
-		hB.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
+		//hA.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
+		//hB.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
 
 		var overlay = document.createElementNS(svgNS, "svg");
 		overlay.style.position = "absolute";
@@ -113,6 +113,14 @@ Editor.polymerElement({
 		this.hB = hB;
 		this.hW = hW;
 		this.overlay = overlay;
+
+		document.addEventListener( "mousedown", function(e) {
+			if (this._clickInsideElement( e, this.hA )) {
+				this._onDragConnector(e, this.iA);
+			} else if (this._clickInsideElement( e, this.hB )) {
+				this._onDragConnector(e, this.iB);
+			}
+		}.bind(this), true);
 	},
 	properties: {
 		posA: {
@@ -122,6 +130,10 @@ Editor.polymerElement({
 		posB: {
 			type: Array,
 			value: function() { return [400, 300]; },
+		},
+		scale: {
+			type: Number,
+			value: 1
 		}
 	},
 	observers: [
@@ -311,19 +323,21 @@ Editor.polymerElement({
 		el.classList.remove("enter");
 		this.style.cursor = "";
 	},
-	_onDragConnector: function( e ) {
+	_onDragConnector: function( e, el ) {
 		if (3 === e.which || 2 === e.which) {
 			return;
 		}
 		e.stopPropagation();
 		this.style.cursor = this.draggingCursor;
-		var el = e.target === this.hA ? this.iA : this.iB;
+		if (!el) {
+			el = e.target === this.hA ? this.iA : this.iB;
+		}
 		Editor.UI.DomUtils.startDrag(this.draggingCursor, e, function( e, dx, dy ) {
 			el.classList.add("dragging");
 			if (el === this.iA) {
-				this.posA = [this.posA[0] + dx, this.posA[1] + dy];
+				this.posA = [this.posA[0] + dx / this.scale, this.posA[1] + dy / this.scale];
 			} else {
-				this.posB = [this.posB[0] + dx, this.posB[1] + dy];
+				this.posB = [this.posB[0] + dx / this.scale, this.posB[1] + dy / this.scale];
 			}
 		}.bind(this), function( e ) {
 			el.classList.remove("dragging");
@@ -339,6 +353,40 @@ Editor.polymerElement({
 		var el = this.iW;
 		el.classList.remove("enter");
 		this.style.cursor = "";
+	},
+	_clickInsideElement: function( e, el ) {
+		var pos = this._getMousePosition(e);
+
+		var bounds = el.getBoundingClientRect();
+
+		var doc = document.documentElement;
+		var clientLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+		var clientTop = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+
+		pos[0] -= clientLeft;
+		pos[1] -= clientTop;
+
+		if (pos[0] < bounds.left || pos[0] > bounds.right || pos[1] < bounds.top || pos[1] > bounds.bottom) {
+			return false;
+		}
+
+		return true;
+	},
+	_getMousePosition: function(e) {
+		var posx = 0;
+		var posy = 0;
+
+		if (!e) var e = window.event;
+		
+		if (e.pageX || e.pageY) {
+			posx = e.pageX;
+			posy = e.pageY;
+		} else if (e.clientX || e.clientY) {
+			posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+			posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+		}
+
+		return [posx, posy];
 	}
 });
 
