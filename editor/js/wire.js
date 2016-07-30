@@ -84,18 +84,6 @@ Editor.polymerElement({
 		hB.style.fill = "rgba(0,255,0,0.25)";
 		hW.style.fill = "none";
 
-		hA.addEventListener("mouseenter", this._onEnterConnector.bind( this ), false);
-		hA.addEventListener("mouseout", this._onOutConnector.bind( this ), false);
-
-		hB.addEventListener("mouseenter", this._onEnterConnector.bind( this ), false);
-		hB.addEventListener("mouseout", this._onOutConnector.bind( this ), false);
-
-		hW.addEventListener("mouseenter", this._onEnterWire.bind( this ), false);
-		hW.addEventListener("mouseout", this._onOutWire.bind( this ), false);
-
-		//hA.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
-		//hB.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
-
 		var overlay = document.createElementNS(svgNS, "svg");
 		overlay.style.position = "absolute";
 		overlay.style.left = "0px";
@@ -110,11 +98,30 @@ Editor.polymerElement({
 		this.hW = hW;
 		this.overlay = overlay;
 
+		hA.addEventListener("mouseenter", function() { this._onEnter(iA); }.bind(this));
+		hA.addEventListener("mouseout", function() { this._onOut(iA); }.bind(this));
+
+		hB.addEventListener("mouseenter", function() { this._onEnter(iB); }.bind(this));
+		hB.addEventListener("mouseout", function() { this._onOut(iB); }.bind(this));
+
+		hW.addEventListener("mouseenter", function() { this._onEnter(iW); }.bind(this));
+		hW.addEventListener("mouseout", function() { this._onOut(iW); }.bind(this));
+
+		//hA.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
 		document.addEventListener( "mousedown", function(e) {
-			if (this._clickInsideElement( e, this.hA )) {
-				this._onDragConnector(e, this.iA);
-			} else if (this._clickInsideElement( e, this.hB )) {
-				this._onDragConnector(e, this.iB);
+			if (this._clickInsideElement( e, hA )) {
+				this._onDrag(e, iA, function(dx, dy) {
+					this.posA = [this.posA[0] + dx / this.scale, this.posA[1] + dy / this.scale];
+				}.bind(this));
+			}
+		}.bind(this), true);
+
+		//hB.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
+		document.addEventListener( "mousedown", function(e) {
+			if (this._clickInsideElement( e, hB )) {
+				this._onDrag(e, iB, function(dx, dy) {
+					this.posB = [this.posB[0] + dx / this.scale, this.posB[1] + dy / this.scale];
+				}.bind(this));
 			}
 		}.bind(this), true);
 	},
@@ -309,46 +316,26 @@ Editor.polymerElement({
 		// console.log(c * d);
 		return c * d;
 	},
-	_onEnterConnector: function(e) {
-		var el = e.target === this.hA ? this.iA : this.iB;
+	_onEnter: function(el) {
 		el.classList.add("enter");
 		this.style.cursor = this.enterConnectorCursor;
 	},
-	_onOutConnector: function(e) {
-		var el = e.target === this.hB ? this.iA : this.iB;
+	_onOut: function(el) {
 		el.classList.remove("enter");
 		this.style.cursor = "";
 	},
-	_onDragConnector: function( e, el ) {
+	_onDrag: function( e, el, update) {
 		if (3 === e.which || 2 === e.which) {
 			return;
 		}
 		e.stopPropagation();
-		this.style.cursor = this.draggingCursor;
-		if (!el) {
-			el = e.target === this.hA ? this.iA : this.iB;
-		}
+		el.classList.add("dragging");
 		Editor.UI.DomUtils.startDrag(this.draggingCursor, e, function( e, dx, dy ) {
-			el.classList.add("dragging");
-			if (el === this.iA) {
-				this.posA = [this.posA[0] + dx / this.scale, this.posA[1] + dy / this.scale];
-			} else {
-				this.posB = [this.posB[0] + dx / this.scale, this.posB[1] + dy / this.scale];
-			}
+			update(dx, dy);
 		}.bind(this), function( e ) {
 			el.classList.remove("dragging");
-			this.style.cursor = "";
+			this.style.cursor = this.draggingCursor;
 		}.bind(this));
-	},
-	_onEnterWire: function(e) {
-		var el = this.iW;
-		el.classList.add("enter");
-		this.style.cursor = this.enterWireCursor;
-	},
-	_onOutWire: function(e) {
-		var el = this.iW;
-		el.classList.remove("enter");
-		this.style.cursor = "";
 	},
 	_clickInsideElement: function( e, el ) {
 		var pos = this._getMousePosition(e);
