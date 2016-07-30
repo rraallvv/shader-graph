@@ -6,37 +6,14 @@ if ( typeof Editor === "undefined" ) {
 
 Editor.polymerElement({
 	ready: function() {
+		// Disale all events in the visible elements
 		this.style.pointerEvents = "none";
 		this.$.A.style.pointerEvents = "none";
 		this.$.B.style.pointerEvents = "none";
 		this.$.W.style.pointerEvents = "none";
-		this.$.hA.style.pointerEvents = "all";
-		this.$.hB.style.pointerEvents = "all";
-		this.$.hW.style.pointerEvents = "visibleStroke";
 
-		this.$.hA.setAttribute("r", this.connectorRadius);
-		this.$.hB.setAttribute("r", this.connectorRadius);
-		this.$.hW.setAttribute("stroke-width", this.wireWidth);
-
-		this.$.hA.style.stroke = "none";
-		this.$.hB.style.stroke = "none";
-		this.$.hW.style.stroke = "none";
-
-		this.$.hA.style.fill = "none";
-		this.$.hB.style.fill = "none";
-		this.$.hW.style.fill = "none";
-
-		this.$.hA.addEventListener("mouseenter", this._onEnterConnector.bind( this ), false);
-		this.$.hA.addEventListener("mouseout", this._onOutConnector.bind( this ), false);
-
-		this.$.hB.addEventListener("mouseenter", this._onEnterConnector.bind( this ), false);
-		this.$.hB.addEventListener("mouseout", this._onOutConnector.bind( this ), false);
-
-		this.$.hW.addEventListener("mouseenter", this._onEnterWire.bind( this ), false);
-		this.$.hW.addEventListener("mouseout", this._onOutWire.bind( this ), false);
-
-		this.$.hA.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
-		this.$.hB.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
+		// Add the invisible handlers overlay
+		Polymer.dom(this.root).appendChild(this.overlay);
 	},
 	created: function() {
 		// Get the connector styling
@@ -60,6 +37,55 @@ Editor.polymerElement({
 		// Get the wire enter styling
 		style = this._getStyleRule(".wire.enter." + this.tagName) || {};
 		this.enterWireCursor = style.cursor || "default";
+
+		// Create handlers overlay
+		var svgNS = "http://www.w3.org/2000/svg";
+
+		var hA = document.createElementNS(svgNS, "circle");
+		var hB = document.createElementNS(svgNS, "circle");
+		var hW = document.createElementNS(svgNS, "path");
+
+		hA.style.pointerEvents = "all";
+		hB.style.pointerEvents = "all";
+		hW.style.pointerEvents = "visibleStroke";
+
+		hA.setAttribute("r", this.connectorRadius);
+		hB.setAttribute("r", this.connectorRadius);
+		hW.setAttribute("stroke-width", this.wireWidth);
+
+		hA.style.stroke = "none";
+		hB.style.stroke = "none";
+		hW.style.stroke = "rgba(0,0,255,0.25)";
+
+		hA.style.fill = "rgba(255,0,0,0.25)";
+		hB.style.fill = "rgba(0,255,0,0.25)";
+		hW.style.fill = "none";
+
+		hA.addEventListener("mouseenter", this._onEnterConnector.bind( this ), false);
+		hA.addEventListener("mouseout", this._onOutConnector.bind( this ), false);
+
+		hB.addEventListener("mouseenter", this._onEnterConnector.bind( this ), false);
+		hB.addEventListener("mouseout", this._onOutConnector.bind( this ), false);
+
+		hW.addEventListener("mouseenter", this._onEnterWire.bind( this ), false);
+		hW.addEventListener("mouseout", this._onOutWire.bind( this ), false);
+
+		hA.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
+		hB.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
+
+		var overlay = document.createElementNS(svgNS, "svg");
+		overlay.style.position = "absolute";
+		overlay.style.left = "0px";
+		overlay.style.top = "0px";
+
+		overlay.appendChild(hW);
+		overlay.appendChild(hA);
+		overlay.appendChild(hB);
+
+		this.hA = hA;
+		this.hB = hB;
+		this.hW = hW;
+		this.overlay = overlay;
 	},
 	properties: {
 		posA: {
@@ -102,6 +128,9 @@ Editor.polymerElement({
 		this.style.width = width + "px";
 		this.style.height = height + "px";
 
+		this.overlay.style.width = width + "px";
+		this.overlay.style.height = height + "px";
+
 		// Get relative positions (round them to stop the not moving
 		// connector being slightly moved out of position).
 		var aX = Math.round(posA[0] - left);
@@ -112,14 +141,14 @@ Editor.polymerElement({
 		// Conector A position
 		this.$.A.setAttribute("cx", aX);
 		this.$.A.setAttribute("cy", aY);
-		this.$.hA.setAttribute("cx", aX);
-		this.$.hA.setAttribute("cy", aY);
+		this.hA.setAttribute("cx", aX);
+		this.hA.setAttribute("cy", aY);
 
 		// Conector B position
 		this.$.B.setAttribute("cx", bX);
 		this.$.B.setAttribute("cy", bY);
-		this.$.hB.setAttribute("cx", bX);
-		this.$.hB.setAttribute("cy", bY);
+		this.hB.setAttribute("cx", bX);
+		this.hB.setAttribute("cy", bY);
 
 		// Wire position
 		var attribute = "M " +
@@ -132,7 +161,7 @@ Editor.polymerElement({
 			// B
 			bX + " " + bY;
 		this.$.W.setAttribute("d", attribute);
-		this.$.hW.setAttribute("d", attribute);
+		this.hW.setAttribute("d", attribute);
 	},
 	_getStyleRule: function(selector) {
 		if (!this.styleCache) {
@@ -242,12 +271,12 @@ Editor.polymerElement({
 		return c * d;
 	},
 	_onEnterConnector: function(e) {
-		var el = e.target.id === "hA" ? this.$.A : this.$.B;
+		var el = e.target === this.hA ? this.$.A : this.$.B;
 		el.classList.add("enter");
 		this.style.cursor = this.enterConnectorCursor;
 	},
 	_onOutConnector: function(e) {
-		var el = e.target.id === "hA" ? this.$.A : this.$.B;
+		var el = e.target === this.hB ? this.$.A : this.$.B;
 		el.classList.remove("enter");
 		this.style.cursor = "";
 	},
@@ -257,7 +286,7 @@ Editor.polymerElement({
 		}
 		e.stopPropagation();
 		this.style.cursor = this.draggingCursor;
-		var el = e.target.id === "hA" ? this.$.A : this.$.B;
+		var el = e.target === this.hA ? this.$.A : this.$.B;
 		Editor.UI.DomUtils.startDrag(this.draggingCursor, e, function( e, dx, dy ) {
 			el.classList.add("dragging");
 			if (el.id === "A") {
