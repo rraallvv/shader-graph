@@ -3,19 +3,9 @@
 Editor.polymerElement({
 	attached: function() {
 		var self = this;
-		if (this.instance) {
-			this.instance.draggable(this, {
-				stop: function(e) {
-					var pos = e.finalPos;
-					self.pos[0] = pos[0];
-					self.pos[1] = pos[1];
-				}
-			});
-		}
 	},
 	properties: {
 		id: String,
-		instance: Object,
 		inputs: {
 			type: Object,
 			value: function(){return [];}

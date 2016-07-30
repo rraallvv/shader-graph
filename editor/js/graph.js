@@ -801,36 +801,40 @@ Editor.polymerElement({
 		}
 	},
 	domChange: function(event){
-		this.updateConnections();
+		Array.prototype.forEach.call(this.querySelectorAll("shader-node"), function(el) {
+			this.instance.draggable(el);
+		}, this);
 
-		Array.prototype.forEach.call(this.querySelectorAll("shader-wire"), function(link) {
-			document.addEventListener("mousemove", function(e) { this._onMove(e, link.hA, link.iA); }.bind(this));
+		Array.prototype.forEach.call(this.querySelectorAll("shader-wire"), function(el) {
+			document.addEventListener("mousemove", function(e) { this._onMove(e, el.hA, el.iA); }.bind(this));
 			//hA.addEventListener("mouseout", function() { this._onOut(iA); }.bind(this));
 
-			document.addEventListener("mousemove", function(e) { this._onMove(e, link.hB, link.iB); }.bind(this));
+			document.addEventListener("mousemove", function(e) { this._onMove(e, el.hB, el.iB); }.bind(this));
 			//hB.addEventListener("mouseout", function() { this._onOut(iB); }.bind(this));
 
-			link.hW.addEventListener("mouseenter", function() { this._onEnter(link.iW); }.bind(this));
-			link.hW.addEventListener("mouseout", function() { this._onOut(link.iW); }.bind(this));
+			el.hW.addEventListener("mouseenter", function() { this._onEnter(el.iW); }.bind(this));
+			el.hW.addEventListener("mouseout", function() { this._onOut(el.iW); }.bind(this));
 
 			//hA.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
 			document.addEventListener( "mousedown", function(e) {
-				if (this._clickInsideElement( e, link.hA )) {
-					this._onDrag(e, link.iA, function(dx, dy) {
-						link.posA = [link.posA[0] + dx / this.scale, link.posA[1] + dy / this.scale];
+				if (this._clickInsideElement( e, el.hA )) {
+					this._onDrag(e, el.iA, function(dx, dy) {
+						el.posA = [el.posA[0] + dx / this.scale, el.posA[1] + dy / this.scale];
 					}.bind(this));
 				}
 			}.bind(this), true);
 
 			//hB.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
 			document.addEventListener( "mousedown", function(e) {
-				if (this._clickInsideElement( e, link.hB )) {
-					this._onDrag(e, link.iB, function(dx, dy) {
-						link.posB = [link.posB[0] + dx / this.scale, link.posB[1] + dy / this.scale];
+				if (this._clickInsideElement( e, el.hB )) {
+					this._onDrag(e, el.iB, function(dx, dy) {
+						el.posB = [el.posB[0] + dx / this.scale, el.posB[1] + dy / this.scale];
 					}.bind(this));
 				}
 			}.bind(this), true);
 		}, this);
+
+		this.updateConnections();
 	},
 	_onMove: function(e, hel, el) {
 		if (this._clickInsideElement( e, hel )) {
