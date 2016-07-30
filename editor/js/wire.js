@@ -6,11 +6,10 @@ if ( typeof Editor === "undefined" ) {
 
 Editor.polymerElement({
 	ready: function() {
-		// Disale all events in the visible elements
 		this.style.pointerEvents = "none";
-		this.$.A.style.pointerEvents = "none";
-		this.$.B.style.pointerEvents = "none";
-		this.$.W.style.pointerEvents = "none";
+
+		// Add the visible indicators
+		Polymer.dom(this.root).appendChild(this.indicators);
 
 		// Add the invisible handlers overlay
 		Polymer.dom(this.root).appendChild(this.overlay);
@@ -38,8 +37,36 @@ Editor.polymerElement({
 		style = this._getStyleRule(".wire.enter." + this.tagName) || {};
 		this.enterWireCursor = style.cursor || "default";
 
-		// Create handlers overlay
+		// Create the visible indicators
 		var svgNS = "http://www.w3.org/2000/svg";
+
+		var iA = document.createElementNS(svgNS, "circle");
+		var iB = document.createElementNS(svgNS, "circle");
+		var iW = document.createElementNS(svgNS, "path");
+
+		iA.setAttribute("class", "connector");
+		iB.setAttribute("class", "connector");
+		iW.setAttribute("class", "wire");
+
+		iA.style.pointerEvents = "none";
+		iB.style.pointerEvents = "none";
+		iW.style.pointerEvents = "none";
+
+		var indicators = document.createElementNS(svgNS, "svg");
+		indicators.style.position = "absolute";
+		indicators.style.left = "0px";
+		indicators.style.top = "0px";
+
+		indicators.appendChild(iW);
+		indicators.appendChild(iA);
+		indicators.appendChild(iB);
+
+		this.iA = iA;
+		this.iB = iB;
+		this.iW = iW;
+		this.indicators = indicators;
+
+		// Create handlers overlay
 
 		var hA = document.createElementNS(svgNS, "circle");
 		var hB = document.createElementNS(svgNS, "circle");
@@ -128,6 +155,9 @@ Editor.polymerElement({
 		this.style.width = width + "px";
 		this.style.height = height + "px";
 
+		this.indicators.style.width = width + "px";
+		this.indicators.style.height = height + "px";
+
 		this.overlay.style.width = width + "px";
 		this.overlay.style.height = height + "px";
 
@@ -139,14 +169,14 @@ Editor.polymerElement({
 		var bY = Math.round(posB[1] - top);
 
 		// Conector A position
-		this.$.A.setAttribute("cx", aX);
-		this.$.A.setAttribute("cy", aY);
+		this.iA.setAttribute("cx", aX);
+		this.iA.setAttribute("cy", aY);
 		this.hA.setAttribute("cx", aX);
 		this.hA.setAttribute("cy", aY);
 
 		// Conector B position
-		this.$.B.setAttribute("cx", bX);
-		this.$.B.setAttribute("cy", bY);
+		this.iB.setAttribute("cx", bX);
+		this.iB.setAttribute("cy", bY);
 		this.hB.setAttribute("cx", bX);
 		this.hB.setAttribute("cy", bY);
 
@@ -160,7 +190,8 @@ Editor.polymerElement({
 			(bX - curviness) + " " + bY + " " +
 			// B
 			bX + " " + bY;
-		this.$.W.setAttribute("d", attribute);
+
+		this.iW.setAttribute("d", attribute);
 		this.hW.setAttribute("d", attribute);
 	},
 	_getStyleRule: function(selector) {
@@ -271,12 +302,12 @@ Editor.polymerElement({
 		return c * d;
 	},
 	_onEnterConnector: function(e) {
-		var el = e.target === this.hA ? this.$.A : this.$.B;
+		var el = e.target === this.hA ? this.iA : this.iB;
 		el.classList.add("enter");
 		this.style.cursor = this.enterConnectorCursor;
 	},
 	_onOutConnector: function(e) {
-		var el = e.target === this.hB ? this.$.A : this.$.B;
+		var el = e.target === this.hB ? this.iA : this.iB;
 		el.classList.remove("enter");
 		this.style.cursor = "";
 	},
@@ -286,10 +317,10 @@ Editor.polymerElement({
 		}
 		e.stopPropagation();
 		this.style.cursor = this.draggingCursor;
-		var el = e.target === this.hA ? this.$.A : this.$.B;
+		var el = e.target === this.hA ? this.iA : this.iB;
 		Editor.UI.DomUtils.startDrag(this.draggingCursor, e, function( e, dx, dy ) {
 			el.classList.add("dragging");
-			if (el.id === "A") {
+			if (el === this.iA) {
 				this.posA = [this.posA[0] + dx, this.posA[1] + dy];
 			} else {
 				this.posB = [this.posB[0] + dx, this.posB[1] + dy];
@@ -300,12 +331,12 @@ Editor.polymerElement({
 		}.bind(this));
 	},
 	_onEnterWire: function(e) {
-		var el = this.$.W;
+		var el = this.iW;
 		el.classList.add("enter");
 		this.style.cursor = this.enterWireCursor;
 	},
 	_onOutWire: function(e) {
-		var el = this.$.W;
+		var el = this.iW;
 		el.classList.remove("enter");
 		this.style.cursor = "";
 	}
