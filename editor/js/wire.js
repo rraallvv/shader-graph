@@ -6,22 +6,38 @@ if ( typeof Editor === "undefined" ) {
 
 Editor.polymerElement({
 	ready: function() {
-		this.$.A.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
-		this.$.B.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
 		this.style.pointerEvents = "none";
-		this.$.A.style.pointerEvents = "all";
-		this.$.B.style.pointerEvents = "all";
+		this.$.A.style.pointerEvents = "none";
+		this.$.B.style.pointerEvents = "none";
 		this.$.W.style.pointerEvents = "visibleStroke";
+		this.$.hA.style.pointerEvents = "all";
+		this.$.hB.style.pointerEvents = "all";
+
+		this.$.hA.setAttribute("r", this.connectorRadius);
+		this.$.hB.setAttribute("r", this.connectorRadius);
+
+		this.$.hA.style.fill = "none";
+		this.$.hB.style.fill = "none";
+
+		this.$.hA.addEventListener("mouseenter", this._onEnterConnector.bind( this ), false);
+		this.$.hA.addEventListener("mouseout", this._onOutConnector.bind( this ), false);
+
+		this.$.hB.addEventListener("mouseenter", this._onEnterConnector.bind( this ), false);
+		this.$.hB.addEventListener("mouseout", this._onOutConnector.bind( this ), false);
+
+		this.$.hA.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
+		this.$.hB.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
 	},
 	created: function() {
 		// Get the connector styling
 		var style = this._getStyleRule(".connector." + this.tagName) || {};
+		var handleMargin = 5;
 		var strokeWidth = parseFloat(style.strokeWidth || 1);
 		var radius = parseFloat(style.r || 0);
-		this.radius = strokeWidth + radius;
+		this.connectorRadius = strokeWidth + radius + handleMargin;
 
 		// Get the connector hover styling
-		style = this._getStyleRule(".connector." + this.tagName + ":hover") || {};
+		style = this._getStyleRule(".connector.enter." + this.tagName) || {};
 		this.hoverCursor = style.cursor || "default";
 
 		style = this._getStyleRule(".connector.dragging." + this.tagName) || {};
@@ -58,10 +74,10 @@ Editor.polymerElement({
 			posB[ 0 ] - left - curviness, posB[ 1 ] - top,
 			posB[ 0 ] - left, posB[ 1 ] - top );
 
-		var radiusx2 = 2 * this.radius;
+		var radiusx2 = 2 * this.connectorRadius;
 
-		left = Math.min(left - this.radius, left + bb.left - 0.5 * this.wireWidth);
-		top = Math.min(top - this.radius, top + bb.top);
+		left = Math.min(left - this.connectorRadius, left + bb.left - 0.5 * this.wireWidth);
+		top = Math.min(top - this.connectorRadius, top + bb.top);
 		width = Math.max(width + radiusx2, bb.right - bb.left + this.wireWidth);
 		height = Math.max(height + radiusx2, bb.bottom - bb.top);
 
@@ -82,10 +98,14 @@ Editor.polymerElement({
 		// Conector A position
 		this.$.A.setAttribute("cx", aX);
 		this.$.A.setAttribute("cy", aY);
+		this.$.hA.setAttribute("cx", aX);
+		this.$.hA.setAttribute("cy", aY);
 
 		// Conector B position
 		this.$.B.setAttribute("cx", bX);
 		this.$.B.setAttribute("cy", bY);
+		this.$.hB.setAttribute("cx", bX);
+		this.$.hB.setAttribute("cy", bY);
 
 		// Wire position
 		this.$.W.setAttribute("d", "M " +
@@ -173,25 +193,6 @@ Editor.polymerElement({
 			bottom: Math.max.apply( 0, yvalues )
 		};
 	},
-	_onDragConnector: function( e ) {
-		if (3 === e.which || 2 === e.which) {
-			return;
-		}
-		e.stopPropagation();
-		this.style.cursor = this.draggingCursor;
-		var el = e.target;
-		Editor.UI.DomUtils.startDrag(this.draggingCursor, e, function( e, dx, dy ) {
-			el.classList.add("dragging");
-			if (el.id === "A") {
-				this.posA = [this.posA[0] + dx, this.posA[1] + dy];
-			} else {
-				this.posB = [this.posB[0] + dx, this.posB[1] + dy];
-			}
-		}.bind(this), function( e ) {
-			el.classList.remove("dragging");
-			this.style.cursor = "";
-		}.bind(this));
-	},
 	_curviness: function(posA, posB) {
 		// link going forward
 		var df = 100;
@@ -223,6 +224,35 @@ Editor.polymerElement({
 		}
 		// console.log(c * d);
 		return c * d;
+	},
+	_onEnterConnector: function(e) {
+		var el = e.target.id === "hA" ? this.$.A : this.$.B;
+		el.classList.add("enter");
+		this.style.cursor = this.hoverCursor;
+	},
+	_onOutConnector: function(e) {
+		var el = e.target.id === "hA" ? this.$.A : this.$.B;
+		el.classList.remove("enter");
+		this.style.cursor = "";
+	},
+	_onDragConnector: function( e ) {
+		if (3 === e.which || 2 === e.which) {
+			return;
+		}
+		e.stopPropagation();
+		this.style.cursor = this.draggingCursor;
+		var el = e.target.id === "hA" ? this.$.A : this.$.B;
+		Editor.UI.DomUtils.startDrag(this.draggingCursor, e, function( e, dx, dy ) {
+			el.classList.add("dragging");
+			if (el.id === "A") {
+				this.posA = [this.posA[0] + dx, this.posA[1] + dy];
+			} else {
+				this.posB = [this.posB[0] + dx, this.posB[1] + dy];
+			}
+		}.bind(this), function( e ) {
+			el.classList.remove("dragging");
+			this.style.cursor = "";
+		}.bind(this));
 	}
 });
 

@@ -14,8 +14,8 @@
 	fill: white;
 	r: 3px;
 }
-.connector:hover {
-	fill: #ddd;
+.connector.enter {
+	fill: red;
 	cursor: pointer;
 }
 .connector.dragging {
