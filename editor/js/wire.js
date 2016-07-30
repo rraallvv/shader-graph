@@ -22,7 +22,7 @@ Editor.polymerElement({
 
 		// Get path styling
 		style = this._getStyleRule(".wire." + this.tagName) || {};
-		this.strokeWidth = parseFloat(style["stroke-width"] || 1);
+		this.wireWidth = parseFloat(style["stroke-width"] || 1);
 	},
 	properties: {
 		posA: {
@@ -53,9 +53,9 @@ Editor.polymerElement({
 
 		var radiusx2 = 2 * this.radius;
 
-		left = Math.min(left - this.radius, left + bb.left - 0.5 * this.strokeWidth);
+		left = Math.min(left - this.radius, left + bb.left - 0.5 * this.wireWidth);
 		top = Math.min(top - this.radius, top + bb.top);
-		width = Math.max(width + radiusx2, bb.right - bb.left + this.strokeWidth);
+		width = Math.max(width + radiusx2, bb.right - bb.left + this.wireWidth);
 		height = Math.max(height + radiusx2, bb.bottom - bb.top);
 
 		// Element position and size
