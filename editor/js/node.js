@@ -1,9 +1,6 @@
 (function(){
 
 Editor.polymerElement({
-	attached: function() {
-		var self = this;
-	},
 	properties: {
 		id: String,
 		inputs: {
@@ -18,7 +15,7 @@ Editor.polymerElement({
 			type: Object,
 			value: function(){return [];}
 		},
-		updateNodeData: Object,
+		updateData: Object,
 		removeNode: Object,
 		pos: {
 			type: Array,
@@ -39,8 +36,8 @@ Editor.polymerElement({
 			var value = this.extra.map(function(item) {
 				return parseFloat(item.value);
 			});
-			if (this.updateNodeData) {
-				this.updateNodeData(parseFloat(this.id), {
+			if (this.updateData) {
+				this.updateData(parseFloat(this.id), {
 					value: value
 				});
 			}

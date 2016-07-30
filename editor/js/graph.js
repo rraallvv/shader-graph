@@ -332,7 +332,7 @@ Editor.polymerElement({
 				instance: this.instance,
 				extra: extra,
 				removeNode: data.type !== 'fragColor' ? this.removeNode.bind(this) : undefined,
-				updateNodeData: this.updateNodeData.bind(this),
+				updateData: this.updateData.bind(this),
 			} : undefined;
 		}, this);
 
@@ -419,7 +419,7 @@ Editor.polymerElement({
 			// Only update its data
 			if (mainNode) {
 				data.id = 1;
-				this.updateNodeData(1, data);
+				this.updateData(1, data);
 				return data.id;
 			}
 		}
@@ -540,7 +540,7 @@ Editor.polymerElement({
 
 		return true;
 	},
-	updateNodeData: function(id, data){
+	updateData: function(id, data){
 		if (!data) {
 			return;
 		}

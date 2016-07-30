@@ -1,6 +1,10 @@
 (function(){
 
 Editor.polymerElement({
+	properties: {
+		type: String,
+		instance: Object
+	},
 	attached: function() {
 		var instance = this.instance;
 		if (instance && this.offsetParent) {
@@ -38,10 +42,6 @@ Editor.polymerElement({
 			instance.unmakeSource(this);
 			instance.unmakeTarget(this);
 		}
-	},
-	properties: {
-		type: String,
-		instance: Object
 	}
 });
 
