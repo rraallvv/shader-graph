@@ -6,8 +6,9 @@
 	stroke-width: 2px;
 	fill: none;
 }
-.wire:hover {
-	stroke: #ddd;
+.wire.enter {
+	stroke: blue;
+	cursor:  url(../icon/delete-link.png), pointer;
 }
 .connector {
 	stroke: none;

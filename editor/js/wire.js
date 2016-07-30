@@ -9,21 +9,31 @@ Editor.polymerElement({
 		this.style.pointerEvents = "none";
 		this.$.A.style.pointerEvents = "none";
 		this.$.B.style.pointerEvents = "none";
-		this.$.W.style.pointerEvents = "visibleStroke";
+		this.$.W.style.pointerEvents = "none";
 		this.$.hA.style.pointerEvents = "all";
 		this.$.hB.style.pointerEvents = "all";
+		this.$.hW.style.pointerEvents = "visibleStroke";
 
 		this.$.hA.setAttribute("r", this.connectorRadius);
 		this.$.hB.setAttribute("r", this.connectorRadius);
+		this.$.hW.setAttribute("stroke-width", this.wireWidth);
+
+		this.$.hA.style.stroke = "none";
+		this.$.hB.style.stroke = "none";
+		this.$.hW.style.stroke = "none";
 
 		this.$.hA.style.fill = "none";
 		this.$.hB.style.fill = "none";
+		this.$.hW.style.fill = "none";
 
 		this.$.hA.addEventListener("mouseenter", this._onEnterConnector.bind( this ), false);
 		this.$.hA.addEventListener("mouseout", this._onOutConnector.bind( this ), false);
 
 		this.$.hB.addEventListener("mouseenter", this._onEnterConnector.bind( this ), false);
 		this.$.hB.addEventListener("mouseout", this._onOutConnector.bind( this ), false);
+
+		this.$.hW.addEventListener("mouseenter", this._onEnterWire.bind( this ), false);
+		this.$.hW.addEventListener("mouseout", this._onOutWire.bind( this ), false);
 
 		this.$.hA.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
 		this.$.hB.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
@@ -36,16 +46,20 @@ Editor.polymerElement({
 		var radius = parseFloat(style.r || 0);
 		this.connectorRadius = strokeWidth + radius + handleMargin;
 
-		// Get the connector hover styling
+		// Get the connector enter styling
 		style = this._getStyleRule(".connector.enter." + this.tagName) || {};
-		this.hoverCursor = style.cursor || "default";
+		this.enterConnectorCursor = style.cursor || "default";
 
 		style = this._getStyleRule(".connector.dragging." + this.tagName) || {};
-		this.draggingCursor = style.cursor || this.hoverCursor;
+		this.draggingCursor = style.cursor || this.enterConnectorCursor;
 
 		// Get the wire styling
 		style = this._getStyleRule(".wire." + this.tagName) || {};
-		this.wireWidth = parseFloat(style.strokeWidth || 1);
+		this.wireWidth = parseFloat(style.strokeWidth || 1) + 2 * handleMargin;
+
+		// Get the wire enter styling
+		style = this._getStyleRule(".wire.enter." + this.tagName) || {};
+		this.enterWireCursor = style.cursor || "default";
 	},
 	properties: {
 		posA: {
@@ -108,7 +122,7 @@ Editor.polymerElement({
 		this.$.hB.setAttribute("cy", bY);
 
 		// Wire position
-		this.$.W.setAttribute("d", "M " +
+		var attribute = "M " +
 			// A
 			aX + " " + aY + " " +
 			// control A
@@ -116,7 +130,9 @@ Editor.polymerElement({
 			// control B
 			(bX - curviness) + " " + bY + " " +
 			// B
-			bX + " " + bY);
+			bX + " " + bY;
+		this.$.W.setAttribute("d", attribute);
+		this.$.hW.setAttribute("d", attribute);
 	},
 	_getStyleRule: function(selector) {
 		if (!this.styleCache) {
@@ -228,7 +244,7 @@ Editor.polymerElement({
 	_onEnterConnector: function(e) {
 		var el = e.target.id === "hA" ? this.$.A : this.$.B;
 		el.classList.add("enter");
-		this.style.cursor = this.hoverCursor;
+		this.style.cursor = this.enterConnectorCursor;
 	},
 	_onOutConnector: function(e) {
 		var el = e.target.id === "hA" ? this.$.A : this.$.B;
@@ -253,6 +269,16 @@ Editor.polymerElement({
 			el.classList.remove("dragging");
 			this.style.cursor = "";
 		}.bind(this));
+	},
+	_onEnterWire: function(e) {
+		var el = this.$.W;
+		el.classList.add("enter");
+		this.style.cursor = this.enterWireCursor;
+	},
+	_onOutWire: function(e) {
+		var el = this.$.W;
+		el.classList.remove("enter");
+		this.style.cursor = "";
 	}
 });
 
