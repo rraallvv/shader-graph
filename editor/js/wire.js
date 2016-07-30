@@ -92,16 +92,24 @@ Editor.polymerElement({
 			bX + " " + bY);
 	},
 	_getStyleRule: function(selector) {
-		for (var i = 0; i < document.styleSheets.length; i++) {
-			var sheet = document.styleSheets[i];
-			var rules = sheet.cssRules ? sheet.cssRules : sheet.rules;
-			for (var j = 0; j < rules.length; j++) {
-				if (rules[j].selectorText && rules[j].selectorText.toLowerCase() === selector.toLowerCase()) {
-					return rules[j].style;
+		if (!this.styleCache) {
+			Editor.log("!");
+			this.styleCache = {};
+			for (var i = 0; i < document.styleSheets.length; i++) {
+				var sheet = document.styleSheets[i];
+				var rules = sheet.cssRules ? sheet.cssRules : sheet.rules;
+				for (var j = 0; j < rules.length; j++) {
+					if (rules[j].selectorText) {
+						var selectorText = rules[j].selectorText.toLowerCase();
+						if (selectorText.search(this.tagName.toLowerCase()) !== -1) {
+							this.styleCache[selectorText] = rules[j].style;
+						}
+					}
 				}
-			}
 
+			}
 		}
+		return this.styleCache[selector.toLowerCase()];
 	},
 	_bezierBoundingBox: function( x0, y0, x1, y1, x2, y2, x3, y3 ) {
 		var tvalues = [], xvalues = [], yvalues = [],
