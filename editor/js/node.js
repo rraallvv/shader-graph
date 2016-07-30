@@ -1,9 +1,5 @@
 (function(){
 
-if ( typeof Editor === "undefined" ) {
-	window.Editor = { polymerElement: Polymer, log: console.log };
-}
-
 Editor.polymerElement({
 	attached: function() {
 		var self = this;
