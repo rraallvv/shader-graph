@@ -22,6 +22,28 @@ Editor.polymerElement({
 	ready: function() {
 		this.style.pointerEvents = "none";
 
+		this.A = this._A;
+		this.B = this._B;
+
+		var self = this;
+
+		Object.defineProperty(this.A, "pos", {
+			get: function() { return self.posA; },
+			set: function(pos) { self.posA = pos; },
+			enumerable: true,
+			configurable: true
+		});
+
+		Object.defineProperty(this.B, "pos", {
+			get: function() { return self.posB; },
+			set: function(pos) { self.posB = pos; },
+			enumerable: true,
+			configurable: true
+		});
+
+		this.A.pos = [0,0];
+		this.B.pos = [0,0];
+
 		// Add the visible indicators
 		Polymer.dom(this.root).appendChild(this.indicators);
 
@@ -54,30 +76,30 @@ Editor.polymerElement({
 		// Create the visible indicators
 		var svgNS = "http://www.w3.org/2000/svg";
 
-		var iA = document.createElementNS(svgNS, "circle");
-		var iB = document.createElementNS(svgNS, "circle");
-		var iW = document.createElementNS(svgNS, "path");
+		var A = document.createElementNS(svgNS, "circle");
+		var B = document.createElementNS(svgNS, "circle");
+		var W = document.createElementNS(svgNS, "path");
 
-		iA.setAttribute("class", "connector");
-		iB.setAttribute("class", "connector");
-		iW.setAttribute("class", "wire");
+		A.setAttribute("class", "connector");
+		B.setAttribute("class", "connector");
+		W.setAttribute("class", "wire");
 
-		iA.style.pointerEvents = "none";
-		iB.style.pointerEvents = "none";
-		iW.style.pointerEvents = "none";
+		A.style.pointerEvents = "none";
+		B.style.pointerEvents = "none";
+		W.style.pointerEvents = "none";
 
 		var indicators = document.createElementNS(svgNS, "svg");
 		indicators.style.position = "absolute";
 		indicators.style.left = "0px";
 		indicators.style.top = "0px";
 
-		indicators.appendChild(iW);
-		indicators.appendChild(iA);
-		indicators.appendChild(iB);
+		indicators.appendChild(W);
+		indicators.appendChild(A);
+		indicators.appendChild(B);
 
-		this.iA = iA;
-		this.iB = iB;
-		this.iW = iW;
+		this._A = A;
+		this._B = B;
+		this.W = W;
 		this.indicators = indicators;
 
 		// Create handlers overlay
@@ -119,58 +141,52 @@ Editor.polymerElement({
 		document.addEventListener("mousemove", function(e) {
 			if (this._clickInsideElement( e, hA )) {
 				e.stopPropagation();
-				if (!iA.highlighted) {
-					iA.classList.add("enter");
+				if (!A.highlighted) {
+					A.classList.add("enter");
 					this.style.cursor = this.enterConnectorCursor;
-					iA.highlighted = true;
+					A.highlighted = true;
 				}
 			} else {
-				if (iA.highlighted) {
-					iA.classList.remove("enter");
+				if (A.highlighted) {
+					A.classList.remove("enter");
 					this.style.cursor = "";
-					iA.highlighted = false;
+					A.highlighted = false;
 				}
 			}
 
 			if (this._clickInsideElement( e, hB )) {
 				e.stopPropagation();
-				if (!iB.highlighted) {
-					iB.classList.add("enter");
+				if (!B.highlighted) {
+					B.classList.add("enter");
 					this.style.cursor = this.enterConnectorCursor;
-					iB.highlighted = true;
+					B.highlighted = true;
 				}
 			} else {
-				if (iB.highlighted) {
-					iB.classList.remove("enter");
+				if (B.highlighted) {
+					B.classList.remove("enter");
 					this.style.cursor = "";
-					iB.highlighted = false;
+					B.highlighted = false;
 				}
 			}
 		}.bind(this));
 
 		hW.addEventListener("mouseenter", function() {
-			iW.classList.add("enter");
+			W.classList.add("enter");
 			this.style.cursor = this.enterWireCursor;
 		}.bind(this));
 
 		hW.addEventListener("mouseout", function() {
-			iW.classList.remove("enter");
+			W.classList.remove("enter");
 			this.style.cursor = "";
 		}.bind(this));
 
 		document.addEventListener( "mousedown", function(e) {
-			if (this.drag && this._clickInsideElement( e, hA )) {
-				this.drag(e, iA, function(dx, dy) {
-					this.posA = [this.posA[0] + dx / this.scale, this.posA[1] + dy / this.scale];
-				}.bind(this));
-			}
-		}.bind(this), true);
-
-		document.addEventListener( "mousedown", function(e) {
-			if (this.drag && this._clickInsideElement( e, hB )) {
-				this.drag(e, iB, function(dx, dy) {
-					this.posB = [this.posB[0] + dx / this.scale, this.posB[1] + dy / this.scale];
-				}.bind(this));
+			if (this.drag) {
+				if (this._clickInsideElement( e, hA )) {
+					this.drag(e, A);
+				} else if (this._clickInsideElement( e, hB )) {
+					this.drag(e, B);
+				}
 			}
 		}.bind(this), true);
 	},
@@ -216,14 +232,14 @@ Editor.polymerElement({
 		var bY = Math.round(posB[1] - top);
 
 		// Conector A position
-		this.iA.setAttribute("cx", aX);
-		this.iA.setAttribute("cy", aY);
+		this._A.setAttribute("cx", aX);
+		this._A.setAttribute("cy", aY);
 		this.hA.setAttribute("cx", aX);
 		this.hA.setAttribute("cy", aY);
 
 		// Conector B position
-		this.iB.setAttribute("cx", bX);
-		this.iB.setAttribute("cy", bY);
+		this._B.setAttribute("cx", bX);
+		this._B.setAttribute("cy", bY);
 		this.hB.setAttribute("cx", bX);
 		this.hB.setAttribute("cy", bY);
 
@@ -238,7 +254,7 @@ Editor.polymerElement({
 			// B
 			bX + " " + bY;
 
-		this.iW.setAttribute("d", attribute);
+		this.W.setAttribute("d", attribute);
 		this.hW.setAttribute("d", attribute);
 	},
 	_getStyleRule: function(selector) {

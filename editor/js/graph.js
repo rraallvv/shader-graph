@@ -845,14 +845,14 @@ Editor.polymerElement({
 	*/
 	//	this.updateConnections();
 	},
-	connectorDrag: function( e, el, update) {
+	connectorDrag: function( e, el) {
 		if (3 === e.which || 2 === e.which) {
 			return;
 		}
 		e.stopPropagation();
 		el.classList.add("dragging");
 		Editor.UI.DomUtils.startDrag(this.draggingCursor, e, function( e, dx, dy ) {
-			update(dx, dy);
+			el.pos = [el.pos[0] + dx / this.scale, el.pos[1] + dy / this.scale];
 		}.bind(this), function( e ) {
 			el.classList.remove("dragging");
 			this.style.cursor = this.draggingCursor;
