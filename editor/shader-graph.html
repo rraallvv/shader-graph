@@ -12,7 +12,7 @@
 						pos-a={{item.posA}}
 						pos-b={{item.posB}}
 						drag={{item.drag}}
-					</shader-wire>
+					></shader-wire>
 				</template>
 			</template>
 			<template id="template" is="dom-repeat" items="{{nodes}}">
@@ -29,8 +29,9 @@
 						pos={{item.pos}}
 						data-node-id$="{{item.dataNodeId}}"
 						remove-node={{item.removeNode}}
-						update-data={{item.updateData}}>
-					</shader-node>
+						update-data={{item.updateData}}
+						drag={{item.drag}}
+					></shader-node>
 				</template>
 			</template>
 		</div>

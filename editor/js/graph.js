@@ -336,6 +336,7 @@ Editor.polymerElement({
 					extra: extra,
 					removeNode: data.type !== 'fragColor' ? this.removeNode.bind(this) : undefined,
 					updateData: this.updateData.bind(this),
+					drag: this.nodeDrag.bind(this)
 				};
 			}
 		}, this);
@@ -353,7 +354,7 @@ Editor.polymerElement({
 						positions[link.nodeB][0] + portB.offsetLeft + 3,
 						positions[link.nodeB][1] + portB.offsetTop + 0.5 * portB.offsetHeight + 2
 					],
-					drag: this.drag
+					drag: this.connectorDrag
 				};
 			}
 		}, this);
@@ -772,18 +773,13 @@ Editor.polymerElement({
 			this.setState(state);
 		}
 	},
-	updateSelectRect: function( left, top, width, height ){
-		this.selection = [];
-		var els = this.querySelectorAll("shader-node");
-
+	updateSelectRect: function( left, top, width, height ) {
 		if (!left || !top || !width || !height) {
-			// Deselect all nodes if selection rect is undefined
-			for(var i = 0; i < els.length; i++) {
-				els[i].selected = false;
-			}
-			this.instance.clearDragSelection();
+			this.clearSelection();
 			return;
 		}
+
+		var els = this.querySelectorAll("shader-node");
 
 		// Apply the local transformation to the selection rect
 		left -= 0.5 * (this.offsetWidth - (this._t.sx * this.offsetWidth)) + this._t.tx;
@@ -798,7 +794,8 @@ Editor.polymerElement({
 		var bottom = top + height;
 
 		// Find and mark as selected all the nodes insersecting the selection rect
-		for(var i = 0; i < els.length; i++) {
+		this.selection = [];
+		for (var i = 0; i < els.length; i++) {
 			var el = els[i];
 			var selected = el.offsetLeft <= right &&
 				left <= el.offsetLeft + el.offsetWidth &&
@@ -813,12 +810,28 @@ Editor.polymerElement({
 			}
 		}
 	},
+	clearSelection: function() {
+		this.selection = [];
+		var els = this.querySelectorAll("shader-node");
+
+		// Deselect all nodes if selection rect is undefined
+		for (var i = 0; i < els.length; i++) {
+			els[i].selected = false;
+		}
+		this.instance.clearDragSelection();
+	},
 	removeSelection: function() {
 		if (this.selection) {
 			this.selection.forEach(function(id){
 				this.removeNode(id);
 			}, this);
 		}
+	},
+	addToSelection: function(id) {
+		if (!this.selection) {
+			this.selection = [];
+		}
+		this.selection.push(id)
 	},
 	domChange: function(event){
 	/*
@@ -828,7 +841,7 @@ Editor.polymerElement({
 	*/
 	//	this.updateConnections();
 	},
-	drag: function( e, el, update) {
+	connectorDrag: function( e, el, update) {
 		if (3 === e.which || 2 === e.which) {
 			return;
 		}
@@ -839,6 +852,32 @@ Editor.polymerElement({
 		}.bind(this), function( e ) {
 			el.classList.remove("dragging");
 			this.style.cursor = this.draggingCursor;
+		}.bind(this));
+	},
+	nodeDrag: function(e, el) {
+		if (3 === e.which || 2 === e.which) {
+			return;
+		}
+		e.stopPropagation();
+		el.selected = true;
+		var dragged = false;
+		Editor.UI.DomUtils.startDrag("default", e, function( e, dx, dy ) {
+			dragged = true;
+			var pos = el.pos;
+			pos[0] += dx;
+			pos[1] += dy;
+			el.style.left = pos[0];
+			el.style.top = pos[1];
+			this.instance.addToDragSelection(el);
+			this.addToSelection(el.id);
+		}.bind(this), function( e ) {
+			this.style.cursor = "default";
+			if (!dragged) {
+				this.clearSelection();
+				el.selected = true;
+				this.instance.addToDragSelection(el);
+				this.addToSelection(el.id);
+			}
 		}.bind(this));
 	}
 });

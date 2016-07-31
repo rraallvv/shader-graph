@@ -26,11 +26,19 @@ Editor.polymerElement({
 			type: Boolean,
 			value: function() { return false; },
 			observer: "_selected"
-		}
+		},
+		drag: Object
 	},
 	observers: [
 		'_onValueChange(extra.*)'
 	],
+	created: function() {
+		this.addEventListener( "mousedown", function(e) {
+			if (this.drag) {
+				this.drag(e, this);
+			}
+		}.bind(this), true);
+	},
 	_onValueChange: function() {
 		if (this.extra) {
 			var value = this.extra.map(function(item) {
