@@ -7,23 +7,34 @@
 	<template>
 		<div id="canvas" class="container-full">
 			<template id="template" is="dom-repeat" items="{{links}}">
-				<shader-wire pos-a="{{item.posA}}" pos-b="{{item.posB}}"></shader-wire>
+				<template is="dom-if" if="{{item}}">
+					<shader-wire
+						pos-a={{item.posA}}
+						pos-b={{item.posB}}
+						_on-move={{item.onMove}}
+						_on-enter={{item.onEnter}}
+						_on-out={{item.onOut}}
+						_on-drag={{item.onDrag}}
+					</shader-wire>
+				</template>
 			</template>
 			<template id="template" is="dom-repeat" items="{{nodes}}">
-				<shader-node
-					id$="{{item.id}}"
-					key="{{item.key}}"
-					type="{{item.type}}"
-					instance={{item.instance}}
-					class$="{{item.className}}"
-					inputs={{item.inputs}}
-					outputs={{item.outputs}}
-					extra={{item.extra}}
-					pos={{item.pos}}
-					data-node-id$="{{item.dataNodeId}}"
-					remove-node={{item.removeNode}}
-					update-data={{item.updateData}}
-					></shader-node>
+				<template is="dom-if" if="{{item}}">
+					<shader-node
+						id$="{{item.id}}"
+						key="{{item.key}}"
+						type="{{item.type}}"
+						instance={{item.instance}}
+						class$="{{item.className}}"
+						inputs={{item.inputs}}
+						outputs={{item.outputs}}
+						extra={{item.extra}}
+						pos={{item.pos}}
+						data-node-id$="{{item.dataNodeId}}"
+						remove-node={{item.removeNode}}
+						update-data={{item.updateData}}>
+					</shader-node>
+				</template>
 			</template>
 		</div>
 	</template>

@@ -352,7 +352,11 @@ Editor.polymerElement({
 					posB: [
 						positions[link.nodeB][0] + portB.offsetLeft + 3,
 						positions[link.nodeB][1] + portB.offsetTop + 0.5 * portB.offsetHeight + 2
-					]
+					],
+					onMove: this._onMove,
+					onEnter: this._onEnter,
+					onOut: this._onOut,
+					onDrag: this._onDrag,
 				};
 			}
 		}, this);
@@ -824,39 +828,10 @@ Editor.polymerElement({
 			this.instance.draggable(el);
 		}, this);
 
-		Array.prototype.forEach.call(this.querySelectorAll("shader-wire"), function(el) {
-			document.addEventListener("mousemove", function(e) { this._onMove(e, el.hA, el.iA); }.bind(this));
-			//hA.addEventListener("mouseout", function() { this._onOut(iA); }.bind(this));
-
-			document.addEventListener("mousemove", function(e) { this._onMove(e, el.hB, el.iB); }.bind(this));
-			//hB.addEventListener("mouseout", function() { this._onOut(iB); }.bind(this));
-
-			el.hW.addEventListener("mouseenter", function() { this._onEnter(el.iW); }.bind(this));
-			el.hW.addEventListener("mouseout", function() { this._onOut(el.iW); }.bind(this));
-
-			//hA.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
-			document.addEventListener( "mousedown", function(e) {
-				if (this._clickInsideElement( e, el.hA )) {
-					this._onDrag(e, el.iA, function(dx, dy) {
-						el.posA = [el.posA[0] + dx / this.scale, el.posA[1] + dy / this.scale];
-					}.bind(this));
-				}
-			}.bind(this), true);
-
-			//hB.addEventListener("mousedown", this._onDragConnector.bind( this ), true);
-			document.addEventListener( "mousedown", function(e) {
-				if (this._clickInsideElement( e, el.hB )) {
-					this._onDrag(e, el.iB, function(dx, dy) {
-						el.posB = [el.posB[0] + dx / this.scale, el.posB[1] + dy / this.scale];
-					}.bind(this));
-				}
-			}.bind(this), true);
-		}, this);
-
-		this.updateConnections();
+		// this.updateConnections();
 	},
-	_onMove: function(e, hel, el) {
-		if (this._clickInsideElement( e, hel )) {
+	_onMove: function(e, hel, el, inside) {
+		if (inside) {
 			e.stopPropagation();
 			if (!el.highlighted) {
 				el.classList.add("enter");
@@ -891,41 +866,7 @@ Editor.polymerElement({
 			el.classList.remove("dragging");
 			this.style.cursor = this.draggingCursor;
 		}.bind(this));
-	},
-	_clickInsideElement: function( e, el ) {
-		var pos = this._getMousePosition(e);
-
-		var bounds = el.getBoundingClientRect();
-
-		var doc = document.documentElement;
-		var clientLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
-		var clientTop = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
-
-		pos[0] -= clientLeft;
-		pos[1] -= clientTop;
-
-		if (pos[0] < bounds.left || pos[0] > bounds.right || pos[1] < bounds.top || pos[1] > bounds.bottom) {
-			return false;
-		}
-
-		return true;
-	},
-	_getMousePosition: function(e) {
-		var posx = 0;
-		var posy = 0;
-
-		if (!e) var e = window.event;
-		
-		if (e.pageX || e.pageY) {
-			posx = e.pageX;
-			posy = e.pageY;
-		} else if (e.clientX || e.clientY) {
-			posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-		}
-
-		return [posx, posy];
-	}	
+	}
 });
 
 })();

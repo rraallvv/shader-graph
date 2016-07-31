@@ -13,7 +13,14 @@ Editor.polymerElement({
 		scale: {
 			type: Number,
 			value: 1
-		}
+		},
+		_onMove: Object,
+		_onEnter: Object,
+		_onOut: Object,
+		_onDrag: Object
+	},
+	_yyy: function(v) {
+		Editor.log(v);
 	},
 	observers: [
 		"_onPosChange(posA, posB)"
@@ -114,6 +121,41 @@ Editor.polymerElement({
 		this.hB = hB;
 		this.hW = hW;
 		this.overlay = overlay;
+
+		document.addEventListener("mousemove", function(e) {
+			if (this._onMove) {
+				this._onMove(e, hA, iA, this._clickInsideElement( e, hA ));
+				this._onMove(e, hB, iB, this._clickInsideElement( e, hB ));
+			}
+		}.bind(this));
+
+		hW.addEventListener("mouseenter", function() {
+			if (this._onEnter) {
+				this._onEnter(iW);
+			}
+		}.bind(this));
+
+		hW.addEventListener("mouseout", function() {
+			if (this._onOut) {
+				this._onOut(iW);
+			}
+		}.bind(this));
+
+		document.addEventListener( "mousedown", function(e) {
+			if (this._onDrag && this._clickInsideElement( e, hA )) {
+				this._onDrag(e, iA, function(dx, dy) {
+					this.posA = [this.posA[0] + dx / this.scale, this.posA[1] + dy / this.scale];
+				}.bind(this));
+			}
+		}.bind(this), true);
+
+		document.addEventListener( "mousedown", function(e) {
+			if (this._onDrag && this._clickInsideElement( e, hB )) {
+				this._onDrag(e, iB, function(dx, dy) {
+					this.posB = [this.posB[0] + dx / this.scale, this.posB[1] + dy / this.scale];
+				}.bind(this));
+			}
+		}.bind(this), true);
 	},
 	_onPosChange(posA, posB) {
 		// Bounding box for connectors
@@ -288,6 +330,40 @@ Editor.polymerElement({
 		}
 		// console.log(c * d);
 		return c * d;
+	},
+	_clickInsideElement: function( e, el ) {
+		var pos = this._getMousePosition(e);
+
+		var bounds = el.getBoundingClientRect();
+
+		var doc = document.documentElement;
+		var clientLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+		var clientTop = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+
+		pos[0] -= clientLeft;
+		pos[1] -= clientTop;
+
+		if (pos[0] < bounds.left || pos[0] > bounds.right || pos[1] < bounds.top || pos[1] > bounds.bottom) {
+			return false;
+		}
+
+		return true;
+	},
+	_getMousePosition: function(e) {
+		var posx = 0;
+		var posy = 0;
+
+		if (!e) var e = window.event;
+		
+		if (e.pageX || e.pageY) {
+			posx = e.pageX;
+			posy = e.pageY;
+		} else if (e.clientX || e.clientY) {
+			posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+			posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+		}
+
+		return [posx, posy];
 	}
 });
 
