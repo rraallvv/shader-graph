@@ -804,7 +804,7 @@ Editor.polymerElement({
 			el.selected = selected;
 			if (selected) {
 				this.instance.addToDragSelection(el);
-				this.selection.push(el.id);
+				this.selection.push(el);
 			} else {
 				this.instance.removeFromDragSelection(el);
 			}
@@ -822,16 +822,20 @@ Editor.polymerElement({
 	},
 	removeSelection: function() {
 		if (this.selection) {
-			this.selection.forEach(function(id){
-				this.removeNode(id);
+			this.selection.forEach(function(el){
+				this.removeNode(el.id);
 			}, this);
 		}
 	},
-	addToSelection: function(id) {
+	addToSelection: function(el) {
 		if (!this.selection) {
 			this.selection = [];
 		}
-		this.selection.push(id)
+		if (this.selection.indexOf(el) === -1) {
+			el.selected = true;
+			this.instance.addToDragSelection(el);
+			this.selection.push(el)
+		}
 	},
 	domChange: function(event){
 	/*
@@ -859,24 +863,22 @@ Editor.polymerElement({
 			return;
 		}
 		e.stopPropagation();
-		el.selected = true;
+		this.addToSelection(el);
 		var dragged = false;
 		Editor.UI.DomUtils.startDrag("default", e, function( e, dx, dy ) {
 			dragged = true;
-			var pos = el.pos;
-			pos[0] += dx;
-			pos[1] += dy;
-			el.style.left = pos[0];
-			el.style.top = pos[1];
-			this.instance.addToDragSelection(el);
-			this.addToSelection(el.id);
+			this.selection.forEach(function(el){
+				var pos = el.pos;
+				pos[0] += dx / this.scale;
+				pos[1] += dy / this.scale;
+				el.style.left = pos[0];
+				el.style.top = pos[1];
+			}, this);
 		}.bind(this), function( e ) {
 			this.style.cursor = "default";
 			if (!dragged) {
 				this.clearSelection();
-				el.selected = true;
-				this.instance.addToDragSelection(el);
-				this.addToSelection(el.id);
+				this.addToSelection(el);
 			}
 		}.bind(this));
 	}
