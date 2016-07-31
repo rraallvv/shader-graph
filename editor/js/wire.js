@@ -14,7 +14,6 @@ Editor.polymerElement({
 			type: Number,
 			value: 1
 		},
-		_onMove: Object,
 		_onEnter: Object,
 		_onOut: Object,
 		_onDrag: Object
@@ -123,9 +122,34 @@ Editor.polymerElement({
 		this.overlay = overlay;
 
 		document.addEventListener("mousemove", function(e) {
-			if (this._onMove) {
-				this._onMove(e, hA, iA, this._clickInsideElement( e, hA ));
-				this._onMove(e, hB, iB, this._clickInsideElement( e, hB ));
+			if (this._clickInsideElement( e, hA )) {
+				e.stopPropagation();
+				if (!iA.highlighted) {
+					iA.classList.add("enter");
+					this.style.cursor = this.enterConnectorCursor;
+					iA.highlighted = true;
+				}
+			} else {
+				if (iA.highlighted) {
+					iA.classList.remove("enter");
+					this.style.cursor = "";
+					iA.highlighted = false;
+				}
+			}
+
+			if (this._clickInsideElement( e, hB )) {
+				e.stopPropagation();
+				if (!iB.highlighted) {
+					iB.classList.add("enter");
+					this.style.cursor = this.enterConnectorCursor;
+					iB.highlighted = true;
+				}
+			} else {
+				if (iB.highlighted) {
+					iB.classList.remove("enter");
+					this.style.cursor = "";
+					iB.highlighted = false;
+				}
 			}
 		}.bind(this));
 

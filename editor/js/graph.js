@@ -353,7 +353,6 @@ Editor.polymerElement({
 						positions[link.nodeB][0] + portB.offsetLeft + 3,
 						positions[link.nodeB][1] + portB.offsetTop + 0.5 * portB.offsetHeight + 2
 					],
-					onMove: this._onMove,
 					onEnter: this._onEnter,
 					onOut: this._onOut,
 					onDrag: this._onDrag,
@@ -824,27 +823,12 @@ Editor.polymerElement({
 		}
 	},
 	domChange: function(event){
+	/*
 		Array.prototype.forEach.call(this.querySelectorAll("shader-node"), function(el) {
 			this.instance.draggable(el);
 		}, this);
-
-		// this.updateConnections();
-	},
-	_onMove: function(e, hel, el, inside) {
-		if (inside) {
-			e.stopPropagation();
-			if (!el.highlighted) {
-				el.classList.add("enter");
-				this.style.cursor = this.enterConnectorCursor;
-				el.highlighted = true;
-			}
-		} else {
-			if (el.highlighted) {
-				el.classList.remove("enter");
-				this.style.cursor = "";
-				el.highlighted = false;
-			}
-		}
+	*/
+	//	this.updateConnections();
 	},
 	_onEnter: function(el) {
 		el.classList.add("enter");
