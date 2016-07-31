@@ -288,57 +288,73 @@ Editor.polymerElement({
 	},
 	setState: function(state) {
 		this.state = state;
-		var nodes = this.state.nodes;
 		var shader = this.updateShader();
 
-		this.links = [
-			{posA:[0, 0], posB:[100, 100]},
-			{posA:[300, 300], posB:[100, 50]}
-		];
+		var positions = [];
 
-		this.nodes =  nodes.map(function(data) {
+		this.nodes =  state.nodes.map(function(data) {
 			var node = shader.fragmentGraph.getNodeById(data.id);
+			if (node) {
+				var extra;
 
-			var extra;
-
-			switch (data.type) {
-			case 'value':
-			case 'vec2':
-			case 'vec3':
-			case 'vec4':
-				if (data.value.length > 1) {
-					extra = [];
-					for (var i = 0; i < data.value.length; i++) {
-						extra.push(
-							{
-								value: data.value[i],
-							}
-						);
-					}
-				} else {
-					extra = [
-						{
-							value: data.value,
+				switch (data.type) {
+				case 'value':
+				case 'vec2':
+				case 'vec3':
+				case 'vec4':
+					if (data.value.length > 1) {
+						extra = [];
+						for (var i = 0; i < data.value.length; i++) {
+							extra.push(
+								{
+									value: data.value[i],
+								}
+							);
 						}
-					];
+					} else {
+						extra = [
+							{
+								value: data.value,
+							}
+						];
+					}
+					break;
 				}
-				break;
-			}
 
-			return node ? {
-				pos: data.pos,
-				dataNodeId: data.id,
-				id: data.id,
-				key: data.id,
-				type: data.type,
-				className: "w",
-				inputs: node.getInputPorts(),
-				outputs: node.getOutputPorts(),
-				instance: this.instance,
-				extra: extra,
-				removeNode: data.type !== 'fragColor' ? this.removeNode.bind(this) : undefined,
-				updateData: this.updateData.bind(this),
-			} : undefined;
+				positions[data.id] = data.pos;
+
+				return {
+					pos: data.pos,
+					dataNodeId: data.id,
+					id: data.id,
+					key: data.id,
+					type: data.type,
+					className: "w",
+					inputs: node.getInputPorts(),
+					outputs: node.getOutputPorts(),
+					instance: this.instance,
+					extra: extra,
+					removeNode: data.type !== 'fragColor' ? this.removeNode.bind(this) : undefined,
+					updateData: this.updateData.bind(this),
+				};
+			}
+		}, this);
+
+		this.links = state.links.map(function(link) {
+			var portA = this.querySelector("#" + link.outputA + link.nodeA);
+			var portB = this.querySelector("#" + link.inputB + link.nodeB);
+			if (portA && portB) {
+				return {
+					posA: [
+						positions[link.nodeA][0] + portA.offsetLeft + portA.offsetWidth - 2,
+						positions[link.nodeA][1] + portA.offsetTop + 0.5 * portA.offsetHeight + 2
+					],
+					posB: [
+						positions[link.nodeB][0] + portB.offsetLeft + 3,
+						positions[link.nodeB][1] + portB.offsetTop + 0.5 * portB.offsetHeight + 2
+					]
+				};
+			}
 		}, this);
 	},
 	clearTempConnection: function() {
