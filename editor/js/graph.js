@@ -871,8 +871,7 @@ Editor.polymerElement({
 				var pos = el.pos;
 				pos[0] += dx / this.scale;
 				pos[1] += dy / this.scale;
-				el.style.left = pos[0];
-				el.style.top = pos[1];
+				el.set("pos.*", pos.slice(0));
 			}, this);
 		}.bind(this), function( e ) {
 			this.style.cursor = "default";

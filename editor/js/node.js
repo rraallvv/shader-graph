@@ -19,8 +19,7 @@ Editor.polymerElement({
 		removeNode: Object,
 		pos: {
 			type: Array,
-			value: function() { return [0,0]; },
-			observer: "_pos"
+			value: function() { return [0,0]; }
 		},
 		selected: {
 			type: Boolean,
@@ -30,7 +29,8 @@ Editor.polymerElement({
 		drag: Object
 	},
 	observers: [
-		'_onValueChange(extra.*)'
+		'_onValueChange(extra.*)',
+		'_onPosChange(pos.*)'
 	],
 	created: function() {
 		this.addEventListener( "mousedown", function(e) {
@@ -54,10 +54,10 @@ Editor.polymerElement({
 	_onRemoveNode: function(){
 		this.removeNode(parseFloat(this.id));
 	},
-	_pos: function(pos) {
+	_onPosChange(pos) {
 		if (pos) {
-			this.style.left = pos[0];
-			this.style.top = pos[1];
+			this.style.left = pos.value[0];
+			this.style.top = pos.value[1];
 		}
 	},
 	_selected: function(selected){
