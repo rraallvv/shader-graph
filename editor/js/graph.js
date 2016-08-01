@@ -324,9 +324,9 @@ Editor.polymerElement({
 				positions[data.id] = data.pos;
 
 				return {
+					id: data.id,
 					pos: data.pos,
 					dataNodeId: data.id,
-					id: data.id,
 					key: data.id,
 					type: data.type,
 					className: "w",
