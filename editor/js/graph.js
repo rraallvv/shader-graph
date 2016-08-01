@@ -876,6 +876,31 @@ Editor.polymerElement({
 				pos[0] += dx / this.scale;
 				pos[1] += dy / this.scale;
 				el.set("pos.*", pos.slice(0));
+
+				Array.prototype.forEach.call(el.outputs, function(label) {
+					port = label + el.id;
+					var elp = this.querySelector("#" + port);
+					var elc = this.querySelector("#" + port + "_");
+					if (elp && elc) {
+						elc.pos = [
+							el.offsetLeft + elp.offsetLeft + elp.offsetWidth - 2,
+							el.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
+						];
+					}
+				}, this);
+
+				Array.prototype.forEach.call(el.inputs, function(label) {
+					port = label + el.id;
+					var elp = this.querySelector("#" + port);
+					var elc = this.querySelector("#" + port + "_");
+					if (elp && elc) {
+						elc.pos = [
+							el.offsetLeft + elp.offsetLeft + 3,
+							el.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
+						];
+					}
+				}, this);
+
 			}, this);
 		}.bind(this), function( e ) {
 			this.style.cursor = "default";
