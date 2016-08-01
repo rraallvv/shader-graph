@@ -831,14 +831,28 @@ Editor.polymerElement({
 			}, this);
 		}
 	},
+	isInSelection: function(el) {
+		return this.selection && this.selection.indexOf(el) !== -1;
+	},
 	addToSelection: function(el) {
 		if (!this.selection) {
 			this.selection = [];
 		}
-		if (this.selection.indexOf(el) === -1) {
+		if (!this.isInSelection(el)) {
 			el.selected = true;
 			this.instance.addToDragSelection(el);
 			this.selection.push(el)
+		}
+	},
+	toggleSelection: function(el) {
+		if (!this.selection) {
+			this.selection = [];
+		}
+		if (!this.isInSelection(el)) {
+			this.addToSelection(el);
+		} else {
+			this.selection.splice(this.selection.indexOf(el), 1);
+			el.selected = false;
 		}
 	},
 	domChange: function(event){
@@ -867,10 +881,15 @@ Editor.polymerElement({
 			return;
 		}
 		e.stopPropagation();
-		this.addToSelection(el);
 		var dragged = false;
 		Editor.UI.DomUtils.startDrag("default", e, function( e, dx, dy ) {
 			dragged = true;
+
+			if (!this.isInSelection(el)) {
+				this.clearSelection();
+				this.addToSelection(el);
+			}
+
 			this.selection.forEach(function(el){
 				var pos = el.pos;
 				pos[0] += dx / this.scale;
@@ -902,11 +921,16 @@ Editor.polymerElement({
 				}, this);
 
 			}, this);
+
 		}.bind(this), function( e ) {
 			this.style.cursor = "default";
 			if (!dragged) {
-				this.clearSelection();
-				this.addToSelection(el);
+				if (e.shiftKey) {
+					this.toggleSelection(el);
+				} else {
+					this.clearSelection();
+					this.addToSelection(el);
+				}
 			}
 		}.bind(this));
 	}
