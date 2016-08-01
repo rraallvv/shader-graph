@@ -2,9 +2,17 @@
 
 Editor.polymerElement({
 	properties: {
+		portA: {
+			type: String,
+			observer: "_portA"
+		},
 		posA: {
 			type: Array,
 			value: function() { return [200, -100]; },
+		},
+		portB: {
+			type: String,
+			observer: "_portB"
 		},
 		posB: {
 			type: Array,
@@ -397,6 +405,12 @@ Editor.polymerElement({
 		}
 
 		return [posx, posy];
+	},
+	_portA: function(port) {
+		this._A.setAttribute("id", port);
+	},
+	_portB: function(port) {
+		this._B.setAttribute("id", port);
 	}
 });
 

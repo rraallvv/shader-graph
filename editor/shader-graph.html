@@ -9,7 +9,9 @@
 			<template id="template" is="dom-repeat" items="{{links}}">
 				<template is="dom-if" if="{{item}}">
 					<shader-wire
+						port-a={{item.portA}}
 						pos-a={{item.posA}}
+						port-b={{item.portB}}
 						pos-b={{item.posB}}
 						drag={{item.drag}}
 					></shader-wire>

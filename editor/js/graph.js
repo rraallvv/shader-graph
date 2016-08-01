@@ -342,17 +342,21 @@ Editor.polymerElement({
 		}, this);
 
 		this.links = state.links.map(function(link) {
-			var portA = this.querySelector("#" + link.outputA + link.nodeA);
-			var portB = this.querySelector("#" + link.inputB + link.nodeB);
-			if (portA && portB) {
+			var portA = link.outputA + link.nodeA;
+			var portB = link.inputB + link.nodeB;
+			var ela = this.querySelector("#" + portA);
+			var elb = this.querySelector("#" + portB);
+			if (ela && elb) {
 				return {
+					portA: portA + "_",
 					posA: [
-						positions[link.nodeA][0] + portA.offsetLeft + portA.offsetWidth - 2,
-						positions[link.nodeA][1] + portA.offsetTop + 0.5 * portA.offsetHeight + 2
+						positions[link.nodeA][0] + ela.offsetLeft + ela.offsetWidth - 2,
+						positions[link.nodeA][1] + ela.offsetTop + 0.5 * ela.offsetHeight + 2
 					],
+					portB: portB + "_",
 					posB: [
-						positions[link.nodeB][0] + portB.offsetLeft + 3,
-						positions[link.nodeB][1] + portB.offsetTop + 0.5 * portB.offsetHeight + 2
+						positions[link.nodeB][0] + elb.offsetLeft + 3,
+						positions[link.nodeB][1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
 					],
 					drag: this.connectorDrag
 				};
