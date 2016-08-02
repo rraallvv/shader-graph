@@ -898,6 +898,7 @@ Editor.polymerElement({
 			return;
 		}
 		if (capture) {
+			this.bringToTop(el);
 			if (e.shiftKey) {
 				this.toggleSelection(el);
 			} else {
@@ -948,6 +949,12 @@ Editor.polymerElement({
 				this.style.cursor = "default";
 			}.bind(this));
 		}
+	},
+	bringToTop: function(el) {
+		if (!this.topz) {
+			this.topz = 10;
+		}
+		el.style.zIndex = ++this.topz;
 	}
 });
 
