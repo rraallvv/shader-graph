@@ -40,6 +40,7 @@ Editor.polymerElement({
 		}.bind(this));
 
 		this.addEventListener( "mousedown", function(e) {
+			// this.parentNode.appendChild(this);
 			if (this.clickHandler) {
 				this.clickHandler(e, this, true);
 			}
