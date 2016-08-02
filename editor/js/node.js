@@ -26,7 +26,7 @@ Editor.polymerElement({
 			value: function() { return false; },
 			observer: "_selected"
 		},
-		drag: Object
+		clickHandler: Object
 	},
 	observers: [
 		'_onValueChange(extra.*)',
@@ -34,8 +34,14 @@ Editor.polymerElement({
 	],
 	created: function() {
 		this.addEventListener( "mousedown", function(e) {
-			if (this.drag) {
-				this.drag(e, this);
+			if (this.clickHandler) {
+				this.clickHandler(e, this, false);
+			}
+		}.bind(this));
+
+		this.addEventListener( "mousedown", function(e) {
+			if (this.clickHandler) {
+				this.clickHandler(e, this, true);
 			}
 		}.bind(this), true);
 	},

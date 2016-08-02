@@ -339,7 +339,7 @@ Editor.polymerElement({
 					extra: extra,
 					removeNode: data.type !== 'fragColor' ? this.removeNode.bind(this) : undefined,
 					updateData: this.updateData.bind(this),
-					drag: this.nodeDrag.bind(this)
+					clickHandler: this.nodeClick.bind(this)
 				};
 			}
 		}, this);
@@ -893,63 +893,61 @@ Editor.polymerElement({
 			this.style.cursor = this.draggingCursor;
 		}.bind(this));
 	},
-	nodeDrag: function(e, el) {
+	nodeClick: function(e, el, capture) {
 		if (3 === e.which || 2 === e.which) {
 			return;
 		}
-		e.stopPropagation();
-		var dragged = false;
-		Editor.UI.DomUtils.startDrag("default", e, function( e, dx, dy ) {
-			dragged = true;
-
-			if (!this.isInSelection(el)) {
-				this.clearSelection();
+		if (capture) {
+			if (e.shiftKey) {
+				this.toggleSelection(el);
+			} else {
 				this.addToSelection(el);
 			}
+		} else if (e.target.classList.contains("draggable")) {
+			e.stopPropagation();
+			var dragged = false;
+			Editor.UI.DomUtils.startDrag("default", e, function( e, dx, dy ) {
+				dragged = true;
+				this.selection.forEach(function(el){
+					var pos = el.pos;
+					pos[0] += dx / this.scale;
+					pos[1] += dy / this.scale;
+					el.set("pos.*", pos.slice(0));
 
-			this.selection.forEach(function(el){
-				var pos = el.pos;
-				pos[0] += dx / this.scale;
-				pos[1] += dy / this.scale;
-				el.set("pos.*", pos.slice(0));
+					Array.prototype.forEach.call(el.outputs, function(label) {
+						port = label + el.id;
+						var elp = this.querySelector("#" + port);
+						var elc = this.querySelector("#" + port + "_");
+						if (elp && elc) {
+							elc.pos = [
+								el.offsetLeft + elp.offsetLeft + elp.offsetWidth - 2,
+								el.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
+							];
+						}
+					}, this);
 
-				Array.prototype.forEach.call(el.outputs, function(label) {
-					port = label + el.id;
-					var elp = this.querySelector("#" + port);
-					var elc = this.querySelector("#" + port + "_");
-					if (elp && elc) {
-						elc.pos = [
-							el.offsetLeft + elp.offsetLeft + elp.offsetWidth - 2,
-							el.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
-						];
-					}
+					Array.prototype.forEach.call(el.inputs, function(label) {
+						port = label + el.id;
+						var elp = this.querySelector("#" + port);
+						var elc = this.querySelector("#" + port + "_");
+						if (elp && elc) {
+							elc.pos = [
+								el.offsetLeft + elp.offsetLeft + 3,
+								el.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
+							];
+						}
+					}, this);
+
 				}, this);
 
-				Array.prototype.forEach.call(el.inputs, function(label) {
-					port = label + el.id;
-					var elp = this.querySelector("#" + port);
-					var elc = this.querySelector("#" + port + "_");
-					if (elp && elc) {
-						elc.pos = [
-							el.offsetLeft + elp.offsetLeft + 3,
-							el.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
-						];
-					}
-				}, this);
-
-			}, this);
-
-		}.bind(this), function( e ) {
-			this.style.cursor = "default";
-			if (!dragged) {
-				if (e.shiftKey) {
-					this.toggleSelection(el);
-				} else {
+			}.bind(this), function( e ) {
+				if (!dragged && !e.shiftKey) {
 					this.clearSelection();
 					this.addToSelection(el);
 				}
-			}
-		}.bind(this));
+				this.style.cursor = "default";
+			}.bind(this));
+		}
 	}
 });
 
