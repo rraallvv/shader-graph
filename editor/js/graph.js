@@ -141,6 +141,7 @@ Editor.polymerElement({
 			connector: "Bezier"
 		});
 
+/*
 		instance.bind("click", function (c) {
 			if(!ignoreConnectionEvents){
 				var info = component._getConnectionInfo(c);
@@ -148,6 +149,7 @@ Editor.polymerElement({
 				//instance.detach(c);
 			}
 		});
+*/
 
 		instance.bind("beforeDrop", function (c) {
 			if (!ignoreConnectionEvents) {
@@ -350,7 +352,10 @@ Editor.polymerElement({
 		var nodes = this.nodes;
 		var missing = false;
 
-		this.links = this.state.links.map(function(link) {
+		var links = [];
+		var linkId = 0;
+
+		this.state.links.forEach(function(link) {
 			var portA = link.outputA + link.nodeA;
 			var portB = link.inputB + link.nodeB;
 			var ela = this.querySelector("#" + portA);
@@ -358,7 +363,8 @@ Editor.polymerElement({
 			if (ela && elb) {
 				var nodeA = nodes[link.nodeA];
 				var nodeB = nodes[link.nodeB];
-				return {
+				links[linkId] = {
+					id: linkId,
 					portA: portA + "_",
 					posA: [
 						nodeA.pos[0] + ela.offsetLeft + ela.offsetWidth - 2,
@@ -369,12 +375,16 @@ Editor.polymerElement({
 						nodeB.pos[0] + elb.offsetLeft + 4,
 						nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
 					],
-					clickHandler: this.connectorClick
+					clickHandler: this.connectorClick.bind(this),
+					wireClickHandler: this.wireClickHandler.bind(this)
 				};
+				linkId++;
 			} else {
 				missing = true;
 			}
 		}, this);
+
+		this.links = links;
 
 		if (missing) {
 			setTimeout(function() { this._updateLinks(); }.bind(this), 100);
@@ -613,6 +623,21 @@ Editor.polymerElement({
 		}
 		var split = string.split('.');
 		return [parseInt(split[0]), parseInt(split[1])];
+	},
+	_getWireInfo: function(info) {
+		var result = {};
+		var reg = /([^\d]+)(\d+)_/;
+		var match;
+
+		match = info.portA.match(reg);
+		result.nodeA = match[2];
+		result.outputA = match[1];
+
+		match = info.portB.match(reg);
+		result.nodeB = match[2];
+		result.inputB = match[1];
+
+		return result;
 	},
 	_getConnectionInfo: function(info) {
 		var result = {};
@@ -892,6 +917,12 @@ Editor.polymerElement({
 			el.classList.remove("dragging");
 			this.style.cursor = this.draggingCursor;
 		}.bind(this));
+	},
+	wireClickHandler: function(e, el) {
+		if(!ignoreConnectionEvents){
+			var info = this._getWireInfo(this.links[el.id]);
+			this.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
+		}
 	},
 	nodeClick: function(e, el, capture) {
 		if (3 === e.which || 2 === e.which) {

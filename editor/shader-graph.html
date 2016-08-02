@@ -9,11 +9,13 @@
 			<template id="template" is="dom-repeat" items="{{links}}">
 				<template is="dom-if" if="{{item}}">
 					<shader-wire
+						id$={{item.id}}
 						port-a={{item.portA}}
 						pos-a={{item.posA}}
 						port-b={{item.portB}}
 						pos-b={{item.posB}}
 						click-handler={{item.clickHandler}}
+						wire-click-handler={{item.wireClickHandler}}
 					></shader-wire>
 				</template>
 			</template>

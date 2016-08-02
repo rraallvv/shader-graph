@@ -22,7 +22,8 @@ Editor.polymerElement({
 			type: Number,
 			value: 1
 		},
-		clickHandler: Object
+		clickHandler: Object,
+		wireClickHandler: Object
 	},
 	observers: [
 		"_onPosChange(posA, posB)"
@@ -178,6 +179,16 @@ Editor.polymerElement({
 			}
 		}.bind(this));
 
+		document.addEventListener( "mousedown", function(e) {
+			if (this.clickHandler) {
+				if (this._clickInsideElement( e, hA )) {
+					this.clickHandler(e, A);
+				} else if (this._clickInsideElement( e, hB )) {
+					this.clickHandler(e, B);
+				}
+			}
+		}.bind(this), true);
+
 		hW.addEventListener("mouseenter", function() {
 			W.classList.add("enter");
 			this.style.cursor = this.enterWireCursor;
@@ -188,15 +199,11 @@ Editor.polymerElement({
 			this.style.cursor = "";
 		}.bind(this));
 
-		document.addEventListener( "mousedown", function(e) {
-			if (this.clickHandler) {
-				if (this._clickInsideElement( e, hA )) {
-					this.clickHandler(e, A);
-				} else if (this._clickInsideElement( e, hB )) {
-					this.clickHandler(e, B);
-				}
+		hW.addEventListener("click", function(e) {
+			if (this.wireClickHandler) {
+				this.wireClickHandler(e, this);
 			}
-		}.bind(this), true);
+		}.bind(this));
 	},
 	_onPosChange(posA, posB) {
 		// Bounding box for connectors
