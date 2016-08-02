@@ -288,12 +288,17 @@ Editor.polymerElement({
 	},
 	setState: function(state) {
 		this.state = state;
-		var shader = this.updateShader();
 
-		var positions = [];
+		this.updateShader();
 
-		this.nodes =  state.nodes.map(function(data) {
-			var node = shader.fragmentGraph.getNodeById(data.id);
+		this._updateNodes();
+		this._updateLinks();
+	},
+	_updateNodes: function() {
+		var nodes = [];
+
+		this.state.nodes.forEach(function(data) {
+			var node = this.shader.fragmentGraph.getNodeById(data.id);
 			if (node) {
 				var extra;
 
@@ -321,9 +326,7 @@ Editor.polymerElement({
 					break;
 				}
 
-				positions[data.id] = data.pos;
-
-				return {
+				nodes[data.id] = {
 					id: data.id,
 					pos: data.pos,
 					dataNodeId: data.id,
@@ -341,27 +344,41 @@ Editor.polymerElement({
 			}
 		}, this);
 
-		this.links = state.links.map(function(link) {
+		this.nodes = nodes;
+	},
+	_updateLinks: function() {
+		var nodes = this.nodes;
+		var missing = false;
+
+		this.links = this.state.links.map(function(link) {
 			var portA = link.outputA + link.nodeA;
 			var portB = link.inputB + link.nodeB;
 			var ela = this.querySelector("#" + portA);
 			var elb = this.querySelector("#" + portB);
 			if (ela && elb) {
+				var nodeA = nodes[link.nodeA];
+				var nodeB = nodes[link.nodeB];
 				return {
 					portA: portA + "_",
 					posA: [
-						positions[link.nodeA][0] + ela.offsetLeft + ela.offsetWidth - 2,
-						positions[link.nodeA][1] + ela.offsetTop + 0.5 * ela.offsetHeight + 2
+						nodeA.pos[0] + ela.offsetLeft + ela.offsetWidth - 2,
+						nodeA.pos[1] + ela.offsetTop + 0.5 * ela.offsetHeight + 2
 					],
 					portB: portB + "_",
 					posB: [
-						positions[link.nodeB][0] + elb.offsetLeft + 3,
-						positions[link.nodeB][1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
+						nodeB.pos[0] + elb.offsetLeft + 3,
+						nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
 					],
 					drag: this.connectorDrag
 				};
+			} else {
+				missing = true;
 			}
 		}, this);
+
+		if (missing) {
+			setTimeout(function() { this._updateLinks(); }.bind(this), 100);
+		}
 	},
 	clearTempConnection: function() {
 		this._tempLink = null;
