@@ -369,7 +369,7 @@ Editor.polymerElement({
 						nodeB.pos[0] + elb.offsetLeft + 3,
 						nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
 					],
-					drag: this.connectorDrag
+					clickHandler: this.connectorClick
 				};
 			} else {
 				missing = true;
@@ -880,7 +880,7 @@ Editor.polymerElement({
 	*/
 	//	this.updateConnections();
 	},
-	connectorDrag: function( e, el) {
+	connectorClick: function( e, el) {
 		if (3 === e.which || 2 === e.which) {
 			return;
 		}

@@ -22,7 +22,7 @@ Editor.polymerElement({
 			type: Number,
 			value: 1
 		},
-		drag: Object
+		clickHandler: Object
 	},
 	observers: [
 		"_onPosChange(posA, posB)"
@@ -189,11 +189,11 @@ Editor.polymerElement({
 		}.bind(this));
 
 		document.addEventListener( "mousedown", function(e) {
-			if (this.drag) {
+			if (this.clickHandler) {
 				if (this._clickInsideElement( e, hA )) {
-					this.drag(e, A);
+					this.clickHandler(e, A);
 				} else if (this._clickInsideElement( e, hB )) {
-					this.drag(e, B);
+					this.clickHandler(e, B);
 				}
 			}
 		}.bind(this), true);
