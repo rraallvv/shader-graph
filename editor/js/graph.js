@@ -897,60 +897,60 @@ Editor.polymerElement({
 		if (3 === e.which || 2 === e.which) {
 			return;
 		}
+		var isDraggable = e.target.classList.contains("draggable");
 		if (capture) {
-			this.bringToTop(el);
+			this.bringToFront(el);
 			if (e.shiftKey) {
 				this.toggleSelection(el);
 			} else {
-				this.addToSelection(el);
-			}
-		} else if (e.target.classList.contains("draggable")) {
-			e.stopPropagation();
-			var dragged = false;
-			Editor.UI.DomUtils.startDrag("default", e, function( e, dx, dy ) {
-				dragged = true;
-				this.selection.forEach(function(el){
-					var pos = el.pos;
-					pos[0] += dx / this.scale;
-					pos[1] += dy / this.scale;
-					el.set("pos.*", pos.slice(0));
-
-					Array.prototype.forEach.call(el.outputs, function(label) {
-						port = label + el.id;
-						var elp = this.querySelector("#" + port);
-						var elc = this.querySelector("#" + port + "_");
-						if (elp && elc) {
-							elc.pos = [
-								el.offsetLeft + elp.offsetLeft + elp.offsetWidth - 2,
-								el.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
-							];
-						}
-					}, this);
-
-					Array.prototype.forEach.call(el.inputs, function(label) {
-						port = label + el.id;
-						var elp = this.querySelector("#" + port);
-						var elc = this.querySelector("#" + port + "_");
-						if (elp && elc) {
-							elc.pos = [
-								el.offsetLeft + elp.offsetLeft + 4,
-								el.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
-							];
-						}
-					}, this);
-
-				}, this);
-
-			}.bind(this), function( e ) {
-				if (!dragged && !e.shiftKey) {
+				if (!this.isInSelection(el) || !isDraggable) {
 					this.clearSelection();
 					this.addToSelection(el);
 				}
-				this.style.cursor = "default";
-			}.bind(this));
+			}
+		} else {
+			if (isDraggable) {
+				e.stopPropagation();
+				Editor.UI.DomUtils.startDrag("move", e, function( e, dx, dy ) {
+					this.selection.forEach(function(el){
+						var pos = el.pos;
+						pos[0] += dx / this.scale;
+						pos[1] += dy / this.scale;
+						el.set("pos.*", pos.slice(0));
+
+						Array.prototype.forEach.call(el.outputs, function(label) {
+							port = label + el.id;
+							var elp = this.querySelector("#" + port);
+							var elc = this.querySelector("#" + port + "_");
+							if (elp && elc) {
+								elc.pos = [
+									el.offsetLeft + elp.offsetLeft + elp.offsetWidth - 2,
+									el.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
+								];
+							}
+						}, this);
+
+						Array.prototype.forEach.call(el.inputs, function(label) {
+							port = label + el.id;
+							var elp = this.querySelector("#" + port);
+							var elc = this.querySelector("#" + port + "_");
+							if (elp && elc) {
+								elc.pos = [
+									el.offsetLeft + elp.offsetLeft + 4,
+									el.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
+								];
+							}
+						}, this);
+
+					}, this);
+
+				}.bind(this), function( e ) {
+					this.style.cursor = "default";
+				}.bind(this));
+			}
 		}
 	},
-	bringToTop: function(el) {
+	bringToFront: function(el) {
 		if (!this.topz) {
 			this.topz = 10;
 		}
