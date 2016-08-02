@@ -366,7 +366,7 @@ Editor.polymerElement({
 					],
 					portB: portB + "_",
 					posB: [
-						nodeB.pos[0] + elb.offsetLeft + 3,
+						nodeB.pos[0] + elb.offsetLeft + 4,
 						nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
 					],
 					clickHandler: this.connectorClick
@@ -933,7 +933,7 @@ Editor.polymerElement({
 						var elc = this.querySelector("#" + port + "_");
 						if (elp && elc) {
 							elc.pos = [
-								el.offsetLeft + elp.offsetLeft + 3,
+								el.offsetLeft + elp.offsetLeft + 4,
 								el.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
 							];
 						}

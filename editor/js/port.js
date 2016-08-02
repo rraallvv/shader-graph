@@ -36,6 +36,12 @@ Editor.polymerElement({
 			instance.unmakeSource(this);
 			instance.unmakeTarget(this);
 		}
+	},
+	_isInput: function(type) {
+		return type == "in";
+	},
+	_isOutpout: function(type) {
+		return type == "out";
 	}
 });
 

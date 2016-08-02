@@ -69,16 +69,16 @@ editor-unit-input::shadow i {
 .out,
 .in {
 	cursor: pointer;
-	margin: 3px;
+	margin: 2px;
 	display: block;
 }
 .in {
 	text-align: left;
-	padding-left: 12px;
+	padding-left: 0px;
 }
 .out {
 	text-align: right;
-	padding-right: 12px;
+	padding-right: 0px;
 }
 .title {
 	text-align: center;

@@ -1,5 +1,17 @@
 <dom-module id="shader-port">
 	<link rel="import" type="css" href="css/port.css">
-	<template><content></content></template>
+	<template>
+		<template is="dom-if" if="{{_isInput(type)}}">
+			<svg>
+				<circle class="input"/>
+			</svg>
+		</template>
+		<content></content>
+		<template is="dom-if" if="{{_isOutpout(type)}}">
+			<svg>
+				<circle class="output"/>
+			</svg>
+		</template>
+	</template>
 	<script src="js/port.js"></script>
 </dom-module>
