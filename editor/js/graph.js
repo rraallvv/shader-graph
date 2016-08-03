@@ -213,12 +213,14 @@ Editor.polymerElement({
 			}
 		});
 
+/*
 		instance.bind("beforeDrag", function (c, e) {
 			component.clearTempConnection();
 			if (component && component.onConnectionStarted) {
 				component.onConnectionStarted(e);
 			}
 		});
+*/
 
 		// suspend drawing and initialize.
 		instance.batch(function () {
@@ -909,6 +911,8 @@ Editor.polymerElement({
 	portClickHandler: function(e, el) {
 		e.stopPropagation();
 
+		this._beforePortDrag(e, el);
+
 		var temp = document.createElement("shader-wire");
 		temp.id = "temp";
 
@@ -950,6 +954,19 @@ Editor.polymerElement({
 		}.bind(this), function( e ) {
 
 		}.bind(this));
+	},
+	_beforePortDrag: function(e, el) {
+		this.clearTempWire();
+		if (this.onConnectionStarted) {
+			this.onConnectionStarted(e);
+		}
+	},
+	clearTempWire: function() {
+		this._tempWire = null;
+		var el = this.querySelector("#temp")
+		if (el) {
+			this.$.canvas.removeChild(el);
+		}
 	},
 	connectorClick: function( e, el) {
 		if (3 === e.which || 2 === e.which) {
