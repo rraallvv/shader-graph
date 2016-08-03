@@ -149,7 +149,6 @@ Editor.polymerElement({
 				//instance.detach(c);
 			}
 		});
-*/
 
 		instance.bind("beforeDrop", function (c) {
 			if (!ignoreConnectionEvents) {
@@ -157,6 +156,7 @@ Editor.polymerElement({
 				component.connect(info.nodeA, info.outputA, info.nodeB, info.inputB);
 			}
 		});
+*/
 
 		instance.bind("connectionAborted", function (c, e) {
 			if (!ignoreConnectionEvents) {
@@ -965,28 +965,40 @@ Editor.polymerElement({
 		// Find posible connectors to drop temp wire
 		var filterType = el.type === "in" ? "out" : "in";
 		var portAInfo = this._getPortInfo(el.id);
-		var nA = this.shader.fragmentGraph.getNodeById(portAInfo.node);
+		var nodeA = portAInfo.node;
 		var portA = portAInfo.port;
+		var nA = this.shader.fragmentGraph.getNodeById(nodeA);
 
-		var ports = Array.prototype.filter.call(this.querySelectorAll("shader-port"), function(port) {
+		var ports = [];
+		Array.prototype.forEach.call(this.querySelectorAll("shader-port"), function(port) {
 			if (port.type === filterType) {
 				var portBInfo = this._getPortInfo(port.id);
-				var nB = this.shader.fragmentGraph.getNodeById(portBInfo.node);
+				var nodeB = portBInfo.node;
 				var portB = portBInfo.port;
-				//Editor.log("!", nA.canConnect(portA, nB, portB), nB.canConnect(portB, nA, portA));
-				return nA.canConnect(portA, nB, portB) || nB.canConnect(portB, nA, portA);
+				var nB = this.shader.fragmentGraph.getNodeById(nodeB);
+				if (nA.canConnect(portA, nB, portB) || nB.canConnect(portB, nA, portA)) {
+					ports.push({
+						element: port,
+						node: portBInfo.node,
+						port: portBInfo.port
+					});
+				}
 			}
-			return false;
 		}, this);
 
 		// Start dragging the temp wire
+		var nodeB;
+		var portB;
 		Editor.UI.DomUtils.startDrag("default", e, function( e, dx, dy ) {
 			var pos = [
 				((e.clientX - bounds.left) + 0.5 * this.offsetWidth * (this._t.sx - 1) - this._t.tx) / this._t.sx,
 				((e.clientY - bounds.top) + 0.5 * this.offsetHeight * (this._t.sx - 1) - this._t.ty) / this._t.sy
 			];
+			nodeB = undefined;
+			portB = undefined;
 			// Snap connector to ports
-			ports.forEach(function(port) {
+			ports.forEach(function(info) {
+				var port = info.element;
 				var n = port.parentNode.parentNode;
 				var ppos;
 				if (filterType === "in") {
@@ -1005,11 +1017,17 @@ Editor.polymerElement({
 						pos[1] > n.offsetTop + port.offsetTop &&
 						pos[1] < n.offsetTop + port.offsetTop + port.offsetHeight) {
 					pos = ppos;
+					nodeB = info.node;
+					portB = info.port;
 				}
 			});
 			elc.pos = pos;
 		}.bind(this), function( e ) {
-
+			if (nodeA, portA, nodeB, portB) {
+				this.clearTempWire();
+				this.connect(nodeA, portA, nodeB, portB);
+			} else {
+			}
 		}.bind(this));
 	},
 	clearTempWire: function() {
