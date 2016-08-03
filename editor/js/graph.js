@@ -625,6 +625,17 @@ Editor.polymerElement({
 		var split = string.split('.');
 		return [parseInt(split[0]), parseInt(split[1])];
 	},
+	_getPortInfo: function(info) {
+		var result = {};
+		var reg = /([^\d]+)(\d+)/;
+		var match;
+
+		match = info.match(reg);
+		result.node = match[2];
+		result.port = match[1];
+
+		return result;
+	},
 	_getWireInfo: function(info) {
 		var result = {};
 		var reg = /([^\d]+)(\d+)_/;
@@ -953,8 +964,19 @@ Editor.polymerElement({
 
 		// Find posible connectors to drop temp wire
 		var filterType = el.type === "in" ? "out" : "in";
+		var portAInfo = this._getPortInfo(el.id);
+		var nA = this.shader.fragmentGraph.getNodeById(portAInfo.node);
+		var portA = portAInfo.port;
+
 		var ports = Array.prototype.filter.call(this.querySelectorAll("shader-port"), function(port) {
-			return port.type === filterType;
+			if (port.type === filterType) {
+				var portBInfo = this._getPortInfo(port.id);
+				var nB = this.shader.fragmentGraph.getNodeById(portBInfo.node);
+				var portB = portBInfo.port;
+				//Editor.log("!", nA.canConnect(portA, nB, portB), nB.canConnect(portB, nA, portA));
+				return nA.canConnect(portA, nB, portB) || nB.canConnect(portB, nA, portA);
+			}
+			return false;
 		}, this);
 
 		// Start dragging the temp wire
