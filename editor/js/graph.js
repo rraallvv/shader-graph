@@ -341,7 +341,8 @@ Editor.polymerElement({
 					extra: extra,
 					removeNode: data.type !== 'fragColor' ? this.removeNode.bind(this) : undefined,
 					updateData: this.updateData.bind(this),
-					clickHandler: this.nodeClick.bind(this)
+					clickHandler: this.nodeClick.bind(this),
+					portClickHandler: this.portClickHandler.bind(this)
 				};
 			}
 		}, this);
@@ -904,6 +905,51 @@ Editor.polymerElement({
 		}, this);
 	*/
 	//	this.updateConnections();
+	},
+	portClickHandler: function(e, el) {
+		e.stopPropagation();
+
+		var temp = document.createElement("shader-wire");
+		temp.id = "temp";
+
+		temp.portA = "portA";
+		temp.portB = "portB";
+
+		var eln = el.parentNode.parentNode;
+
+		var elc;
+
+		if (el.type == "in") {
+			temp.B.pos = [
+				eln.offsetLeft + el.offsetLeft + 4,
+				eln.offsetTop + el.offsetTop + 0.5 * el.offsetHeight + 2
+			];
+			elc = temp.A;
+		} else {
+			temp.A.pos = [
+				eln.offsetLeft + el.offsetLeft + el.offsetWidth - 2,
+				eln.offsetTop + el.offsetTop + 0.5 * el.offsetHeight + 2
+			];
+			elc = temp.B;
+		}
+
+		var bounds = this.getBoundingClientRect();
+
+		elc.pos = [
+			((e.clientX - bounds.left) - 0.5 * this.offsetWidth - this._t.tx) / this._t.sx + 0.5 * this.offsetWidth,
+			((e.clientY - bounds.top) - 0.5 * this.offsetHeight - this._t.ty) / this._t.sy + 0.5 * this.offsetHeight
+		];
+
+		Polymer.dom(this.$.canvas).appendChild(temp);
+
+		Editor.UI.DomUtils.startDrag("default", e, function( e, dx, dy ) {
+			elc.pos = [
+				elc.pos[0] + dx / this._t.sx,
+				elc.pos[1] + dy / this._t.sy
+			];
+		}.bind(this), function( e ) {
+
+		}.bind(this));
 	},
 	connectorClick: function( e, el) {
 		if (3 === e.which || 2 === e.which) {

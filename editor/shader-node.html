@@ -18,13 +18,25 @@
 				</div>
 			</template>
 			<template is="dom-repeat" items="{{inputs}}">
-				<shader-port id="{{item}}{{id}}" type="in" class="in" instance={{instance}}>{{item}}</shader-port>
+				<shader-port
+					id="{{item}}{{id}}"
+					type="in"
+					class="in"
+					instance={{instance}}
+					click-handler={{portClickHandler}}
+					>{{item}}</shader-port>
 			</template>
 		</div>
 
 		<div class="outputs">
 			<template is="dom-repeat" items="{{outputs}}">
-				<shader-port id="{{item}}{{id}}" type="out" class="out" instance={{instance}}>{{item}}</shader-port>
+				<shader-port
+					id="{{item}}{{id}}"
+					type="out"
+					class="out"
+					instance={{instance}}
+					click-handler={{portClickHandler}}
+					>{{item}}</shader-port>
 			</template>
 		</div>
     </template>

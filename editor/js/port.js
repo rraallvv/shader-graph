@@ -3,9 +3,11 @@
 Editor.polymerElement({
 	properties: {
 		type: String,
-		instance: Object
+		instance: Object,
+		clickHandler: Object
 	},
 	attached: function() {
+/*
 		var instance = this.instance;
 		if (instance && this.offsetParent) {
 			instance.makeSource(this, {
@@ -28,14 +30,22 @@ Editor.polymerElement({
 				},
 			});
 		}
+*/
+		this.addEventListener( "mousedown", function(e) {
+			if (this.clickHandler) {
+				this.clickHandler(e, this);
+			}
+		}.bind(this), true);
 	},
 	detached: function() {
+/*
 		var instance = this.instance;
 		if (instance) {
 			instance.detachAllConnections(this);
 			instance.unmakeSource(this);
 			instance.unmakeTarget(this);
 		}
+*/
 	},
 	_isInput: function(type) {
 		return type == "in";
