@@ -3,49 +3,14 @@
 Editor.polymerElement({
 	properties: {
 		type: String,
-		instance: Object,
 		clickHandler: Object
 	},
 	attached: function() {
-/*
-		var instance = this.instance;
-		if (instance && this.offsetParent) {
-			instance.makeSource(this, {
-				// maxConnections: 1,
-				connectionType: this.type === "in" ? "basicLR" : "basicRL",
-				onMaxConnections: function (info, e) {
-					console.error("Maximum number of links (" + info.maxConnections + ") reached in source");
-				},
-				extract: {
-					"action": "the-action"
-				}
-			});
-
-			instance.makeTarget(this, {
-				dropOptions: { hoverClass: "dragHover" },
-				allowLoopback: false,
-				// maxConnections: 1,
-				onMaxConnections: function (info, e) {
-					console.error("Maximum number of links (" + info.maxConnections + ") reached in target");
-				},
-			});
-		}
-*/
 		this.addEventListener( "mousedown", function(e) {
 			if (this.clickHandler) {
 				this.clickHandler(e, this);
 			}
 		}.bind(this), true);
-	},
-	detached: function() {
-/*
-		var instance = this.instance;
-		if (instance) {
-			instance.detachAllConnections(this);
-			instance.unmakeSource(this);
-			instance.unmakeTarget(this);
-		}
-*/
 	},
 	_isInput: function(type) {
 		return type == "in";
