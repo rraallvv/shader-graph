@@ -911,8 +911,13 @@ Editor.polymerElement({
 	portClickHandler: function(e, el) {
 		e.stopPropagation();
 
-		this._beforePortDrag(e, el);
+		// Clear temp wire before creating a new one
+		this.clearTempWire();
+		if (this.onConnectionStarted) {
+			this.onConnectionStarted(e);
+		}
 
+		// Create a new temp wire
 		var temp = document.createElement("shader-wire");
 		temp.id = "temp";
 
@@ -946,6 +951,7 @@ Editor.polymerElement({
 
 		Polymer.dom(this.$.canvas).appendChild(temp);
 
+		// Start dragging the temp wire
 		Editor.UI.DomUtils.startDrag("default", e, function( e, dx, dy ) {
 			elc.pos = [
 				elc.pos[0] + dx / this._t.sx,
@@ -954,12 +960,6 @@ Editor.polymerElement({
 		}.bind(this), function( e ) {
 
 		}.bind(this));
-	},
-	_beforePortDrag: function(e, el) {
-		this.clearTempWire();
-		if (this.onConnectionStarted) {
-			this.onConnectionStarted(e);
-		}
 	},
 	clearTempWire: function() {
 		this._tempWire = null;
