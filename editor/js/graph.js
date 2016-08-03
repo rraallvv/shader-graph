@@ -156,7 +156,6 @@ Editor.polymerElement({
 				component.connect(info.nodeA, info.outputA, info.nodeB, info.inputB);
 			}
 		});
-*/
 
 		instance.bind("connectionAborted", function (c, e) {
 			if (!ignoreConnectionEvents) {
@@ -213,7 +212,6 @@ Editor.polymerElement({
 			}
 		});
 
-/*
 		instance.bind("beforeDrag", function (c, e) {
 			component.clearTempConnection();
 			if (component && component.onConnectionStarted) {
@@ -532,19 +530,19 @@ Editor.polymerElement({
 		}
 
 		// If there is a temporary link attach it to the new node
-		if (this._tempLink) {
-			var nodeA = this._tempLink.nodeA;
-			var portA = this._tempLink.outputA;
+		if (this._tempWire) {
+			var nodeA = this._tempWire.nodeA;
+			var portA = this._tempWire.portA;
 			var nodeB = data.id;
-			if (this._isOutput(nodeA, portA)) {
+			if (this._tempWire.element.type === "out") {
 				var portB = ShaderGraph.Node.classes[data.type].prototype.getInputPorts()[0];
 				this.connect(nodeB, portB, nodeA, portA);
 				// this.connect(nodeA, portA, nodeB, portB);
-			} else if (this._isInput(nodeA, portA)) {
+			} else if (this._tempWire.element.type === "in") {
 				var portB = ShaderGraph.Node.classes[data.type].prototype.getOutputPorts()[0];
 				this.connect(nodeB, portB, nodeA, portA);
 			}
-			this.clearTempConnection();
+			this.clearTempWire();
 		}
 
 		return data.id;
@@ -1027,6 +1025,14 @@ Editor.polymerElement({
 				this.clearTempWire();
 				this.connect(nodeA, portA, nodeB, portB);
 			} else {
+				this._tempWire = {
+					element: el,
+					nodeA: nodeA,
+					portA: portA,
+					nodeB: nodeB,
+					portB: portB
+				};
+				this.connectionAborted(e);
 			}
 		}.bind(this));
 	},
@@ -1035,6 +1041,16 @@ Editor.polymerElement({
 		var el = this.querySelector("#temp")
 		if (el) {
 			this.$.canvas.removeChild(el);
+		}
+	},
+	connectionAborted: function(e) {
+		if (!ignoreConnectionEvents) {
+			if (this.onConnectionReleased) {
+				this.onConnectionReleased(e);
+			} else {
+				// If onConnectionReleased is not defined abort temp connection
+				this.clearTempWire();
+			}
 		}
 	},
 	connectorClick: function( e, el) {
