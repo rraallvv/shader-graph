@@ -829,11 +829,11 @@ Editor.polymerElement({
 		var els = this.querySelectorAll("shader-node");
 
 		// Apply the local transformation to the selection rect
-		left -= 0.5 * (this.offsetWidth - (this._t.sx * this.offsetWidth)) + this._t.tx;
+		left -= this._t.tx - 0.5 * this.offsetWidth * (this._t.sx - 1);
 		left /= this._t.sx;
 		width /= this._t.sx;
 
-		top -= 0.5 * (this.offsetHeight - (this._t.sy * this.offsetHeight)) + this._t.ty;
+		top -= this._t.ty - 0.5 * this.offsetHeight * (this._t.sy - 1);
 		top /= this._t.sy;
 		height /= this._t.sy;
 
@@ -936,8 +936,8 @@ Editor.polymerElement({
 		var bounds = this.getBoundingClientRect();
 
 		elc.pos = [
-			((e.clientX - bounds.left) - 0.5 * this.offsetWidth - this._t.tx) / this._t.sx + 0.5 * this.offsetWidth,
-			((e.clientY - bounds.top) - 0.5 * this.offsetHeight - this._t.ty) / this._t.sy + 0.5 * this.offsetHeight
+			((e.clientX - bounds.left) + 0.5 * this.offsetWidth * (this._t.sx - 1) - this._t.tx) / this._t.sx,
+			((e.clientY - bounds.top) + 0.5 * this.offsetHeight * (this._t.sx - 1) - this._t.ty) / this._t.sy
 		];
 
 		Polymer.dom(this.$.canvas).appendChild(temp);
