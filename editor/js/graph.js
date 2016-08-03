@@ -974,14 +974,14 @@ Editor.polymerElement({
 					];
 				} else {
 					ppos = [
-						n.offsetLeft + port.offsetLeft + 4,
+						n.offsetLeft + port.offsetLeft + port.offsetWidth - 2,
 						n.offsetTop + port.offsetTop + 0.5 * port.offsetHeight + 2
 					];
 				}
-				if (pos[0] > ppos[0] - 10 &&
-						pos[0] < ppos[0] + 10 &&
-						pos[1] > ppos[1] - 10 &&
-						pos[1] < ppos[1] + 10) {
+				if (pos[0] > ppos[0] - 20 &&
+						pos[0] < ppos[0] + 20 &&
+						pos[1] > n.offsetTop + port.offsetTop &&
+						pos[1] < n.offsetTop + port.offsetTop + port.offsetHeight) {
 					pos = ppos;
 				}
 			});
