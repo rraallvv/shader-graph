@@ -951,12 +951,41 @@ Editor.polymerElement({
 
 		Polymer.dom(this.$.canvas).appendChild(temp);
 
+		// Find posible connectors to drop temp wire
+		var filterType = el.type === "in" ? "out" : "in";
+		var ports = Array.prototype.filter.call(this.querySelectorAll("shader-port"), function(port) {
+			return port.type === filterType;
+		}, this);
+
 		// Start dragging the temp wire
 		Editor.UI.DomUtils.startDrag("default", e, function( e, dx, dy ) {
-			elc.pos = [
-				elc.pos[0] + dx / this._t.sx,
-				elc.pos[1] + dy / this._t.sy
+			var pos = [
+				((e.clientX - bounds.left) + 0.5 * this.offsetWidth * (this._t.sx - 1) - this._t.tx) / this._t.sx,
+				((e.clientY - bounds.top) + 0.5 * this.offsetHeight * (this._t.sx - 1) - this._t.ty) / this._t.sy
 			];
+			// Snap connector to ports
+			ports.forEach(function(port) {
+				var n = port.parentNode.parentNode;
+				var ppos;
+				if (filterType === "in") {
+					ppos = [
+						n.offsetLeft + port.offsetLeft + 4,
+						n.offsetTop + port.offsetTop + 0.5 * port.offsetHeight + 2
+					];
+				} else {
+					ppos = [
+						n.offsetLeft + port.offsetLeft + 4,
+						n.offsetTop + port.offsetTop + 0.5 * port.offsetHeight + 2
+					];
+				}
+				if (pos[0] > ppos[0] - 10 &&
+						pos[0] < ppos[0] + 10 &&
+						pos[1] > ppos[1] - 10 &&
+						pos[1] < ppos[1] + 10) {
+					pos = ppos;
+				}
+			});
+			elc.pos = pos;
 		}.bind(this), function( e ) {
 
 		}.bind(this));
