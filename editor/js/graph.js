@@ -353,7 +353,6 @@ Editor.polymerElement({
 		var missing = false;
 
 		var links = [];
-		var linkId = 0;
 
 		this.state.links.forEach(function(link) {
 			var portA = link.outputA + link.nodeA;
@@ -363,8 +362,8 @@ Editor.polymerElement({
 			if (ela && elb) {
 				var nodeA = nodes[link.nodeA];
 				var nodeB = nodes[link.nodeB];
-				links[linkId] = {
-					id: linkId,
+				links[link.id] = {
+					id: link.id,
 					portA: portA + "_",
 					posA: [
 						nodeA.pos[0] + ela.offsetLeft + ela.offsetWidth - 2,
@@ -378,7 +377,6 @@ Editor.polymerElement({
 					clickHandler: this.connectorClick.bind(this),
 					wireClickHandler: this.wireClickHandler.bind(this)
 				};
-				linkId++;
 			} else {
 				missing = true;
 			}
@@ -762,6 +760,8 @@ Editor.polymerElement({
 			var info = existing[i];
 			this.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
 		}
+
+		link.id = this.generateId();
 
 		state.links.push(link);
 
