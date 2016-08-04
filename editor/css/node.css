@@ -90,20 +90,3 @@ editor-unit-input::shadow i {
 .draggable {
 	cursor: move;
 }
-.remove-button {
-	position: relative;
-	top: 3px;
-	font-size: 9px;
-	display: inline-block;
-	font-family: 'Glyphicons Halflings';
-	font-style: normal;
-	font-weight: 400;
-	line-height: 1;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	cursor: pointer;
-	float: right!important;
-}
-.remove-button:before {
-	content: "\e014";
-}

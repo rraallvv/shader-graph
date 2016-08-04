@@ -16,7 +16,6 @@ Editor.polymerElement({
 			value: function(){return [];}
 		},
 		updateData: Object,
-		removeNode: Object,
 		pos: {
 			type: Array,
 			value: function() { return [0,0]; }
@@ -57,9 +56,6 @@ Editor.polymerElement({
 				});
 			}
 		}
-	},
-	_onRemoveNode: function(){
-		this.removeNode(parseFloat(this.id));
 	},
 	_onPosChange(pos) {
 		if (pos && pos.value) {

@@ -6,9 +6,6 @@
 	<template>
 		<div class="title draggable">
 			{{type}}
-			<template is="dom-if" if="{{removeNode}}">
-				<span class="remove-button" on-click="_onRemoveNode"></span>
-			</template>
 		</div>
 
 		<div class="inputs">

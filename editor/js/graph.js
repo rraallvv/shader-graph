@@ -169,7 +169,6 @@ Editor.polymerElement({
 					inputs: node.getInputPorts(),
 					outputs: node.getOutputPorts(),
 					extra: extra,
-					removeNode: data.type !== 'fragColor' ? this.removeNode.bind(this) : undefined,
 					updateData: this.updateData.bind(this),
 					clickHandler: this.nodeClick.bind(this),
 					portClickHandler: this.portClickHandler.bind(this)
