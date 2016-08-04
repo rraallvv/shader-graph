@@ -4,19 +4,19 @@ Editor.polymerElement({
 	properties: {
 		portA: {
 			type: String,
-			observer: "_portA"
+			value: "port-a"
 		},
 		posA: {
 			type: Array,
-			value: function() { return [200, -100]; },
+			value: function() { return [0, 0]; },
 		},
 		portB: {
 			type: String,
-			observer: "_portB"
+			value: "port-b"
 		},
 		posB: {
 			type: Array,
-			value: function() { return [400, 300]; },
+			value: function() { return [0, 0]; },
 		},
 		scale: {
 			type: Number,
@@ -30,87 +30,36 @@ Editor.polymerElement({
 	ready: function() {
 		this.style.pointerEvents = "none";
 
-		this.A = this._A;
-		this.B = this._B;
-
-		var self = this;
-
-		Object.defineProperty(this.A, "pos", {
-			get: function() { return self.posA; },
-			set: function(pos) { self.posA = pos; },
-			enumerable: true,
-			configurable: true
-		});
-
-		Object.defineProperty(this.B, "pos", {
-			get: function() { return self.posB; },
-			set: function(pos) { self.posB = pos; },
-			enumerable: true,
-			configurable: true
-		});
-
-		this.A.pos = [0,0];
-		this.B.pos = [0,0];
-
-		// Add elements
-		Polymer.dom(this.root).appendChild(this.elements);
-	},
-	created: function() {
-		// Get the connector styling
-		var style = this._getStyleRule(".connector." + this.tagName) || {};
-		var strokeWidth = parseFloat(style.strokeWidth || 1);
-		var radius = parseFloat(style.r || 0);
-		this.connectorRadius = strokeWidth + radius;
-
-		// Get the wire styling
-		var handleMargin = 5;
-		style = this._getStyleRule(".wire." + this.tagName) || {};
-		this.wireWidth = parseFloat(style.strokeWidth || 1) + 2 * handleMargin;
-
-		// Get the wire enter styling
-		style = this._getStyleRule(".wire.enter." + this.tagName) || {};
-		this.enterWireCursor = style.cursor || "default";
-
-		// Create the visible elements
-		var svgNS = "http://www.w3.org/2000/svg";
-
-		var A = document.createElementNS(svgNS, "circle");
-		var B = document.createElementNS(svgNS, "circle");
-		var W = document.createElementNS(svgNS, "path");
-
-		A.setAttribute("class", "connector");
-		B.setAttribute("class", "connector");
-		W.setAttribute("class", "wire");
+		// Visible elements
+		var A = this.$$("#" + this.portA);
+		var B = this.$$("#" + this.portB);
+		var W = this.$.wire;
 
 		A.style.pointerEvents = "none";
 		B.style.pointerEvents = "none";
 		W.style.pointerEvents = "none";
 
-		var elements = document.createElementNS(svgNS, "svg");
-		elements.style.position = "absolute";
-		elements.style.left = "0px";
-		elements.style.top = "0px";
+		var container = this.$.container;
+		container.style.position = "absolute";
+		container.style.left = "0px";
+		container.style.top = "0px";
 
-		elements.appendChild(W);
-		elements.appendChild(A);
-		elements.appendChild(B);
-
-		this._A = A;
-		this._B = B;
+		this.A = A;
+		this.B = B;
 		this.W = W;
 
-		// Create margin overlay
-		var hW = document.createElementNS(svgNS, "path");
+		// Margin overlay
+		var hW = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
 		hW.style.pointerEvents = "visibleStroke";
 		hW.setAttribute("stroke-width", this.wireWidth);
 		hW.style.stroke = "none";
 		hW.style.fill = "none";
 
-		elements.appendChild(hW);
+		container.appendChild(hW);
 
 		this.hW = hW;
-		this.elements = elements;
+		this.container = container;
 
 		// Event listeners
 		hW.addEventListener("mouseenter", function() {
@@ -128,8 +77,47 @@ Editor.polymerElement({
 				this.clickHandler(e, this);
 			}
 		}.bind(this));
+
+		// Position accesors
+		var self = this;
+
+		Object.defineProperty(this.A, "pos", {
+			get: function() { return self.posA; },
+			set: function(pos) { self.posA = pos; },
+			enumerable: true,
+			configurable: true
+		});
+		this.A.pos = [0,0];
+
+		Object.defineProperty(this.B, "pos", {
+			get: function() { return self.posB; },
+			set: function(pos) { self.posB = pos; },
+			enumerable: true,
+			configurable: true
+		});
+		this.B.pos = [0,0];
+	},
+	created: function() {
+		// Get the connector styling
+		var style = this._getStyleRule(".connector." + this.tagName) || {};
+		var strokeWidth = parseFloat(style.strokeWidth || 1);
+		var radius = parseFloat(style.r || 0);
+		this.connectorRadius = strokeWidth + radius;
+
+		// Get the wire styling
+		var handleMargin = 5;
+		style = this._getStyleRule(".wire." + this.tagName) || {};
+		this.wireWidth = parseFloat(style.strokeWidth || 1) + 2 * handleMargin;
+
+		// Get the wire enter styling
+		style = this._getStyleRule(".wire.enter." + this.tagName) || {};
+		this.enterWireCursor = style.cursor || "default";
 	},
 	_onPosChange(posA, posB) {
+		if (!this.container) {
+			return;
+		}
+
 		// Bounding box for connectors
 		var left = Math.min( posA[ 0 ], posB[ 0 ] );
 		var top = Math.min( posA[ 1 ], posB[ 1 ] );
@@ -157,8 +145,8 @@ Editor.polymerElement({
 		this.style.width = width + "px";
 		this.style.height = height + "px";
 
-		this.elements.style.width = width + "px";
-		this.elements.style.height = height + "px";
+		this.container.style.width = width + "px";
+		this.container.style.height = height + "px";
 
 		// Get relative positions (round them to stop the not moving
 		// connector being slightly moved out of position).
@@ -168,12 +156,12 @@ Editor.polymerElement({
 		var bY = Math.round(posB[1] - top);
 
 		// Conector A position
-		this._A.setAttribute("cx", aX);
-		this._A.setAttribute("cy", aY);
+		this.A.setAttribute("cx", aX);
+		this.A.setAttribute("cy", aY);
 
 		// Conector B position
-		this._B.setAttribute("cx", bX);
-		this._B.setAttribute("cy", bY);
+		this.B.setAttribute("cx", bX);
+		this.B.setAttribute("cy", bY);
 
 		// Wire position
 		var attribute = "M " +
@@ -295,28 +283,6 @@ Editor.polymerElement({
 		}
 		// console.log(c * d);
 		return c * d;
-	},
-	_getMousePosition: function(e) {
-		var posx = 0;
-		var posy = 0;
-
-		if (!e) var e = window.event;
-		
-		if (e.pageX || e.pageY) {
-			posx = e.pageX;
-			posy = e.pageY;
-		} else if (e.clientX || e.clientY) {
-			posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-		}
-
-		return [posx, posy];
-	},
-	_portA: function(port) {
-		this._A.setAttribute("id", port);
-	},
-	_portB: function(port) {
-		this._B.setAttribute("id", port);
 	}
 });
 

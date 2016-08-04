@@ -1,6 +1,11 @@
 <dom-module id="shader-wire">
 	<link rel="import" type="css" href="css/wire.css">
 	<template>
+		<svg id="container">
+			<path id="wire" class="wire"/>
+			<circle id$={{portA}} class="connector"/>
+			<circle id$={{portB}} class="connector"/>
+		</svg>
 	</template>
 	<script src="js/wire.js"></script>
 </dom-module>
