@@ -7,7 +7,7 @@
 	fill: none;
 }
 .wire.enter {
-	stroke: blue;
+	stroke: rgba(0,153,255,1);
 	cursor:  url(../icon/delete-link.png), pointer;
 }
 .connector {
