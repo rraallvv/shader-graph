@@ -721,6 +721,7 @@ Editor.polymerElement({
 		// Create a new temp wire
 		var temp = document.createElement("shader-wire");
 		temp.id = "temp";
+		temp.W.classList.add("temp");
 
 		temp.portA = "portA";
 		temp.portB = "portB";

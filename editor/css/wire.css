@@ -15,3 +15,6 @@
 	fill: white;
 	r: 3px;
 }
+.temp {
+	stroke: rgba(0,153,255,1);
+}

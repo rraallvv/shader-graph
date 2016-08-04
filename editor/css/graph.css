@@ -34,11 +34,6 @@
 	-webkit-user-select: none;
 	-ms-user-select: none;
 }
-.temp {
-	padding: 0;
-	position: absolute;
-	display: node;
-}
 .w {
 	z-index: 4;
 }
