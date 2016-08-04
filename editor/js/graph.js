@@ -186,8 +186,8 @@ Editor.polymerElement({
 		var links = [];
 
 		this.state.links.forEach(function(link) {
-			var portA = link.outputA + link.nodeA;
-			var portB = link.inputB + link.nodeB;
+			var portA = link.portA + link.nodeA;
+			var portB = link.portB + link.nodeB;
 			var ela = this.querySelector("#" + portA);
 			var elb = this.querySelector("#" + portB);
 			if (ela && elb) {
@@ -359,7 +359,7 @@ Editor.polymerElement({
 			var nB = this.shader.fragmentGraph.getNodeById(link.nodeB);
 			if(!nB) throw new Error('couldnt find node ' + link.nodeB);
 
-			nA.disconnect(link.outputA, nB, link.inputB);
+			nA.disconnect(link.portA, nB, link.portB);
 
 			var idx = state.links.indexOf(link);
 			if(idx !== -1){
@@ -432,11 +432,11 @@ Editor.polymerElement({
 
 		match = info.portA.match(reg);
 		result.nodeA = match[2];
-		result.outputA = match[1];
+		result.portA = match[1];
 
 		match = info.portB.match(reg);
 		result.nodeB = match[2];
-		result.inputB = match[1];
+		result.portB = match[1];
 
 		return result;
 	},
@@ -447,23 +447,23 @@ Editor.polymerElement({
 			var attributes = info.source.parentNode.parentNode.attributes['data-node-id'];
 			if (attributes) {
 				result.nodeA = attributes.value;
-				result.outputA = info.source.innerHTML;
+				result.portA = info.source.innerHTML;
 			}
 		} else {
 			var m = info.sourceId.match(reg);
 			result.nodeA = m[2];
-			result.outputA = m[1];
+			result.portA = m[1];
 		}
 		if (typeof info.target !== "undefined") {
 			var attributes = info.target.parentNode.parentNode.attributes['data-node-id'];
 			if (attributes) {
 				result.nodeB = attributes.value;
-				result.inputB = info.target.innerHTML;
+				result.portB = info.target.innerHTML;
 			}
 		} else {
 			var m = info.targetId.match(reg);
 			result.nodeB = m[2];
-			result.inputB = m[1];
+			result.portB = m[1];
 		}
 		return result;
 	},
@@ -483,22 +483,22 @@ Editor.polymerElement({
 		var existing = [];
 		this.links.forEach(function(link) {
 			var info = this._getWireInfo(link);
-			if (info.nodeB === node && info.inputB === port) {
+			if (info.nodeB === node && info.portB === port) {
 				existing.push(info);
 			}
 		}, this);
 		return existing;
 	},
-	connect: function(nodeA, outputA, nodeB, inputB){
+	connect: function(nodeA, portA, nodeB, portB){
 		if(arguments.length === 2) {
 			var portA = this._splitPort(arguments[0]);
 			var portB = this._splitPort(arguments[1]);
 
 			nodeA = portA[0];
-			outputA = portA[1];
+			portA = portA[1];
 
 			nodeB = portB[0];
-			inputB = portB[1];
+			portB = portB[1];
 		} else {
 			nodeA = Number(nodeA);
 			nodeB = Number(nodeB);
@@ -509,17 +509,17 @@ Editor.polymerElement({
 		if(!nA) throw new Error('couldnt find node ' + nodeA);
 		if(!nB) throw new Error('couldnt find node ' + nodeB);
 
-		if(typeof outputA === "number") {
-			outputA = nA.getOutputPorts()[outputA];
-			if(typeof outputA === "undefined") {
+		if(typeof portA === "number") {
+			portA = nA.getOutputPorts()[portA];
+			if(typeof portA === "undefined") {
 				console.warn("Output port A undefined");
 				return false;
 			}
 		}
 
-		if(typeof inputB === "number") {
-			inputB = nB.getInputPorts()[inputB];
-			if(typeof inputB === "undefined") {
+		if(typeof portB === "number") {
+			portB = nB.getInputPorts()[portB];
+			if(typeof portB === "undefined") {
 				console.warn("Input port B undefined");
 				return false;
 			}
@@ -529,37 +529,37 @@ Editor.polymerElement({
 
 		var link;
 
-		if(!nB.canConnect(inputB, nA, outputA)){
-			if (!nA.canConnect(outputA, nB, inputB)) {
+		if(!nB.canConnect(portB, nA, portA)){
+			if (!nA.canConnect(portA, nB, portB)) {
 				console.warn(nB.errorMessage);
 				return false;
 			} else {
 				// make the connetion in opposite direction
-				nA.connect(outputA, nB, inputB);
+				nA.connect(portA, nB, portB);
 				link = {
 					nodeA: nodeB,
 					nodeB: nodeA,
-					outputA: inputB,
-					inputB: outputA
+					portA: portB,
+					portB: portA
 				};
 			}
 		} else {
 			// make the connetion as is
-			nB.connect(inputB, nA, outputA);
+			nB.connect(portB, nA, portA);
 			link = {
 				nodeA: nodeA,
 				nodeB: nodeB,
-				outputA: outputA,
-				inputB: inputB
+				portA: portA,
+				portB: portB
 			};
 		}
 
 		// remove existing links for input ports
-		var existing = this._getExistingConnections(nodeB, inputB);
+		var existing = this._getExistingConnections(nodeB, portB);
 
 		for (var i = 0; i < existing.length; i++) {
 			var info = existing[i];
-			this.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
+			this.disconnect(info.nodeA, info.portA, info.nodeB, info.portB);
 		}
 
 		link.id = this.generateId();
@@ -572,7 +572,7 @@ Editor.polymerElement({
 
 		return true;
 	},
-	disconnect: function(nodeA, outputA, nodeB, inputB){
+	disconnect: function(nodeA, portA, nodeB, portB){
 		nodeA = Number(nodeA);
 		nodeB = Number(nodeB);
 
@@ -581,8 +581,8 @@ Editor.polymerElement({
 			return (
 				link.nodeA === nodeA &&
 				link.nodeB === nodeB &&
-				link.outputA === outputA &&
-				link.inputB === inputB
+				link.portA === portA &&
+				link.portB === portB
 			);
 		});
 		var idx = state.links.indexOf(connToRemove);
@@ -593,7 +593,7 @@ Editor.polymerElement({
 		// Test it!
 		var nA = this.shader.fragmentGraph.getNodeById(nodeA);
 		var nB = this.shader.fragmentGraph.getNodeById(nodeB);
-		nB.disconnect(inputB, nA, outputA);
+		nB.disconnect(portB, nA, portA);
 
 		// Delete any other invalid links
 		/*
@@ -605,8 +605,8 @@ Editor.polymerElement({
 				return (
 					connData.nodeA === link.fromNode &&
 					connData.nodeB === link.toNode &&
-					connData.outputA === link.fromPortKey &&
-					connData.inputB === link.toPortKey
+					connData.portA === link.fromPortKey &&
+					connData.portB === link.toPortKey
 				);
 			});
 			var idx = state.links.indexOf(connToRemove);
@@ -847,7 +847,7 @@ Editor.polymerElement({
 	wireClickHandler: function(e, el) {
 		if(!ignoreConnectionEvents){
 			var info = this._getWireInfo(this.links[el.id]);
-			this.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
+			this.disconnect(info.nodeA, info.portA, info.nodeB, info.portB);
 		}
 	},
 	nodeClick: function(e, el, capture) {
