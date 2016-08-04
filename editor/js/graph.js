@@ -555,7 +555,21 @@ Editor.polymerElement({
 		}
 
 		// remove existing links for input ports
-		var existing = this._getExistingConnections(nodeB, portB);
+		var inputs = this._getExistingConnections(nodeB, portB);
+		var outputs = this._getExistingConnections(nodeA, portA);
+		var existing = [];
+		inputs.forEach(function(input){
+			existing.push(input);
+		});
+		outputs.forEach(function(output){
+			if (output.nodeA === nodeB.toString() &&
+					output.portA === portB &&
+					output.nodeB === nodeA.toString() &&
+					output.portB === portA) {
+				// Remove existing connection to the same output port
+				existing.push(output);
+			}
+		});
 
 		for (var i = 0; i < existing.length; i++) {
 			var info = existing[i];
