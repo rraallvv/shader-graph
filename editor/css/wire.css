@@ -15,10 +15,3 @@
 	fill: white;
 	r: 3px;
 }
-.connector.enter {
-	fill: red;
-	cursor: pointer;
-}
-.connector.dragging {
-	display: none;
-}

@@ -22,8 +22,7 @@ Editor.polymerElement({
 			type: Number,
 			value: 1
 		},
-		clickHandler: Object,
-		wireClickHandler: Object
+		clickHandler: Object
 	},
 	observers: [
 		"_onPosChange(posA, posB)"
@@ -66,13 +65,6 @@ Editor.polymerElement({
 		var strokeWidth = parseFloat(style.strokeWidth || 1);
 		var radius = parseFloat(style.r || 0);
 		this.connectorRadius = strokeWidth + radius + handleMargin;
-
-		// Get the connector enter styling
-		style = this._getStyleRule(".connector.enter." + this.tagName) || {};
-		this.enterConnectorCursor = style.cursor || "default";
-
-		style = this._getStyleRule(".connector.dragging." + this.tagName) || {};
-		this.draggingCursor = style.cursor || this.enterConnectorCursor;
 
 		// Get the wire styling
 		style = this._getStyleRule(".wire." + this.tagName) || {};
@@ -147,48 +139,6 @@ Editor.polymerElement({
 		this.hW = hW;
 		this.overlay = overlay;
 
-		document.addEventListener("mousemove", function(e) {
-			if (this._clickInsideElement( e, hA )) {
-				e.stopPropagation();
-				if (!A.highlighted) {
-					A.classList.add("enter");
-					this.style.cursor = this.enterConnectorCursor;
-					A.highlighted = true;
-				}
-			} else {
-				if (A.highlighted) {
-					A.classList.remove("enter");
-					this.style.cursor = "";
-					A.highlighted = false;
-				}
-			}
-
-			if (this._clickInsideElement( e, hB )) {
-				e.stopPropagation();
-				if (!B.highlighted) {
-					B.classList.add("enter");
-					this.style.cursor = this.enterConnectorCursor;
-					B.highlighted = true;
-				}
-			} else {
-				if (B.highlighted) {
-					B.classList.remove("enter");
-					this.style.cursor = "";
-					B.highlighted = false;
-				}
-			}
-		}.bind(this));
-
-		document.addEventListener( "mousedown", function(e) {
-			if (this.clickHandler) {
-				if (this._clickInsideElement( e, hA )) {
-					this.clickHandler(e, A);
-				} else if (this._clickInsideElement( e, hB )) {
-					this.clickHandler(e, B);
-				}
-			}
-		}.bind(this), true);
-
 		hW.addEventListener("mouseenter", function() {
 			W.classList.add("enter");
 			this.style.cursor = this.enterWireCursor;
@@ -200,8 +150,8 @@ Editor.polymerElement({
 		}.bind(this));
 
 		hW.addEventListener("click", function(e) {
-			if (this.wireClickHandler) {
-				this.wireClickHandler(e, this);
+			if (this.clickHandler) {
+				this.clickHandler(e, this);
 			}
 		}.bind(this));
 	},
@@ -378,24 +328,6 @@ Editor.polymerElement({
 		}
 		// console.log(c * d);
 		return c * d;
-	},
-	_clickInsideElement: function( e, el ) {
-		var pos = this._getMousePosition(e);
-
-		var bounds = el.getBoundingClientRect();
-
-		var doc = document.documentElement;
-		var clientLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
-		var clientTop = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
-
-		pos[0] -= clientLeft;
-		pos[1] -= clientTop;
-
-		if (pos[0] < bounds.left || pos[0] > bounds.right || pos[1] < bounds.top || pos[1] > bounds.bottom) {
-			return false;
-		}
-
-		return true;
 	},
 	_getMousePosition: function(e) {
 		var posx = 0;
