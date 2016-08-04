@@ -48,9 +48,6 @@ Editor.polymerElement({
 			tx + ", " +
 			ty + ")";
 		this.scale = sx;
-		if (this.instance) {
-			this.instance.setZoom(sx);
-		}
 	},
 	attached: function() {
 		this._attachedDeferred();
@@ -63,169 +60,8 @@ Editor.polymerElement({
 			return;
 		}
 
-		var component = this;
-
-		var curviness = function(v){
-			// link going forward
-			var df = 100;
-			const sf = 2;
-			// link going backwards
-			var db = 600;
-			const sb = 4;
-			// transition threshold
-			const th = 300;
-			// distance percentage
-			const c = 0.25;
-
-			var d0 = v[ 0 ];
-			var d1 = v[ 1 ];
-			var d = Math.sqrt( d0 * d0 + d1 * d1 );
-			// var d = v[0];
-
-			// fix distance
-			df = df + (d - df) / sf;
-			db = db + (d - db) / sb;
-
-			if ( v[ 0 ] > 0 ) { // forward
-				d = df;
-			} else if ( v[ 0 ] < -th  ) { // backwards
-				d = db;
-			} else { // transition
-				var t = v[ 0 ] / th;
-				d = (1 + t) * df - t * db;
-			}
-			// console.log(c * d);
-			return c * d;
-		};
-
-		// setup some defaults for jsPlumb.
-		var instance = jsPlumb.getInstance({
-			Endpoint: ["Dot", {radius: 3}],
-            EndpointStyle: { fillStyle: "white" },
-			Connector: ["Bezier", {curviness: curviness, snapThreshold: 0.00001}],
-            PaintStyle: {
-				strokeStyle: "white",
-				lineWidth: 2
-			},
-			HoverPaintStyle: {
-				strokeStyle: "#ddd",
-				lineWidth: 2
-			},
-			ConnectionOverlays: [
-				/*
-				[ "Arrow", {
-					location: 0.5,
-					id: "arrow",
-					length: 10,
-					width: 10,
-					foldback: 1
-				} ]
-				*/
-			],
-			Container: "canvas"
-		});
-
-		this.jsPlumbInstance = instance;
-
-		var anchorMargin = 3;
-		instance.leftAnchor = [0, 0.5, -1, 0, 1 + anchorMargin, 2];
-		instance.rightAnchor = [1, 0.5, 1, 0, 1 - anchorMargin, 2];
-
-		instance.registerConnectionType("basicRL", {
-			anchors: [instance.rightAnchor, instance.leftAnchor],
-			connector: "Bezier"
-		});
-
-		instance.registerConnectionType("basicLR", {
-			anchors: [instance.leftAnchor, instance.rightAnchor],
-			connector: "Bezier"
-		});
-
-/*
-		instance.bind("click", function (c) {
-			if(!ignoreConnectionEvents){
-				var info = component._getConnectionInfo(c);
-				component.disconnect(info.nodeA, info.outputA, info.nodeB, info.inputB);
-				//instance.detach(c);
-			}
-		});
-
-		instance.bind("beforeDrop", function (c) {
-			if (!ignoreConnectionEvents) {
-				var info = component._getConnectionInfo(c);
-				component.connect(info.nodeA, info.outputA, info.nodeB, info.inputB);
-			}
-		});
-
-		instance.bind("connectionAborted", function (c, e) {
-			if (!ignoreConnectionEvents) {
-				var info = component._tempLink = component._getConnectionInfo(c);
-
-				// If it was droped on a node just abort
-				if (typeof info.nodeB !== "undefined") {
-					component.clearTempConnection();
-					return;
-				}
-
-				// If onConnectionReleased is not defined abort too
-				if (!component || !component.onConnectionReleased) {
-					return;
-				}
-
-				// Ask the callback if the temporary connection should be aborted 
-				var aborted = component.onConnectionReleased(e);
-				if (typeof aborted === "undefined" || aborted) {
-					return;
-				}
-
-				// Create or reuse the temporarty link node
-				var nodeA = info.outputA;
-				var outputA = info.nodeA;
-				var isInput = component._isInput(outputA, nodeA);
-				var container = instance.getContainer();
-				var el = component.querySelector("#temp");
-				if (el) {
-					component.instance.detachAllConnections(el);
-				} else {
-					el = document.createElement("span");
-					el.className = "temp " + isInput ? "in" : "out";
-					el.id = "temp";
-					el.style.position = "absolute";
-					el.style.width = 0;
-					el.style.height = 20;
-					Polymer.dom(container).appendChild(el);
-				}
-
-				// Get the click coordinates relative to the container
-				var zoom = component.instance.getZoom();
-				var bounds = container.getBoundingClientRect();
-				el.style.left = (e.clientX - bounds.left) / zoom;
-				el.style.top = (e.clientY - bounds.top) / zoom;
-
-				// Create the temporary link
-				instance.connect({
-					source: nodeA + outputA,
-					target: el.id,
-					type: isInput ? "basicLR" : "basicRL"
-				});
-				instance.revalidate(el);
-			}
-		});
-
-		instance.bind("beforeDrag", function (c, e) {
-			component.clearTempConnection();
-			if (component && component.onConnectionStarted) {
-				component.onConnectionStarted(e);
-			}
-		});
-*/
-
-		// suspend drawing and initialize.
-		instance.batch(function () {
-			// Connect initial links
-			this.initialize(instance);
-
-		}.bind(this));
+		// Connect initial links
+		this.initialize();
 
 		console.log('Graph editor ready');
 
@@ -233,8 +69,7 @@ Editor.polymerElement({
 			this.onReady();
 		}
 	},
-	initialize: function(instance){
-		this.instance = instance;
+	initialize: function(){
 		batchRender = true;
 
 		// Find the main node
@@ -258,35 +93,31 @@ Editor.polymerElement({
 		this.setState(this.state);
 	},
 	loadGraph: function(graph) {
-		this.instance.batch(function () {
-			batchRender = true;
-			var nodes = graph.nodes;
-			var ids = []
-			for (var i = 0; i < nodes.length; i++) {
-				var id = this._addNode(nodes[i]);
-				ids.push(id);
-			}
-			var links = graph.links;
-			for (var i = 0; i < links.length; i++) {
-				var portA = this._splitPort(links[i][0]);
-				var portB = this._splitPort(links[i][1]);
-				this.connect(ids[portA[0]], portA[1], ids[portB[0]], portB[1]);
-			}
-			batchRender = false;
-			this.setState(this.state);
-		}.bind(this));
+		batchRender = true;
+		var nodes = graph.nodes;
+		var ids = []
+		for (var i = 0; i < nodes.length; i++) {
+			var id = this._addNode(nodes[i]);
+			ids.push(id);
+		}
+		var links = graph.links;
+		for (var i = 0; i < links.length; i++) {
+			var portA = this._splitPort(links[i][0]);
+			var portB = this._splitPort(links[i][1]);
+			this.connect(ids[portA[0]], portA[1], ids[portB[0]], portB[1]);
+		}
+		batchRender = false;
+		this.setState(this.state);
 	},
 	clearGraph: function() {
-		this.instance.batch(function () {
-			batchRender = true;
-			var nodes = this.state.nodes.slice(0);
-			for (var i = 0; i < nodes.length; i++) {
-				var node = nodes[i];
-				this.removeNode(node.id);
-			}
-			batchRender = false;
-			this.setState(this.state);
-		}.bind(this));
+		batchRender = true;
+		var nodes = this.state.nodes.slice(0);
+		for (var i = 0; i < nodes.length; i++) {
+			var node = nodes[i];
+			this.removeNode(node.id);
+		}
+		batchRender = false;
+		this.setState(this.state);
 	},
 	setState: function(state) {
 		this.state = state;
@@ -388,13 +219,6 @@ Editor.polymerElement({
 			setTimeout(function() { this._updateLinks(); }.bind(this), 100);
 		}
 	},
-	clearTempConnection: function() {
-		this._tempLink = null;
-		var el = this.querySelector("#temp")
-		if (el) {
-			this.instance.detachAllConnections(el);
-		}
-	},
 	nodeTypes: function(){
 		var types = Object.keys(ShaderGraph.Node.classes).sort().filter(function(type){
 			// Should not list the main node
@@ -411,37 +235,6 @@ Editor.polymerElement({
 		}
 
 		return this.shader
-	},
-	updateConnections: function(){
-		if(this.instance){
-			this.instance.batch(function () {
-				var instance = this.instance;
-				ignoreConnectionEvents = true;
-				var missing = false;
-				var connections = [];
-				this.state.links.forEach(function(link){
-					var srcId = link.outputA + link.nodeA;
-					var src = this.querySelector("#" + srcId);
-					var tarId = link.inputB + link.nodeB;
-					var tar = this.querySelector("#" + tarId);
-					//if (document.contains(src) && document.contains(tar)) {
-					if (src && tar) {
-						connections.push({source: srcId, target: tarId, type: "basicRL"});
-					} else {
-						missing = true;
-					}
-				}, this);
-				if (missing) {
-					setTimeout(function() { this.updateConnections(); }.bind(this), 100);
-				} else {
-					instance.detachEveryConnection();
-					connections.forEach(function(link) {
-						instance.connect(link);
-					}, this);
-				}
-				ignoreConnectionEvents = false;
-			}.bind(this));
-		}
 	},
 	generateId: function(){
 		if(this.idCounter === undefined){
@@ -858,10 +651,7 @@ Editor.polymerElement({
 				top <= el.offsetTop + el.offsetHeight;
 			el.selected = selected;
 			if (selected) {
-				this.instance.addToDragSelection(el);
 				this.selection.push(el);
-			} else {
-				this.instance.removeFromDragSelection(el);
 			}
 		}
 	},
@@ -873,7 +663,6 @@ Editor.polymerElement({
 		for (var i = 0; i < els.length; i++) {
 			els[i].selected = false;
 		}
-		this.instance.clearDragSelection();
 	},
 	removeSelection: function() {
 		if (this.selection) {
@@ -891,7 +680,6 @@ Editor.polymerElement({
 		}
 		if (!this.isInSelection(el)) {
 			el.selected = true;
-			this.instance.addToDragSelection(el);
 			this.selection.push(el)
 		}
 	},
@@ -907,12 +695,6 @@ Editor.polymerElement({
 		}
 	},
 	domChange: function(event){
-	/*
-		Array.prototype.forEach.call(this.querySelectorAll("shader-node"), function(el) {
-			this.instance.draggable(el);
-		}, this);
-	*/
-	//	this.updateConnections();
 	},
 	portClickHandler: function(e, el) {
 		e.stopPropagation();
