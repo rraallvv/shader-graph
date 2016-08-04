@@ -52,21 +52,18 @@ Editor.polymerElement({
 		this.A.pos = [0,0];
 		this.B.pos = [0,0];
 
-		// Add the visible indicators
-		Polymer.dom(this.root).appendChild(this.indicators);
-
-		// Add the invisible handlers overlay
-		Polymer.dom(this.root).appendChild(this.overlay);
+		// Add elements
+		Polymer.dom(this.root).appendChild(this.elements);
 	},
 	created: function() {
 		// Get the connector styling
 		var style = this._getStyleRule(".connector." + this.tagName) || {};
-		var handleMargin = 5;
 		var strokeWidth = parseFloat(style.strokeWidth || 1);
 		var radius = parseFloat(style.r || 0);
-		this.connectorRadius = strokeWidth + radius + handleMargin;
+		this.connectorRadius = strokeWidth + radius;
 
 		// Get the wire styling
+		var handleMargin = 5;
 		style = this._getStyleRule(".wire." + this.tagName) || {};
 		this.wireWidth = parseFloat(style.strokeWidth || 1) + 2 * handleMargin;
 
@@ -74,7 +71,7 @@ Editor.polymerElement({
 		style = this._getStyleRule(".wire.enter." + this.tagName) || {};
 		this.enterWireCursor = style.cursor || "default";
 
-		// Create the visible indicators
+		// Create the visible elements
 		var svgNS = "http://www.w3.org/2000/svg";
 
 		var A = document.createElementNS(svgNS, "circle");
@@ -89,56 +86,33 @@ Editor.polymerElement({
 		B.style.pointerEvents = "none";
 		W.style.pointerEvents = "none";
 
-		var indicators = document.createElementNS(svgNS, "svg");
-		indicators.style.position = "absolute";
-		indicators.style.left = "0px";
-		indicators.style.top = "0px";
+		var elements = document.createElementNS(svgNS, "svg");
+		elements.style.position = "absolute";
+		elements.style.left = "0px";
+		elements.style.top = "0px";
 
-		indicators.appendChild(W);
-		indicators.appendChild(A);
-		indicators.appendChild(B);
+		elements.appendChild(W);
+		elements.appendChild(A);
+		elements.appendChild(B);
 
 		this._A = A;
 		this._B = B;
 		this.W = W;
-		this.indicators = indicators;
 
-		// Create handlers overlay
-
-		var hA = document.createElementNS(svgNS, "circle");
-		var hB = document.createElementNS(svgNS, "circle");
+		// Create margin overlay
 		var hW = document.createElementNS(svgNS, "path");
 
-		hA.style.pointerEvents = "all";
-		hB.style.pointerEvents = "all";
 		hW.style.pointerEvents = "visibleStroke";
-
-		hA.setAttribute("r", this.connectorRadius);
-		hB.setAttribute("r", this.connectorRadius);
 		hW.setAttribute("stroke-width", this.wireWidth);
-
-		hA.style.stroke = "none";
-		hB.style.stroke = "none";
 		hW.style.stroke = "none";
-
-		hA.style.fill = "none";
-		hB.style.fill = "none";
 		hW.style.fill = "none";
 
-		var overlay = document.createElementNS(svgNS, "svg");
-		overlay.style.position = "absolute";
-		overlay.style.left = "0px";
-		overlay.style.top = "0px";
+		elements.appendChild(hW);
 
-		overlay.appendChild(hW);
-		overlay.appendChild(hA);
-		overlay.appendChild(hB);
-
-		this.hA = hA;
-		this.hB = hB;
 		this.hW = hW;
-		this.overlay = overlay;
+		this.elements = elements;
 
+		// Event listeners
 		hW.addEventListener("mouseenter", function() {
 			W.classList.add("enter");
 			this.style.cursor = this.enterWireCursor;
@@ -183,11 +157,8 @@ Editor.polymerElement({
 		this.style.width = width + "px";
 		this.style.height = height + "px";
 
-		this.indicators.style.width = width + "px";
-		this.indicators.style.height = height + "px";
-
-		this.overlay.style.width = width + "px";
-		this.overlay.style.height = height + "px";
+		this.elements.style.width = width + "px";
+		this.elements.style.height = height + "px";
 
 		// Get relative positions (round them to stop the not moving
 		// connector being slightly moved out of position).
@@ -199,14 +170,10 @@ Editor.polymerElement({
 		// Conector A position
 		this._A.setAttribute("cx", aX);
 		this._A.setAttribute("cy", aY);
-		this.hA.setAttribute("cx", aX);
-		this.hA.setAttribute("cy", aY);
 
 		// Conector B position
 		this._B.setAttribute("cx", bX);
 		this._B.setAttribute("cy", bY);
-		this.hB.setAttribute("cx", bX);
-		this.hB.setAttribute("cy", bY);
 
 		// Wire position
 		var attribute = "M " +
