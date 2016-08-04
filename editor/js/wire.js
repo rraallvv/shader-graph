@@ -119,10 +119,10 @@ Editor.polymerElement({
 
 		hA.style.stroke = "none";
 		hB.style.stroke = "none";
-		hW.style.stroke = "rgba(0,0,255,0.25)";
+		hW.style.stroke = "none";
 
-		hA.style.fill = "rgba(255,0,0,0.25)";
-		hB.style.fill = "rgba(0,255,0,0.25)";
+		hA.style.fill = "none";
+		hB.style.fill = "none";
 		hW.style.fill = "none";
 
 		var overlay = document.createElementNS(svgNS, "svg");
