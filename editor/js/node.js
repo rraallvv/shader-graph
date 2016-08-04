@@ -62,7 +62,7 @@ Editor.polymerElement({
 		this.removeNode(parseFloat(this.id));
 	},
 	_onPosChange(pos) {
-		if (pos) {
+		if (pos && pos.value) {
 			this.style.left = pos.value[0];
 			this.style.top = pos.value[1];
 		}
