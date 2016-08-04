@@ -686,14 +686,15 @@ Editor.polymerElement({
 		return el && el.classList.contains("out");
 	},
 	_getExistingConnections: function(node, port) {
+		node = node.toString();
 		var id = port + node;
-		var con = this.instance.getConnections({target:id});
 		var existing = [];
-		if (con.length!=0 && this._isInput(node, port)) {
-			for (var i = 0; i < con.length; i++) {
-				existing.push(this._getConnectionInfo(con[i]));
+		this.links.forEach(function(link) {
+			var info = this._getWireInfo(link);
+			if (info.nodeB === node && info.inputB === port) {
+				existing.push(info);
 			}
-		}
+		}, this);
 		return existing;
 	},
 	connect: function(nodeA, outputA, nodeB, inputB){
@@ -762,10 +763,7 @@ Editor.polymerElement({
 		}
 
 		// remove existing links for input ports
-		var existing = [];
-
-		existing = existing.concat(this._getExistingConnections(nodeA, outputA));
-		existing = existing.concat(this._getExistingConnections(nodeB, inputB));
+		var existing = this._getExistingConnections(nodeB, inputB);
 
 		for (var i = 0; i < existing.length; i++) {
 			var info = existing[i];
