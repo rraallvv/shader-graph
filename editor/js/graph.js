@@ -439,43 +439,6 @@ Editor.polymerElement({
 
 		return result;
 	},
-	_getConnectionInfo: function(info) {
-		var result = {};
-		var reg = /([^\d]+)(\d+)/;
-		if (typeof info.source !== "undefined") {
-			var attributes = info.source.parentNode.parentNode.attributes['data-node-id'];
-			if (attributes) {
-				result.nodeA = attributes.value;
-				result.portA = info.source.innerHTML;
-			}
-		} else {
-			var m = info.sourceId.match(reg);
-			result.nodeA = m[2];
-			result.portA = m[1];
-		}
-		if (typeof info.target !== "undefined") {
-			var attributes = info.target.parentNode.parentNode.attributes['data-node-id'];
-			if (attributes) {
-				result.nodeB = attributes.value;
-				result.portB = info.target.innerHTML;
-			}
-		} else {
-			var m = info.targetId.match(reg);
-			result.nodeB = m[2];
-			result.portB = m[1];
-		}
-		return result;
-	},
-	_isInput: function(node, port) {
-		var id = port + node;
-		var el = this.querySelector("#" + id);
-		return el && el.classList.contains("in");
-	},
-	_isOutput: function(node, port) {
-		var id = port + node;
-		var el = this.querySelector("#" + id);
-		return el && el.classList.contains("out");
-	},
 	_getExistingConnections: function(node, port) {
 		node = node.toString();
 		var id = port + node;
