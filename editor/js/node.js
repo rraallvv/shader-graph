@@ -28,8 +28,8 @@ Editor.polymerElement({
 		clickHandler: Object
 	},
 	observers: [
-		'_onValueChange(extra.*)',
-		'_onPosChange(pos.*)'
+		"_onValueChange(extra.*)",
+		"_onPosChange(pos.*)"
 	],
 	created: function() {
 		this.addEventListener( "mousedown", function(e) {

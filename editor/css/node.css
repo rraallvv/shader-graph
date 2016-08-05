@@ -64,7 +64,6 @@ editor-unit-input::shadow i {
 	align-items: center;
 }
 .inputs, .outputs {
-	display: inline-block;
 }
 .inputs {
 }
