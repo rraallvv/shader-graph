@@ -725,7 +725,7 @@ Editor.polymerElement({
 		temp.portA = "portA";
 		temp.portB = "portB";
 
-		var eln = el.parentNode.parentNode;
+		var eln = el.parentNode.parentNode.parentNode;
 
 		var elc;
 
@@ -789,7 +789,7 @@ Editor.polymerElement({
 			// Snap connector to ports
 			ports.forEach(function(info) {
 				var port = info.element;
-				var n = port.parentNode.parentNode;
+				var n = port.parentNode.parentNode.parentNode;
 				var ppos;
 				if (filterType === "in") {
 					ppos = [

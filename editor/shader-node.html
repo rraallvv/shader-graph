@@ -8,31 +8,33 @@
 			{{type}}
 		</div>
 
-		<div class="inputs">
-			<template is="dom-if" if="{{extra}}">
-				<div class$="node-type-{{type}}">
-					<template is="dom-repeat" items="{{extra}}"><editor-unit-input input-value="{{item.value}}"></editor-unit-input></template>
-				</div>
-			</template>
-			<template is="dom-repeat" items="{{inputs}}">
-				<shader-port
-					id="{{item}}{{id}}"
-					type="in"
-					class="in"
-					click-handler={{portClickHandler}}
-					>{{item}}</shader-port>
-			</template>
-		</div>
+		<div class="rack">
+			<div class="inputs">
+				<template is="dom-if" if="{{extra}}">
+					<div class$="node-type-{{type}}">
+						<template is="dom-repeat" items="{{extra}}"><editor-unit-input input-value="{{item.value}}"></editor-unit-input></template>
+					</div>
+				</template>
+				<template is="dom-repeat" items="{{inputs}}">
+					<shader-port
+						id="{{item}}{{id}}"
+						type="in"
+						class="in"
+						click-handler={{portClickHandler}}
+						>{{item}}</shader-port>
+				</template>
+			</div>
 
-		<div class="outputs">
-			<template is="dom-repeat" items="{{outputs}}">
-				<shader-port
-					id="{{item}}{{id}}"
-					type="out"
-					class="out"
-					click-handler={{portClickHandler}}
-					>{{item}}</shader-port>
-			</template>
+			<div class="outputs">
+				<template is="dom-repeat" items="{{outputs}}">
+					<shader-port
+						id="{{item}}{{id}}"
+						type="out"
+						class="out"
+						click-handler={{portClickHandler}}
+						>{{item}}</shader-port>
+				</template>
+			</div>
 		</div>
     </template>
 

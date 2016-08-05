@@ -58,11 +58,17 @@ editor-unit-input::shadow i {
 }
 .node-type-vec4 editor-unit-input {
 }
+.rack {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.inputs, .outputs {
+	display: inline-block;
+}
 .inputs {
-	float: left;
 }
 .outputs {
-	float: right;
 }
 .out,
 .in {
