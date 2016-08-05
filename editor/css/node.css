@@ -1,8 +1,6 @@
 :host {
 	position: absolute;
-	display: block;
 	padding: 0;
-	z-index: 4;
 	border: 1px solid black;
 	font-size: 11px;
 	min-width: 100px;
