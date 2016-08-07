@@ -65,6 +65,7 @@ editor-unit-input::shadow i {
 	flex: 1;
 	justify-content: space-between;
 	align-items: center;
+	z-index: 1;
 }
 .inputs, .outputs {
 }
@@ -95,4 +96,13 @@ editor-unit-input::shadow i {
 }
 .draggable {
 	cursor: move;
+}
+#background {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 250%;
+	text-align: center;
+	color: rgba(16,16,16,1);
+	padding: .25em .5em;
 }
