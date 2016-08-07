@@ -60,7 +60,7 @@ editor-unit-input::shadow i {
 }
 .node-type-vec4 editor-unit-input {
 }
-.rack {
+#rack {
 	display: flex;
 	flex: 1;
 	justify-content: space-between;
@@ -86,7 +86,7 @@ editor-unit-input::shadow i {
 	text-align: right;
 	padding-right: 0px;
 }
-.title {
+#title {
 	text-align: center;
 	padding: 4px;
 	color: #9d9d9d;

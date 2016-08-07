@@ -4,11 +4,11 @@
 	<link rel="import" type="css" href="css/node.css">
 
 	<template>
-		<div class="title draggable">
+		<div id="title" class="draggable">
 			{{type}}
 		</div>
 
-		<div class="rack">
+		<div id="rack">
 			<div class="inputs">
 				<template is="dom-if" if="{{extra}}">
 					<div class$="node-type-{{type}}">

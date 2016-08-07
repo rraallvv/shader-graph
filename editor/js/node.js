@@ -32,13 +32,13 @@ Editor.polymerElement({
 		"_onPosChange(pos.*)"
 	],
 	created: function() {
-		this.addEventListener( "mousedown", function(e) {
+		this.addEventListener("mousedown", function(e) {
 			if (this.clickHandler) {
 				this.clickHandler(e, this, false);
 			}
 		}.bind(this));
 
-		this.addEventListener( "mousedown", function(e) {
+		this.addEventListener("mousedown", function(e) {
 			// this.parentNode.appendChild(this);
 			if (this.clickHandler) {
 				this.clickHandler(e, this, true);
