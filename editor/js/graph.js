@@ -515,18 +515,16 @@ Editor.polymerElement({
 			};
 		}
 
-		// remove existing links for input ports
-		var inputs = this._getExistingConnections(nodeB, portB);
-		var outputs = this._getExistingConnections(nodeA, portA);
 		var existing = [];
-		inputs.forEach(function(input){
-			existing.push(input);
-		});
-		outputs.forEach(function(output){
+		// find existing connections to the same input port
+		this._getExistingConnections(nodeA, portA).forEach(function(output){
 			if (output.nodeB === nodeA && output.portB === portA) {
-				// Remove existing connection to the same output port
 				existing.push(output);
 			}
+		});
+		// find existing connections in output ports
+		this._getExistingConnections(nodeB, portB).forEach(function(input){
+			existing.push(input);
 		});
 
 		for (var i = 0; i < existing.length; i++) {
