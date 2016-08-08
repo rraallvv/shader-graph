@@ -683,7 +683,7 @@ Editor.polymerElement({
 		// Create a new temp wire
 		var temp = document.createElement("shader-wire");
 		temp.id = "temp";
-		temp.W.classList.add("temp");
+		temp.W.classList.add("dragging");
 
 		temp.portA = "portA";
 		temp.portB = "portB";
@@ -691,7 +691,6 @@ Editor.polymerElement({
 		var eln = el.parentNode.parentNode.parentNode;
 
 		var elc;
-
 		if (el.type == "in") {
 			temp.B.pos = [
 				eln.offsetLeft + el.offsetLeft + 4,
@@ -705,6 +704,7 @@ Editor.polymerElement({
 			];
 			elc = temp.B;
 		}
+		elc.classList.add("dragging");
 
 		var bounds = this.getBoundingClientRect();
 

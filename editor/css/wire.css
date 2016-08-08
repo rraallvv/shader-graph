@@ -10,11 +10,14 @@
 	stroke: rgba(0,153,255,1);
 	cursor:  url(../icon/delete-link.png), pointer;
 }
+.wire.dragging {
+	stroke: rgba(0,153,255,1);
+}
 .connector {
 	stroke: none;
 	fill: white;
 	r: 3px;
 }
-.temp {
-	stroke: rgba(0,153,255,1);
+.connector.dragging {
+	/*fill: rgba(0,153,255,1);*/
 }
