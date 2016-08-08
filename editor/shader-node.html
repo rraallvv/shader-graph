@@ -21,22 +21,24 @@
 				</template>
 				<template is="dom-repeat" items="{{inputs}}">
 					<shader-port
-						id="{{item}}{{id}}"
+						id="{{item.key}}{{id}}"
 						type="in"
+						connected={{item.connected}}
 						class="in"
 						click-handler={{portClickHandler}}
-						>{{item}}</shader-port>
+						>{{item.key}}</shader-port>
 				</template>
 			</div>
 
 			<div class="outputs">
 				<template is="dom-repeat" items="{{outputs}}">
 					<shader-port
-						id="{{item}}{{id}}"
+						id="{{item.key}}{{id}}"
 						type="out"
+						connected={{item.connected}}
 						class="out"
 						click-handler={{portClickHandler}}
-						>{{item}}</shader-port>
+						>{{item.key}}</shader-port>
 				</template>
 			</div>
 		</div>

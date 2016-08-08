@@ -159,6 +159,19 @@ Editor.polymerElement({
 					break;
 				}
 
+				var inputs = node.getInputPorts().map(function(key){
+					return {
+						key: key,
+						connected: node.inputPortIsConnected(key)
+					}
+				});
+				var outputs = node.getOutputPorts().map(function(key){
+					return {
+						key: key,
+						connected: node.outputPortIsConnected(key)
+					}
+				});
+
 				nodes[data.id] = {
 					id: data.id,
 					pos: data.pos,
@@ -166,8 +179,8 @@ Editor.polymerElement({
 					key: data.id,
 					type: data.type,
 					className: "w",
-					inputs: node.getInputPorts(),
-					outputs: node.getOutputPorts(),
+					inputs: inputs,
+					outputs: outputs,
 					extra: extra,
 					updateData: this.updateData.bind(this),
 					clickHandler: this.nodeClick.bind(this),

@@ -3,13 +3,13 @@
 	<template>
 		<template is="dom-if" if="{{_isInput(type)}}">
 			<svg>
-				<circle class="input"/>
+				<circle id="port" class="input"/>
 			</svg>
 		</template>
 		<content></content>
 		<template is="dom-if" if="{{_isOutpout(type)}}">
 			<svg>
-				<circle class="output"/>
+				<circle id="port" class="output"/>
 			</svg>
 		</template>
 	</template>
