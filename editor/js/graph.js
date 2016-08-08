@@ -419,7 +419,7 @@ Editor.polymerElement({
 		var match;
 
 		match = info.match(reg);
-		result.node = match[2];
+		result.node = Number(match[2]);
 		result.port = match[1];
 
 		return result;
@@ -430,17 +430,16 @@ Editor.polymerElement({
 		var match;
 
 		match = info.portA.match(reg);
-		result.nodeA = match[2];
+		result.nodeA = Number(match[2]);
 		result.portA = match[1];
 
 		match = info.portB.match(reg);
-		result.nodeB = match[2];
+		result.nodeB = Number(match[2]);
 		result.portB = match[1];
 
 		return result;
 	},
 	_getExistingConnections: function(node, port) {
-		node = node.toString();
 		var id = port + node;
 		var existing = [];
 		this.links.forEach(function(link) {
@@ -524,10 +523,7 @@ Editor.polymerElement({
 			existing.push(input);
 		});
 		outputs.forEach(function(output){
-			if (output.nodeA === nodeB.toString() &&
-					output.portA === portB &&
-					output.nodeB === nodeA.toString() &&
-					output.portB === portA) {
+			if (output.nodeB === nodeA && output.portB === portA) {
 				// Remove existing connection to the same output port
 				existing.push(output);
 			}
