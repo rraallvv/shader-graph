@@ -171,7 +171,7 @@ Editor.polymerElement({
 					extra: extra,
 					updateData: this.updateData.bind(this),
 					clickHandler: this.nodeClick.bind(this),
-					portClickHandler: this.portClickHandler.bind(this)
+					portClickHandler: this.portClick.bind(this)
 				};
 			}
 		}, this);
@@ -204,7 +204,7 @@ Editor.polymerElement({
 						nodeB.pos[0] + elb.offsetLeft + 4,
 						nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
 					],
-					clickHandler: this.wireClickHandler.bind(this)
+					clickHandler: this.wireClick.bind(this)
 				};
 			} else {
 				missing = true;
@@ -671,7 +671,7 @@ Editor.polymerElement({
 	},
 	domChange: function(event){
 	},
-	portClickHandler: function(e, el) {
+	portClick: function(e, el) {
 		e.stopPropagation();
 
 		// Clear temp wire before creating a new one
@@ -808,20 +808,7 @@ Editor.polymerElement({
 			}
 		}
 	},
-	connectorClick: function( e, el) {
-		if (3 === e.which || 2 === e.which) {
-			return;
-		}
-		e.stopPropagation();
-		el.classList.add("dragging");
-		Editor.UI.DomUtils.startDrag(this.draggingCursor, e, function( e, dx, dy ) {
-			el.pos = [el.pos[0] + dx / this.scale, el.pos[1] + dy / this.scale];
-		}.bind(this), function( e ) {
-			el.classList.remove("dragging");
-			this.style.cursor = this.draggingCursor;
-		}.bind(this));
-	},
-	wireClickHandler: function(e, el) {
+	wireClick: function(e, el) {
 		if(!ignoreConnectionEvents){
 			var info = this._getWireInfo(this.links[el.id]);
 			this.disconnect(info.nodeA, info.portA, info.nodeB, info.portB);
