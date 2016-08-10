@@ -16,7 +16,7 @@ PositionNode.prototype.buildShader = function(){
 		this.graph.sortNodes();
 		return [
 			this.graph.renderVaryingDeclarations(),
-			this.graph.renderAttrubuteDeclarations(),
+			this.graph.renderAttributeDeclarations(),
 			this.graph.renderUniformDeclarations(),
 			'void main(void){',
 				this.graph.renderConnectionVariableDeclarations(),

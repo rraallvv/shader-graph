@@ -178,7 +178,7 @@ Graph.prototype.renderUniformDeclarations = function(){
 	return shaderSource.join('\n');
 };
 
-Graph.prototype.renderAttrubuteDeclarations = function(){
+Graph.prototype.renderAttributeDeclarations = function(){
 	var shaderSource = [];
 	var declarations = {}; // Only unique declarations
 	this.getAttributes().sort(sortByName).forEach(function(attribute){

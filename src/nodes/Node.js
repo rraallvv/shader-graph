@@ -190,7 +190,7 @@ Node.prototype.buildShader = function(){
 	return function(){
 		this.graph.sortNodes();
 		return [
-			this.graph.renderAttrubuteDeclarations(),
+			this.graph.renderAttributeDeclarations(),
 			this.graph.renderUniformDeclarations(),
 			'void main(void){',
 				this.graph.renderConnectionVariableDeclarations(),
