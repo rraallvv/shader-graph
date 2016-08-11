@@ -175,7 +175,7 @@ Editor.polymerElement({
 		var self = this;
 		var el = this.$[searchClassName];
 		el.onkeypress = function(e) {
-			if (e.keyCode === 13) {
+			if (Editor.KeyCode(e.which) === "enter") {
 				var type = this.innerHTML;
 				var result = nodeTypes.filter(function(node){
 					return node.type === type;
@@ -190,16 +190,17 @@ Editor.polymerElement({
 			}
 		};
 		el.onkeydown = function(e) {
-			var code = e.keyCode;
-			if (code === 8 && this.innerHTML.length === 1) {
+			var keyCode = Editor.KeyCode(e.which);
+			if (keyCode === "backspace" && this.innerHTML.length === 1) {
 				this.innerHTML = "";
 				e.preventDefault();
-			} else if (code === 38 || code === 40) {
+				e.stopPropagation();
+			} else if (keyCode === "up" || keyCode === "down") {
 				var container = self.$[contextMenuItemsClassName];
 				var items = container.children;
 				var hovered = self.clearHoveredMenuItems();
 				var i = hovered, item;
-				if (code === 38) {
+				if (keyCode === "up") {
 					while((item = items[--i]) && item.style.display === "none");
 					if (i < 0) {
 						i = items.length;
@@ -222,11 +223,12 @@ Editor.polymerElement({
 				container.scrollTop = Math.min(container.scrollTop, offsetTop);
 				container.scrollTop = Math.max(container.scrollTop, offsetTop + offsetHeight - container.clientHeight);
 				e.preventDefault();
+				e.stopPropagation();
 			}
 		};
 		el.onkeyup = function(e) {
-			var code = e.keyCode;
-			if (code !== 38 && code !== 40) {
+			var keyCode = Editor.KeyCode(e.which);
+			if (keyCode !== "up" && keyCode !== "down") {
 				self.updateNodeList(this.innerHTML);
 			}
 		};
@@ -262,7 +264,7 @@ Editor.polymerElement({
 	_initKeydownListener: function() {
 		var self = this;
 		window.onkeydown = function(e) {
-			if ( e.keyCode === 27 ) {
+			if (Editor.KeyCode(e.which) === "esc" ) {
 				self.toggleMenuOff();
 			}
 		}
