@@ -7,6 +7,10 @@ Editor.polymerElement({
 		connected: {
 			type: Boolean,
 			observer: "_connected"
+		},
+		dragged: {
+			type: Boolean,
+			observer: "_dragged"
 		}
 	},
 	ready: function() {
@@ -32,6 +36,16 @@ Editor.polymerElement({
 				port.classList.add("connected");
 			} else {
 				port.classList.remove("connected");
+			}
+		}
+	},
+	_dragged: function(dragged) {
+		var port = this.$$("#port");
+		if (port) {
+			if (dragged) {
+				port.classList.add("dragged");
+			} else {
+				port.classList.remove("dragged");
 			}
 		}
 	},

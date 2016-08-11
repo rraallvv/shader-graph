@@ -19,3 +19,8 @@ svg {
 .output.connected {
 	fill: #9d9d9d;
 }
+.input.dragged,
+.output.dragged {
+	fill: white;
+	stroke: white;
+}
