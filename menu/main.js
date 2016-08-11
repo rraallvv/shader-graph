@@ -84,41 +84,20 @@ Editor.polymerElement({
 	clickInsideElement: function( e, className ) {
 		var el = document.getElementsByClassName(className)[0];
 
-		var pos = this._getMousePosition(e);
-
 		var bounds = el.getBoundingClientRect();
 
 		var doc = document.documentElement;
 		var clientLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
 		var clientTop = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
 
-		pos.y -= clientTop;
-		pos.x -= clientLeft;
+		var y = e.pageX - clientTop;
+		var x = e.pageY - clientLeft;
 
-		if (pos.x < bounds.left || pos.x > bounds.right || pos.y < bounds.top || pos.y > bounds.bottom) {
+		if (x < bounds.left || x > bounds.right || y < bounds.top || y > bounds.bottom) {
 			return false;
 		}
 
 		return true;
-	},
-	_getMousePosition: function(e) {
-		var posx = 0;
-		var posy = 0;
-
-		if (!e) var e = window.event;
-		
-		if (e.pageX || e.pageY) {
-			posx = e.pageX;
-			posy = e.pageY;
-		} else if (e.clientX || e.clientY) {
-			posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-		}
-
-		return {
-			x: posx,
-			y: posy
-		}
 	},
 	updateNodeList: function(type) {
 		var items = this.$[contextMenuItemsClassName].children;
@@ -322,7 +301,7 @@ Editor.polymerElement({
 		}
 	},
 	positionMenu: function(e) {
-		position = this._getMousePosition(e);
+		position = {x: e.pageX, y: e.pageY};
 
 		var el = document.getElementsByClassName(this.activateForClass)[0];
 		var bounds = el.getBoundingClientRect();

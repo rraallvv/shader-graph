@@ -739,7 +739,7 @@ Editor.polymerElement({
 		// Start dragging the temp wire
 		var nodeB;
 		var portB;
-		Editor.UI.DomUtils.startDrag("default", e, function( e, dx, dy ) {
+		Editor.UI._DomUtils.startDrag("default", e, function( e, dx, dy ) {
 			var pos = [
 				((e.clientX - bounds.left) + 0.5 * this.offsetWidth * (this._t.sx - 1) - this._t.tx) / this._t.sx,
 				((e.clientY - bounds.top) + 0.5 * this.offsetHeight * (this._t.sx - 1) - this._t.ty) / this._t.sy
@@ -829,15 +829,15 @@ Editor.polymerElement({
 		} else {
 			if (isDraggable) {
 				e.stopPropagation();
-				Editor.UI.DomUtils.startDrag("move", e, function( e, dx, dy ) {
+				Editor.UI._DomUtils.startDrag("move", e, function( e, dx, dy ) {
 					this.selection.forEach(function(el){
 						var pos = el.pos;
 						pos[0] += dx / this.scale;
 						pos[1] += dy / this.scale;
 						el.set("pos.*", pos.slice(0));
 
-						Array.prototype.forEach.call(el.outputs, function(label) {
-							port = label + el.id;
+						Array.prototype.forEach.call(el.outputs, function(output) {
+							var port = output.key + el.id;
 							var elp = this.querySelector("#" + port);
 							var elc = this.querySelector("#" + port + "_");
 							if (elp && elc) {
@@ -848,8 +848,8 @@ Editor.polymerElement({
 							}
 						}, this);
 
-						Array.prototype.forEach.call(el.inputs, function(label) {
-							port = label + el.id;
+						Array.prototype.forEach.call(el.inputs, function(input) {
+							var port = input.key + el.id;
 							var elp = this.querySelector("#" + port);
 							var elc = this.querySelector("#" + port + "_");
 							if (elp && elc) {
