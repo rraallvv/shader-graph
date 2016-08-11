@@ -667,7 +667,7 @@ Editor.polymerElement({
 	},
 	domChange: function(event){
 	},
-	portClick: function(e, el) {
+	portClick: function(e, elp) {
 		e.stopPropagation();
 
 		// Clear temp wire before creating a new one
@@ -681,22 +681,19 @@ Editor.polymerElement({
 		temp.id = "temp";
 		temp.W.classList.add("dragging");
 
-		temp.portA = "portA";
-		temp.portB = "portB";
-
-		var eln = el.parentNode.parentNode.parentNode;
+		var eln = elp.parentNode.parentNode.parentNode;
 
 		var elc;
-		if (el.type == "in") {
+		if (elp.type == "in") {
 			temp.B.pos = [
-				eln.offsetLeft + el.offsetLeft + 4,
-				eln.offsetTop + el.offsetTop + 0.5 * el.offsetHeight + 2
+				eln.offsetLeft + elp.offsetLeft + 4,
+				eln.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
 			];
 			elc = temp.A;
 		} else {
 			temp.A.pos = [
-				eln.offsetLeft + el.offsetLeft + el.offsetWidth - 2,
-				eln.offsetTop + el.offsetTop + 0.5 * el.offsetHeight + 2
+				eln.offsetLeft + elp.offsetLeft + elp.offsetWidth - 2,
+				eln.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
 			];
 			elc = temp.B;
 		}
@@ -712,8 +709,8 @@ Editor.polymerElement({
 		Polymer.dom(this.$.canvas).appendChild(temp);
 
 		// Find posible connectors to drop temp wire
-		var filterType = el.type === "in" ? "out" : "in";
-		var portAInfo = this._getPortInfo(el.id);
+		var filterType = elp.type === "in" ? "out" : "in";
+		var portAInfo = this._getPortInfo(elp.id);
 		var nodeA = portAInfo.node;
 		var portA = portAInfo.port;
 		var nA = this.shader.fragmentGraph.getNodeById(nodeA);
@@ -777,7 +774,7 @@ Editor.polymerElement({
 				this.connect(nodeA, portA, nodeB, portB);
 			} else {
 				this._tempWire = {
-					element: el,
+					element: elp,
 					nodeA: nodeA,
 					portA: portA,
 					nodeB: nodeB,

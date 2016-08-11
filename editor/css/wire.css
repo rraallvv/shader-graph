@@ -7,11 +7,11 @@
 	fill: none;
 }
 .wire.enter {
-	stroke: rgba(0,153,255,1);
+	stroke: #09f;
 	cursor:  url(../icon/delete-link.png), pointer;
 }
 .wire.dragging {
-	stroke: rgba(0,153,255,1);
+	stroke: #09f;
 }
 .connector {
 	stroke: none;
@@ -19,5 +19,5 @@
 	r: 3px;
 }
 .connector.dragging {
-	/*fill: rgba(0,153,255,1);*/
+	/*fill: #09f;*/
 }

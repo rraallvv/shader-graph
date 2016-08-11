@@ -21,7 +21,7 @@
 	left: -3px;
 	right: -3px;
 	border-radius: 5px;
-	border: solid 2px rgba(0,153,255,1);
+	border: solid 2px #09f;
 	pointer-events:none;	
 }
 editor-unit-input {
