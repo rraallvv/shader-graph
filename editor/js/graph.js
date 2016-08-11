@@ -1,6 +1,5 @@
 (function(){
 
-var ignoreConnectionEvents = false;
 var batchRender = false;
 
 Editor.polymerElement({
@@ -796,20 +795,16 @@ Editor.polymerElement({
 		}
 	},
 	connectionAborted: function(e) {
-		if (!ignoreConnectionEvents) {
-			if (this.onConnectionReleased) {
-				this.onConnectionReleased(e);
-			} else {
-				// If onConnectionReleased is not defined abort temp connection
-				this.clearTempWire();
-			}
+		if (this.onConnectionReleased) {
+			this.onConnectionReleased(e);
+		} else {
+			// If onConnectionReleased is not defined abort temp connection
+			this.clearTempWire();
 		}
 	},
 	wireClick: function(e, el) {
-		if(!ignoreConnectionEvents){
-			var info = this._getWireInfo(this.links[el.id]);
-			this.disconnect(info.nodeA, info.portA, info.nodeB, info.portB);
-		}
+		var info = this._getWireInfo(this.links[el.id]);
+		this.disconnect(info.nodeA, info.portA, info.nodeB, info.portB);
 	},
 	nodeClick: function(e, el, capture) {
 		if (3 === e.which || 2 === e.which) {
