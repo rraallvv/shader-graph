@@ -177,7 +177,6 @@ Editor.polymerElement({
 					dataNodeId: data.id,
 					key: data.id,
 					type: data.type,
-					className: "w",
 					inputs: inputs,
 					outputs: outputs,
 					extra: extra,
