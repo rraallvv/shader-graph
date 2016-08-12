@@ -336,11 +336,11 @@ Editor.polymerElement({
 			var nodeA = this._tempWire.nodeA;
 			var portA = this._tempWire.portA;
 			var nodeB = data.id;
-			if (this._tempWire.element.type === "out") {
+			if (this._tempWire.elementA.type === "out") {
 				var portB = ShaderGraph.Node.classes[data.type].prototype.getInputPorts()[0];
 				this.connect(nodeB, portB, nodeA, portA);
 				// this.connect(nodeA, portA, nodeB, portB);
-			} else if (this._tempWire.element.type === "in") {
+			} else if (this._tempWire.elementA.type === "in") {
 				var portB = ShaderGraph.Node.classes[data.type].prototype.getOutputPorts()[0];
 				this.connect(nodeB, portB, nodeA, portA);
 			}
@@ -708,6 +708,8 @@ Editor.polymerElement({
 
 		Polymer.dom(this.$.canvas).appendChild(wire);
 
+		elp.dragged = true;
+
 		// Find posible connectors to drop temp wire
 		var filterType = elp.type === "in" ? "out" : "in";
 		var portAInfo = this._getPortInfo(elp.id);
@@ -735,6 +737,7 @@ Editor.polymerElement({
 		// Start dragging the temp wire
 		var nodeB;
 		var portB;
+		var targetPort;
 		Editor.UI._DomUtils.startDrag("default", e, function( e, dx, dy ) {
 			var pos = [
 				((e.clientX - bounds.left) + 0.5 * this.offsetWidth * (this._t.sx - 1) - this._t.tx) / this._t.sx,
@@ -743,6 +746,7 @@ Editor.polymerElement({
 			nodeB = undefined;
 			portB = undefined;
 			// Snap connector to ports
+			targetPort = null;
 			ports.forEach(function(info) {
 				var port = info.element;
 				var n = port.parentNode.parentNode.parentNode;
@@ -765,19 +769,24 @@ Editor.polymerElement({
 					pos = ppos;
 					nodeB = info.node;
 					portB = info.port;
+					targetPort = port;
+					port.dragged = true;
+				} else {
+					port.dragged = false;
 				}
 			});
 			elc.pos = pos;
 		}.bind(this), function( e ) {
 			this._tempWire = {
-				element: elp,
+				elementA: elp,
+				elementB: targetPort,
 				wire: wire,
 				nodeA: nodeA,
 				portA: portA,
 				nodeB: nodeB,
 				portB: portB
 			};
-			if (nodeA, portA, nodeB, portB) {
+			if (targetPort) {
 				this.clearTempWire();
 				this.connect(nodeA, portA, nodeB, portB);
 			} else {
@@ -792,6 +801,10 @@ Editor.polymerElement({
 	},
 	clearTempWire: function() {
 		if (this._tempWire) {
+			this._tempWire.elementA.dragged = false;
+			if (this._tempWire.elementB) {
+				this._tempWire.elementB.dragged = false;
+			}
 			this.$.canvas.removeChild(this._tempWire.wire);
 			this._tempWire = null;
 		}
