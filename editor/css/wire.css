@@ -8,7 +8,7 @@
 }
 .wire.enter {
 	stroke: #09f;
-	cursor:  url(../icon/delete-link.png), pointer;
+	cursor: url(../icon/delete-link.png), pointer;
 }
 .wire.dragging {
 	stroke: #09f;

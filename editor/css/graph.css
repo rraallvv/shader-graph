@@ -37,10 +37,3 @@
 .w {
 	z-index: 4;
 }
-.jsplumb-source-hover,
-.jsplumb-target-hover {
-	background-color: #ddd;
-}
-.jsplumb-endpoint {
-	cursor: pointer;
-}
