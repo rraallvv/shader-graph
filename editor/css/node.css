@@ -75,7 +75,6 @@ editor-unit-input::shadow i {
 }
 .out,
 .in {
-	cursor: pointer;
 	margin: 2px;
 	display: block;
 }
