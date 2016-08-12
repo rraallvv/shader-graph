@@ -3,6 +3,11 @@
 Editor.polymerElement({
 	properties: {
 		type: String,
+		node: {
+			type: Number,
+			observer: "_node"
+		},
+		port: String,
 		clickHandler: Object,
 		connected: {
 			type: Boolean,
@@ -48,6 +53,9 @@ Editor.polymerElement({
 				port.classList.remove("dragged");
 			}
 		}
+	},
+	_node: function(node) {
+		this.node = Number(node);
 	},
 	domChange: function() {
 		this._connected(this.connected);

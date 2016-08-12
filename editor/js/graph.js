@@ -424,17 +424,6 @@ Editor.polymerElement({
 		var split = string.split('.');
 		return [parseInt(split[0]), parseInt(split[1])];
 	},
-	_getPortInfo: function(info) {
-		var result = {};
-		var reg = /([^\d]+)(\d+)/;
-		var match;
-
-		match = info.match(reg);
-		result.node = Number(match[2]);
-		result.port = match[1];
-
-		return result;
-	},
 	_getWireInfo: function(info) {
 		var result = {};
 		var reg = /([^\d]+)(\d+)_/;
@@ -711,23 +700,21 @@ Editor.polymerElement({
 
 		// Find posible connectors to drop temp wire
 		var filterType = elp.type === "in" ? "out" : "in";
-		var portAInfo = this._getPortInfo(elp.id);
-		var nodeA = portAInfo.node;
-		var portA = portAInfo.port;
+		var nodeA = elp.node;
+		var portA = elp.port;
 		var nA = this.shader.fragmentGraph.getNodeById(nodeA);
 
 		var ports = [];
 		Array.prototype.forEach.call(this.querySelectorAll("shader-port"), function(port) {
 			if (port.type === filterType) {
-				var portBInfo = this._getPortInfo(port.id);
-				var nodeB = portBInfo.node;
-				var portB = portBInfo.port;
+				var nodeB = port.node;
+				var portB = port.port;
 				var nB = this.shader.fragmentGraph.getNodeById(nodeB);
 				if (nA.canConnect(portA, nB, portB) || nB.canConnect(portB, nA, portA)) {
 					ports.push({
 						element: port,
-						node: portBInfo.node,
-						port: portBInfo.port
+						node: port.node,
+						port: port.port
 					});
 				}
 			}

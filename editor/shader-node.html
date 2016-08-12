@@ -23,6 +23,8 @@
 					<shader-port
 						id="{{item.key}}{{id}}"
 						type="in"
+						node={{id}}
+						port={{item.key}}
 						connected={{item.connected}}
 						class="in"
 						click-handler={{portClickHandler}}
@@ -35,6 +37,8 @@
 					<shader-port
 						id="{{item.key}}{{id}}"
 						type="out"
+						node={{id}}
+						port={{item.key}}
 						connected={{item.connected}}
 						class="out"
 						click-handler={{portClickHandler}}
