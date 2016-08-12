@@ -198,19 +198,19 @@ Editor.polymerElement({
 		this.state.links.forEach(function(link) {
 			var portA = link.portA + link.nodeA;
 			var portB = link.portB + link.nodeB;
-			var ela = this.querySelector("#" + portA);
-			var elb = this.querySelector("#" + portB);
+			var ela = this.querySelector("shader-port#" + portA);
+			var elb = this.querySelector("shader-port#" + portB);
 			if (ela && elb) {
 				var nodeA = nodes[link.nodeA];
 				var nodeB = nodes[link.nodeB];
 				links[link.id] = {
 					id: link.id,
-					portA: portA + "_",
+					portA: portA,
 					posA: [
 						nodeA.pos[0] + ela.offsetLeft + ela.offsetWidth - 2,
 						nodeA.pos[1] + ela.offsetTop + 0.5 * ela.offsetHeight + 2
 					],
-					portB: portB + "_",
+					portB: portB,
 					posB: [
 						nodeB.pos[0] + elb.offsetLeft + 4,
 						nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
@@ -426,7 +426,7 @@ Editor.polymerElement({
 	},
 	_getWireInfo: function(info) {
 		var result = {};
-		var reg = /([^\d]+)(\d+)_/;
+		var reg = /([^\d]+)(\d+)/;
 		var match;
 
 		match = info.portA.match(reg);
@@ -826,8 +826,8 @@ Editor.polymerElement({
 
 						Array.prototype.forEach.call(el.outputs, function(output) {
 							var port = output.key + el.id;
-							var elp = this.querySelector("#" + port);
-							var elc = this.querySelector("#" + port + "_");
+							var elp = this.querySelector("shader-port#" + port);
+							var elc = this.querySelector(".connector#" + port);
 							if (elp && elc) {
 								elc.pos = [
 									el.offsetLeft + elp.offsetLeft + elp.offsetWidth - 2,
@@ -838,8 +838,8 @@ Editor.polymerElement({
 
 						Array.prototype.forEach.call(el.inputs, function(input) {
 							var port = input.key + el.id;
-							var elp = this.querySelector("#" + port);
-							var elc = this.querySelector("#" + port + "_");
+							var elp = this.querySelector("shader-port#" + port);
+							var elc = this.querySelector(".connector#" + port);
 							if (elp && elc) {
 								elc.pos = [
 									el.offsetLeft + elp.offsetLeft + 4,
