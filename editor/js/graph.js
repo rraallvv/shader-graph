@@ -677,25 +677,25 @@ Editor.polymerElement({
 		}
 
 		// Create a new temp wire
-		var temp = document.createElement("shader-wire");
-		temp.id = "temp";
-		temp.W.classList.add("dragging");
+		var wire = document.createElement("shader-wire");
+		wire.id = "temp";
+		wire.W.classList.add("dragging");
 
 		var eln = elp.parentNode.parentNode.parentNode;
 
 		var elc;
 		if (elp.type == "in") {
-			temp.B.pos = [
+			wire.B.pos = [
 				eln.offsetLeft + elp.offsetLeft + 4,
 				eln.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
 			];
-			elc = temp.A;
+			elc = wire.A;
 		} else {
-			temp.A.pos = [
+			wire.A.pos = [
 				eln.offsetLeft + elp.offsetLeft + elp.offsetWidth - 2,
 				eln.offsetTop + elp.offsetTop + 0.5 * elp.offsetHeight + 2
 			];
-			elc = temp.B;
+			elc = wire.B;
 		}
 		elc.classList.add("dragging");
 
@@ -706,7 +706,7 @@ Editor.polymerElement({
 			((e.clientY - bounds.top) + 0.5 * this.offsetHeight * (this._t.sx - 1) - this._t.ty) / this._t.sy
 		];
 
-		Polymer.dom(this.$.canvas).appendChild(temp);
+		Polymer.dom(this.$.canvas).appendChild(wire);
 
 		// Find posible connectors to drop temp wire
 		var filterType = elp.type === "in" ? "out" : "in";
@@ -769,34 +769,31 @@ Editor.polymerElement({
 			});
 			elc.pos = pos;
 		}.bind(this), function( e ) {
+			this._tempWire = {
+				element: elp,
+				wire: wire,
+				nodeA: nodeA,
+				portA: portA,
+				nodeB: nodeB,
+				portB: portB
+			};
 			if (nodeA, portA, nodeB, portB) {
 				this.clearTempWire();
 				this.connect(nodeA, portA, nodeB, portB);
 			} else {
-				this._tempWire = {
-					element: elp,
-					nodeA: nodeA,
-					portA: portA,
-					nodeB: nodeB,
-					portB: portB
-				};
-				this.connectionAborted(e);
+				if (this.onConnectionReleased) {
+					this.onConnectionReleased(e);
+				} else {
+					// If onConnectionReleased is not defined abort temp connection
+					this.clearTempWire();
+				}
 			}
 		}.bind(this));
 	},
 	clearTempWire: function() {
-		this._tempWire = null;
-		var el = this.querySelector("#temp")
-		if (el) {
-			this.$.canvas.removeChild(el);
-		}
-	},
-	connectionAborted: function(e) {
-		if (this.onConnectionReleased) {
-			this.onConnectionReleased(e);
-		} else {
-			// If onConnectionReleased is not defined abort temp connection
-			this.clearTempWire();
+		if (this._tempWire) {
+			this.$.canvas.removeChild(this._tempWire.wire);
+			this._tempWire = null;
 		}
 	},
 	wireClick: function(e, el) {
