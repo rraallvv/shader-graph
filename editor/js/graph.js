@@ -196,10 +196,8 @@ Editor.polymerElement({
 		var links = [];
 
 		this.state.links.forEach(function(link) {
-			var portA = link.portA + link.nodeA;
-			var portB = link.portB + link.nodeB;
-			var ela = this.querySelector("shader-port#" + portA);
-			var elb = this.querySelector("shader-port#" + portB);
+			var ela = this.querySelector('shader-port[node="' + link.nodeA + '"][port="' + link.portA + '"]');
+			var elb = this.querySelector('shader-port[node="' + link.nodeB + '"][port="' + link.portB + '"]');
 			if (ela && elb) {
 				var nodeA = nodes[link.nodeA];
 				var nodeB = nodes[link.nodeB];
@@ -812,7 +810,7 @@ Editor.polymerElement({
 
 						Array.prototype.forEach.call(el.outputs, function(output) {
 							var port = output.key + el.id;
-							var elp = this.querySelector("shader-port#" + port);
+							var elp = this.querySelector('shader-port[node="' + el.id + '"][port="' + output.key + '"]');
 							var elc = this.querySelector(".connector#" + port);
 							if (elp && elc) {
 								elc.pos = [
@@ -824,7 +822,7 @@ Editor.polymerElement({
 
 						Array.prototype.forEach.call(el.inputs, function(input) {
 							var port = input.key + el.id;
-							var elp = this.querySelector("shader-port#" + port);
+							var elp = this.querySelector('shader-port[node="' + el.id + '"][port="' + inoput.key + '"]');
 							var elc = this.querySelector(".connector#" + port);
 							if (elp && elc) {
 								elc.pos = [

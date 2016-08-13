@@ -21,10 +21,9 @@
 				</template>
 				<template is="dom-repeat" items="{{inputs}}">
 					<shader-port
-						id="{{item.key}}{{id}}"
 						type="in"
-						node={{id}}
-						port={{item.key}}
+						node$={{id}}
+						port$={{item.key}}
 						connected={{item.connected}}
 						class="in"
 						click-handler={{portClickHandler}}
@@ -35,10 +34,9 @@
 			<div class="outputs">
 				<template is="dom-repeat" items="{{outputs}}">
 					<shader-port
-						id="{{item.key}}{{id}}"
 						type="out"
-						node={{id}}
-						port={{item.key}}
+						node$={{id}}
+						port$={{item.key}}
 						connected={{item.connected}}
 						class="out"
 						click-handler={{portClickHandler}}
