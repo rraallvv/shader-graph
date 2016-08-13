@@ -427,7 +427,6 @@ Editor.polymerElement({
 		return [parseInt(split[0]), parseInt(split[1])];
 	},
 	_getExistingConnections: function(node, port) {
-		var id = port + node;
 		var existing = [];
 		this.links.forEach(function(link) {
 			if (link.nodeB === node && link.portB === port) {
@@ -784,6 +783,7 @@ Editor.polymerElement({
 	wireClick: function(e, el) {
 		var link = this.links[el.id];
 		this.disconnect(link.nodeA, link.portA, link.nodeB, link.portB);
+		el.parentNode.removeChild(el);
 	},
 	nodeClick: function(e, el, capture) {
 		if (3 === e.which || 2 === e.which) {

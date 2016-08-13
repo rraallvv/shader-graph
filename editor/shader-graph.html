@@ -10,11 +10,11 @@
 				<template is="dom-if" if="{{item}}">
 					<shader-wire
 						id$={{item.id}}
-						node-a="{{item.nodeA}}"
-						port-a="{{item.portA}}"
+						node-a={{item.nodeA}}
+						port-a={{item.portA}}
 						pos-a={{item.posA}}
-						node-b="{{item.nodeB}}"
-						port-b="{{item.portB}}"
+						node-b={{item.nodeB}}
+						port-b={{item.portB}}
 						pos-b={{item.posB}}
 						click-handler={{item.clickHandler}}
 					></shader-wire>
