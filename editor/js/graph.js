@@ -809,9 +809,8 @@ Editor.polymerElement({
 						el.set("pos.*", pos.slice(0));
 
 						Array.prototype.forEach.call(el.outputs, function(output) {
-							var port = output.key + el.id;
 							var elp = this.querySelector('shader-port[node="' + el.id + '"][port="' + output.key + '"]');
-							var elc = this.querySelector(".connector#" + port);
+							var elc = this.querySelector('.connector[node-a="' + el.id + '"][port-a="' + output.key + '"]');
 							if (elp && elc) {
 								elc.pos = [
 									el.offsetLeft + elp.offsetLeft + elp.offsetWidth - 2,
@@ -821,9 +820,8 @@ Editor.polymerElement({
 						}, this);
 
 						Array.prototype.forEach.call(el.inputs, function(input) {
-							var port = input.key + el.id;
-							var elp = this.querySelector('shader-port[node="' + el.id + '"][port="' + inoput.key + '"]');
-							var elc = this.querySelector(".connector#" + port);
+							var elp = this.querySelector('shader-port[node="' + el.id + '"][port="' + input.key + '"]');
+							var elc = this.querySelector('.connector[node-b="' + el.id + '"][port-b="' + input.key + '"]');
 							if (elp && elc) {
 								elc.pos = [
 									el.offsetLeft + elp.offsetLeft + 4,

@@ -39,8 +39,8 @@ Editor.polymerElement({
 		this.style.pointerEvents = "none";
 
 		// Visible elements
-		var A = this.$$("#" + this.portA + this.nodeA);
-		var B = this.$$("#" + this.portB + this.nodeB);
+		var A = this.$$('[node-a="' + this.nodeA + '"][port-a="' + this.portA + '"]');
+		var B = this.$$('[node-b="' + this.nodeB + '"][port-b="' + this.portB + '"]');
 		var W = this.$.wire;
 
 		A.style.pointerEvents = "none";
@@ -291,9 +291,6 @@ Editor.polymerElement({
 		}
 		// console.log(c * d);
 		return c * d;
-	},
-	computeConnectorId: function(node, port) {
-		return port + node;
 	}
 });
 
