@@ -3,8 +3,8 @@
 	<template>
 		<svg id="container">
 			<path id="wire" class="wire"/>
-			<circle id$={{portA}} class="connector"/>
-			<circle id$={{portB}} class="connector"/>
+			<circle id$="{{computeConnectorId(nodeA, portA)}}" class="connector"/>
+			<circle id$="{{computeConnectorId(nodeB, portB)}}" class="connector"/>
 		</svg>
 	</template>
 	<script src="js/wire.js"></script>

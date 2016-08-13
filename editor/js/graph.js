@@ -205,12 +205,14 @@ Editor.polymerElement({
 				var nodeB = nodes[link.nodeB];
 				links[link.id] = {
 					id: link.id,
-					portA: portA,
+					nodeA: link.nodeA,
+					portA: link.portA,
 					posA: [
 						nodeA.pos[0] + ela.offsetLeft + ela.offsetWidth - 2,
 						nodeA.pos[1] + ela.offsetTop + 0.5 * ela.offsetHeight + 2
 					],
-					portB: portB,
+					nodeB: link.nodeB,
+					portB: link.portB,
 					posB: [
 						nodeB.pos[0] + elb.offsetLeft + 4,
 						nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
@@ -425,22 +427,14 @@ Editor.polymerElement({
 		return [parseInt(split[0]), parseInt(split[1])];
 	},
 	_getWireInfo: function(info) {
-		var result = {};
-		var reg = /([^\d]+)(\d+)/;
-		var match;
-
-		match = info.portA.match(reg);
-		result.nodeA = Number(match[2]);
-		result.portA = match[1];
-
-		match = info.portB.match(reg);
-		result.nodeB = Number(match[2]);
-		result.portB = match[1];
-
-		return result;
+		return {
+			nodeA: Number(info.nodeA),
+			portA: info.portA,
+			nodeB: Number(info.nodeB),
+			portB: info.portB
+		};
 	},
 	_getExistingConnections: function(node, port) {
-		var id = port + node;
 		var existing = [];
 		this.links.forEach(function(link) {
 			var info = this._getWireInfo(link);
@@ -798,6 +792,7 @@ Editor.polymerElement({
 	wireClick: function(e, el) {
 		var info = this._getWireInfo(this.links[el.id]);
 		this.disconnect(info.nodeA, info.portA, info.nodeB, info.portB);
+		el.parentNode.removeChild(el);
 	},
 	nodeClick: function(e, el, capture) {
 		if (3 === e.which || 2 === e.which) {

@@ -2,6 +2,10 @@
 
 Editor.polymerElement({
 	properties: {
+		nodeA: {
+			type: String,
+			value: "node-a"
+		},
 		portA: {
 			type: String,
 			value: "port-a"
@@ -9,6 +13,10 @@ Editor.polymerElement({
 		posA: {
 			type: Array,
 			value: function() { return [0, 0]; },
+		},
+		nodeB: {
+			type: String,
+			value: "node-b"
 		},
 		portB: {
 			type: String,
@@ -31,8 +39,8 @@ Editor.polymerElement({
 		this.style.pointerEvents = "none";
 
 		// Visible elements
-		var A = this.$$("#" + this.portA);
-		var B = this.$$("#" + this.portB);
+		var A = this.$$("#" + this.portA + this.nodeA);
+		var B = this.$$("#" + this.portB + this.nodeB);
 		var W = this.$.wire;
 
 		A.style.pointerEvents = "none";
@@ -283,6 +291,9 @@ Editor.polymerElement({
 		}
 		// console.log(c * d);
 		return c * d;
+	},
+	computeConnectorId: function(node, port) {
+		return port + node;
 	}
 });
 
