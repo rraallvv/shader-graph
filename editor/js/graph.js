@@ -426,20 +426,11 @@ Editor.polymerElement({
 		var split = string.split('.');
 		return [parseInt(split[0]), parseInt(split[1])];
 	},
-	_getWireInfo: function(info) {
-		return {
-			nodeA: Number(info.nodeA),
-			portA: info.portA,
-			nodeB: Number(info.nodeB),
-			portB: info.portB
-		};
-	},
 	_getExistingConnections: function(node, port) {
 		var existing = [];
 		this.links.forEach(function(link) {
-			var info = this._getWireInfo(link);
-			if (info.nodeB === node && info.portB === port) {
-				existing.push(info);
+			if (link.nodeB === node && link.portB === port) {
+				existing.push(link);
 			}
 		}, this);
 		return existing;
@@ -790,8 +781,8 @@ Editor.polymerElement({
 		}
 	},
 	wireClick: function(e, el) {
-		var info = this._getWireInfo(this.links[el.id]);
-		this.disconnect(info.nodeA, info.portA, info.nodeB, info.portB);
+		var link = this.links[el.id];
+		this.disconnect(link.nodeA, link.portA, link.nodeB, link.portB);
 		el.parentNode.removeChild(el);
 	},
 	nodeClick: function(e, el, capture) {
