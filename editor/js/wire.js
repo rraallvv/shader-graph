@@ -26,10 +26,6 @@ Editor.polymerElement({
 			type: Array,
 			value: function() { return [0, 0]; },
 		},
-		scale: {
-			type: Number,
-			value: 1
-		},
 		clickHandler: Object
 	},
 	observers: [

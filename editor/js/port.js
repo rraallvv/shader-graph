@@ -8,7 +8,6 @@ Editor.polymerElement({
 			observer: "_node"
 		},
 		port: String,
-		clickHandler: Object,
 		connected: {
 			type: Boolean,
 			observer: "_connected"
@@ -16,7 +15,8 @@ Editor.polymerElement({
 		dragged: {
 			type: Boolean,
 			observer: "_dragged"
-		}
+		},
+		clickHandler: Object
 	},
 	ready: function() {
 		this.addEventListener("dom-change", this.domChange.bind(this));
