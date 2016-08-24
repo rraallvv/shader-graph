@@ -2,15 +2,11 @@
 	<link rel="import" type="css" href="css/port.css">
 	<template>
 		<template is="dom-if" if="{{_isInput(type)}}">
-			<svg>
-				<circle id="port" class="input"/>
-			</svg>
+			<div id="port" class="input"/>
 		</template>
 		<content></content>
 		<template is="dom-if" if="{{_isOutpout(type)}}">
-			<svg>
-				<circle id="port" class="output"/>
-			</svg>
+			<div id="port" class="output"/>
 		</template>
 	</template>
 	<script src="js/port.js"></script>

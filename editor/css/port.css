@@ -9,19 +9,19 @@ svg {
 }
 .input,
 .output {
-	stroke: #9d9d9d;
-	stroke-width: 1px;
-	fill: none;
-	r: 3px;
-	cx: 4px;
-	cy: 4px;
+	display: inline-block;
+	background-image: url(../images/port.png);
+	background-repeat: no-repeat;
+	width: 8px;
+	height: 8px;
+	margin: 0;
+	padding: 0;
 }
 .input.connected,
 .output.connected {
-	fill: #9d9d9d;
+	background-image: url(../images/port-connected.png);
 }
 .input.dragged,
 .output.dragged {
-	fill: white;
-	stroke: white;
+	background-image: url(../images/port-connected.png);
 }
