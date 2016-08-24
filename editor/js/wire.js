@@ -44,6 +44,15 @@ Editor.polymerElement({
 		var B = this.$$('[node-b="' + this.nodeB + '"][port-b="' + this.portB + '"]');
 		var W = this.$.wire;
 
+		A.style.width = "0px";
+		A.style.height = "0px";
+
+		B.style.width = "0px";
+		B.style.height = "0px";
+
+		A.style.display = "none";
+		B.style.display = "none";
+
 		A.style.pointerEvents = "none";
 		B.style.pointerEvents = "none";
 		W.style.pointerEvents = "none";
@@ -109,11 +118,7 @@ Editor.polymerElement({
 		this.B.pos = [0,0];
 	},
 	created: function() {
-		// Get the connector styling
-		var style = this._getStyleRule(".connector." + this.tagName) || {};
-		var strokeWidth = parseFloat(style.strokeWidth || 1);
-		var radius = parseFloat(style.r || 0);
-		this.connectorRadius = strokeWidth + radius;
+		this.connectorRadius = 1;
 
 		// Get the wire styling
 		var handleMargin = 5;
@@ -167,12 +172,12 @@ Editor.polymerElement({
 		var bY = Math.round(posB[1] - top);
 
 		// Conector A position
-		this.A.setAttribute("cx", aX);
-		this.A.setAttribute("cy", aY);
+		this.A.style.left = (aX - this.A.offsetWidth / 2) + "px";
+		this.A.style.top = (aY - this.A.offsetHeight / 2) + "px";
 
 		// Conector B position
-		this.B.setAttribute("cx", bX);
-		this.B.setAttribute("cy", bY);
+		this.B.style.left = (bX - this.B.offsetWidth / 2) + "px";
+		this.B.style.top = (bY - this.B.offsetHeight / 2) + "px";
 
 		// Wire position
 		var attribute = "M " +

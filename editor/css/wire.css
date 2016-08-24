@@ -13,14 +13,3 @@
 .wire.dragging {
 	stroke: #09f;
 }
-.connector {
-	stroke: none;
-	fill: white;
-	r: 3px;
-}
-.connector.dragging {
-	/*fill: #09f;*/
-}
-.connector.connected {
-	display: none;
-}
