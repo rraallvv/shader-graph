@@ -3,6 +3,10 @@
 Editor.polymerElement({
 	properties: {
 		type: String,
+		dataType: {
+			type: Array,
+			observer: "_dataType"
+		},
 		node: {
 			type: Number,
 			observer: "_node"
@@ -56,6 +60,8 @@ Editor.polymerElement({
 	},
 	_node: function(node) {
 		this.node = Number(node);
+	},
+	_dataType: function(dataType) {
 	},
 	domChange: function() {
 		this._connected(this.connected);

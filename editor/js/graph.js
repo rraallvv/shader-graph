@@ -161,13 +161,15 @@ Editor.polymerElement({
 				var inputs = node.getInputPorts().map(function(key){
 					return {
 						key: key,
-						connected: node.inputPortIsConnected(key)
+						connected: node.inputPortIsConnected(key),
+						dataType: node.getInputTypes(key)
 					}
 				});
 				var outputs = node.getOutputPorts().map(function(key){
 					return {
 						key: key,
-						connected: node.outputPortIsConnected(key)
+						connected: node.outputPortIsConnected(key),
+						dataType: node.getOutputTypes(key)
 					}
 				});
 
