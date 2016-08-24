@@ -215,7 +215,8 @@ Editor.polymerElement({
 						nodeB.pos[0] + elb.offsetLeft + 4,
 						nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
 					],
-					clickHandler: this.wireClick.bind(this)
+					clickHandler: this.wireClick.bind(this),
+					connected: true
 				};
 			} else {
 				missing = true;

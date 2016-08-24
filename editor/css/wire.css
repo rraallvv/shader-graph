@@ -21,3 +21,6 @@
 .connector.dragging {
 	/*fill: #09f;*/
 }
+.connector.connected {
+	display: none;
+}

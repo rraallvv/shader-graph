@@ -26,7 +26,12 @@ Editor.polymerElement({
 			type: Array,
 			value: function() { return [0, 0]; },
 		},
-		clickHandler: Object
+		clickHandler: Object,
+		connected: {
+			type: Boolean,
+			value: false,
+			observer: "_connected"
+		}
 	},
 	observers: [
 		"_onPosChange(posA, posB)"
@@ -51,6 +56,8 @@ Editor.polymerElement({
 		this.A = A;
 		this.B = B;
 		this.W = W;
+
+		this._connected(this.connected);
 
 		// Margin overlay
 		var hW = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -287,6 +294,17 @@ Editor.polymerElement({
 		}
 		// console.log(c * d);
 		return c * d;
+	},
+	_connected(connected) {
+		if (this.A && this.B) {
+			if (connected) {
+				this.A.classList.add("connected");
+				this.B.classList.add("connected");
+			} else {
+				this.A.classList.remove("connected");
+				this.B.classList.remove("connected");
+			}
+		}
 	}
 });
 
