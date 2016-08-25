@@ -181,12 +181,7 @@ parent.preview._initEngine = function() {
 parent.preview.updateShader = function(shaderDef){
 	// console.log(shaderDef.fshader());
 	if (cc.EffectPreview) {
-		var fs = shaderDef.fshader();
-		//fs = fs.split("uniform sampler2D texture12;").join("");
-		//fs = fs.split("texture12").join("CC_Texture0");
-
-		cc.EffectPreview.frag_glsl = fs;
-		cc.EffectPreview.updateShader();
+		cc.EffectPreview.updateShader(shaderDef);
 	}
 }
 

@@ -85,8 +85,15 @@ cc.Class({
         this.parameters.resolution.x = ( this.node.getContentSize().width );
         this.parameters.resolution.y = ( this.node.getContentSize().height );
     },
-	updateShader: function updateShader() {
-		//cc.game.emit(cc.game.EVENT_SHOW, cc.game);
+	updateShader: function updateShader(shaderDef) {
+		this.frag_glsl = shaderDef.fshader();
+		//fs = fs.split("uniform sampler2D texture12;").join("");
+		//fs = fs.split("texture12").join("CC_Texture0");
+
+		//parent.Editor.log("!", shaderDef.attributes);
+		//{ vertexUV0: 'TEXCOORD0', vertexPosition: 'POSITION' }
+		//parent.Editor.log("!", shaderDef.uniforms);
+		//{ viewProjectionMatrix: 'VIEW_PROJECTION_MATRIX', worldMatrix: 'WORLD_MATRIX' }
 
 		var linked = false;
 		this._program = new cc.GLProgram();
@@ -97,7 +104,7 @@ cc.Class({
 		} else {
 			this._program.initWithVertexShaderByteArray(this.vert_glsl, this.frag_glsl);
 			this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_POSITION, cc.macro.VERTEX_ATTRIB_POSITION);
-			this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_COLOR, cc.macro.VERTEX_ATTRIB_COLOR);
+			// this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_COLOR, cc.macro.VERTEX_ATTRIB_COLOR);
 			// this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_TEX_COORD, cc.macro.VERTEX_ATTRIB_TEX_COORDS);
 			this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_TEX_COORD, cc.macro.VERTEX_ATTRIB_TEX_COORDS);
 			linked = this._program.link();
