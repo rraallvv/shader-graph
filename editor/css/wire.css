@@ -13,3 +13,9 @@
 .wire.dragging {
 	stroke: #09f;
 }
+.wire.float {
+	stroke: rgb(164, 255, 48);
+}
+.wire.vector {
+	stroke: rgb(246, 192, 43);
+}

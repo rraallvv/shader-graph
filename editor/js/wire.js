@@ -27,10 +27,9 @@ Editor.polymerElement({
 			value: function() { return [0, 0]; },
 		},
 		clickHandler: Object,
-		connected: {
-			type: Boolean,
-			value: false,
-			observer: "_connected"
+		dataType: {
+			type: Array,
+			observer: "_dataType"
 		}
 	},
 	observers: [
@@ -65,8 +64,6 @@ Editor.polymerElement({
 		this.A = A;
 		this.B = B;
 		this.W = W;
-
-		this._connected(this.connected);
 
 		// Margin overlay
 		var hW = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -300,15 +297,25 @@ Editor.polymerElement({
 		// console.log(c * d);
 		return c * d;
 	},
-	_connected(connected) {
-		if (this.A && this.B) {
-			if (connected) {
-				this.A.classList.add("connected");
-				this.B.classList.add("connected");
+	_dataType: function(dataType) {
+		var wire = this.$.wire;
+		if (wire && dataType) {
+			if (dataType.indexOf("float") > -1) {
+				wire.classList.add("float");
 			} else {
-				this.A.classList.remove("connected");
-				this.B.classList.remove("connected");
+				wire.classList.remove("float");
 			}
+
+			if (dataType.indexOf("vec2") > -1 ||
+					dataType.indexOf("vec3") > -1 ||
+					dataType.indexOf("vec4") > -1) {
+				wire.classList.add("vector");
+			} else {
+				wire.classList.remove("vector");
+			}
+		} else {
+				wire.classList.remove("float");
+				wire.classList.remove("vector");
 		}
 	}
 });

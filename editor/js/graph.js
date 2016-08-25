@@ -218,7 +218,7 @@ Editor.polymerElement({
 						nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
 					],
 					clickHandler: this.wireClick.bind(this),
-					connected: true
+					dataType: ela.dataType
 				};
 			} else {
 				missing = true;
