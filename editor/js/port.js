@@ -62,9 +62,26 @@ Editor.polymerElement({
 		this.node = Number(node);
 	},
 	_dataType: function(dataType) {
+		var port = this.$$("#port");
+		if (port) {
+			if (dataType.indexOf("float") > -1) {
+				port.classList.add("float");
+			} else {
+				port.classList.remove("float");
+			}
+
+			if (dataType.indexOf("vec2") > -1 ||
+					dataType.indexOf("vec3") > -1 ||
+					dataType.indexOf("vec4") > -1) {
+				port.classList.add("vector");
+			} else {
+				port.classList.remove("vector");
+			}
+		}
 	},
 	domChange: function() {
 		this._connected(this.connected);
+		this._dataType(this.dataType);
 	}
 });
 

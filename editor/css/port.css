@@ -1,16 +1,11 @@
 :host {
 	cursor: pointer;
 }
-svg {
-	position: relative;
-	top: 1px;
-	height: 8px;
-	width: 8px;
-}
+
 .input,
 .output {
 	display: inline-block;
-	background-image: url(../images/port.png);
+	background-image: url(../images/port-generic.png);
 	background-repeat: no-repeat;
 	width: 8px;
 	height: 8px;
@@ -19,9 +14,35 @@ svg {
 }
 .input.connected,
 .output.connected {
-	background-image: url(../images/port-connected.png);
+	background-image: url(../images/port-generic-connected.png);
 }
 .input.dragged,
 .output.dragged {
-	background-image: url(../images/port-connected.png);
+	background-image: url(../images/port-generic-connected.png);
+}
+
+.input.float,
+.output.float {
+	background-image: url(../images/port-float.png);
+}
+.input.float.connected,
+.output.float.connected {
+	background-image: url(../images/port-float-connected.png);
+}
+.input.float.dragged,
+.output.float.dragged {
+	background-image: url(../images/port-float-connected.png);
+}
+
+.input.vector,
+.output.vector {
+	background-image: url(../images/port-vector.png);
+}
+.input.vector.connected,
+.output.vector.connected {
+	background-image: url(../images/port-vector-connected.png);
+}
+.input.vector.dragged,
+.output.vector.dragged {
+	background-image: url(../images/port-vector-connected.png);
 }

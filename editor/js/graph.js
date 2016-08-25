@@ -162,7 +162,7 @@ Editor.polymerElement({
 					return {
 						key: key,
 						connected: node.inputPortIsConnected(key),
-						dataType: node.getInputTypes(key)
+						dataType: node.getInputVariableTypes(key)
 					}
 				});
 				var outputs = node.getOutputPorts().map(function(key){
