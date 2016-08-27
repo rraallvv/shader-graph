@@ -25,7 +25,7 @@ UVNode.prototype.getOutputPorts = function(key){
 UVNode.prototype.getAttributes = function(){
 	return [
 		new Attribute({
-			name: 'vertexUV0',
+			name: 'a_texCoord',
 			key: 'TEXCOORD0',
 			type: 'vec2',
 			ifdef: 'TEXCOORD0'

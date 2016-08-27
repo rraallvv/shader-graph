@@ -16,12 +16,12 @@ UberVertNode.prototype.canBuildShader = function(){
 UberVertNode.prototype.getUniforms = function(){
 	var uniforms = [
 		new Uniform({
-			name: 'viewProjectionMatrix',
+			name: 'CC_PMatrix',
 			defaultValue: 'VIEW_PROJECTION_MATRIX',
 			type: 'vec3'
 		}),
 		new Uniform({
-			name: 'worldMatrix',
+			name: 'CC_MVMatrix',
 			defaultValue: 'WORLD_MATRIX',
 			type: 'mat4'
 		}),
@@ -66,7 +66,7 @@ UberVertNode.prototype.getUniforms = function(){
 UberVertNode.prototype.getAttributes = function(){
 	var attribute = [
 		new Attribute({
-			name: 'vertexPosition',
+			name: 'a_position',
 			key: 'POSITION',
 			type: 'vec3'
 		}),
@@ -83,13 +83,13 @@ UberVertNode.prototype.getAttributes = function(){
 			ifdef: 'NORMAL'
 		}),
 		new Attribute({
-			name: 'vertexColor',
+			name: 'a_color',
 			key: 'COLOR',
 			type: 'vec4',
 			ifdef: 'COLOR'
 		}),
 		new Attribute({
-			name: 'vertexUV0',
+			name: 'a_texCoord',
 			key: 'TEXCOORD0',
 			type: 'vec2',
 			ifdef: 'TEXCOORD0'
@@ -126,14 +126,14 @@ UberVertNode.prototype.buildShader = function(){
 				this.graph.renderConnectionVariableDeclarations(),
 				this.graph.renderNodeCodes(),
 				'{',
-					'mat4 wMatrix = worldMatrix;',
+					'mat4 wMatrix = CC_MVMatrix;',
 					'#ifdef NORMAL',
 						'mat3 nMatrix = normalMatrix;',
 					'#endif',
 					ShaderBuilder.animation.vertex,
-					'vec4 worldPos = wMatrix * vec4(vertexPosition, 1.0);',
+					'vec4 worldPos = wMatrix * vec4(a_position, 1.0);',
 					'vWorldPos = worldPos.xyz;',
-					'gl_Position = viewProjectionMatrix * worldPos;',
+					'gl_Position = CC_PMatrix * worldPos;',
 
 					'viewPosition = cameraPosition - worldPos.xyz;',
 
@@ -145,10 +145,10 @@ UberVertNode.prototype.buildShader = function(){
 					'	binormal = cross(normal, tangent) * vec3(vertexTangent.w);',
 					'#endif',
 					'#ifdef COLOR',
-					'	color = vertexColor;',
+					'	color = a_color;',
 					'#endif',
 					'#ifdef TEXCOORD0',
-					'	v_texCoord = vertexUV0 * offsetRepeat.zw + offsetRepeat.xy;',
+					'	v_texCoord = a_texCoord * offsetRepeat.zw + offsetRepeat.xy;',
 					'#endif',
 					'#ifdef TEXCOORD1',
 					'	texCoord1 = vertexUV1;',

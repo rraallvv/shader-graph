@@ -2,6 +2,8 @@ cc._RFpush({ exports: {} }, '414458STphLF75+aFmYFzfh', 'EffectPreview');
 
 "use strict";
 
+var Editor = parent.Editor;
+
 cc.Class({
 	"extends": cc.Component,
 	properties: {
@@ -86,6 +88,7 @@ cc.Class({
         this.parameters.resolution.y = ( this.node.getContentSize().height );
     },
 	updateShader: function updateShader(shaderDef) {
+		this.vert_glsl = shaderDef.vshader();
 		this.frag_glsl = shaderDef.fshader();
 		//fs = fs.split("uniform sampler2D texture12;").join("");
 		//fs = fs.split("texture12").join("CC_Texture0");
@@ -122,6 +125,7 @@ cc.Class({
 
 			this.setProgram(this.node._sgNode, this._program);
 		} else {
+			Editor.error("Could't link custom shader; using the default one.");
 			this.setProgram(this.node._sgNode, cc.shaderCache.programForKey("ShaderPositionTextureColor"));
 		}
 

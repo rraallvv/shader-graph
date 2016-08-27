@@ -13,27 +13,35 @@ VertexGraph.prototype = Object.create(Graph.prototype);
 
 VertexGraph.prototype.getUniforms = function(){
 	var uniforms = Graph.prototype.getUniforms.apply(this);
+	/*
 	uniforms.push(
 		new Uniform({
-			name: 'viewProjectionMatrix',
+			name: 'CC_PMatrix',
 			type: 'mat4',
 			defaultValue: 'VIEW_PROJECTION_MATRIX'
 		}),
 		new Uniform({
-			name: 'worldMatrix',
+			name: 'CC_MVMatrix',
 			type: 'mat4',
 			defaultValue: 'WORLD_MATRIX'
 		})
 	);
+	*/
 	return uniforms;
 };
 
 VertexGraph.prototype.getAttributes = function(){
 	var attributes = Graph.prototype.getAttributes.apply(this);
 	attributes.push(new Attribute({
-		name: 'vertexPosition',
+		name: 'a_position',
 		defaultValue: 'POSITION',
 		type: 'vec3'
+	}));
+	attributes.push(new Attribute({
+		name: 'a_color',
+		key: 'COLOR',
+		type: 'vec4',
+		ifdef: 'COLOR'
 	}));
 	return attributes;
 };

@@ -76,8 +76,8 @@ UberFragNode.prototype.getUniforms = function(){
 	];
 	return uniforms;
 
-	// viewProjectionMatrix: Shader.VIEW_PROJECTION_MATRIX,
-	// worldMatrix: Shader.WORLD_MATRIX,
+	// CC_PMatrix: Shader.VIEW_PROJECTION_MATRIX,
+	// CC_MVMatrix: Shader.WORLD_MATRIX,
 	// normalMatrix: Shader.NORMAL_MATRIX,
 	// cameraPosition: Shader.CAMERA,
 	// diffuseMap: Shader.DIFFUSE_MAP,
