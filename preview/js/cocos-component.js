@@ -90,6 +90,7 @@ cc.Class({
         this.parameters.resolution[1] = ( this.node.getContentSize().height );
     },
 	updateShader: function updateShader(shaderDef) {
+		this.shaderDef = shaderDef;
 		this.vert_glsl = shaderDef.vshader();
 		this.frag_glsl = shaderDef.fshader();
 		//fs = fs.split("uniform sampler2D texture12;").join("");
@@ -120,9 +121,10 @@ cc.Class({
 
 			if (cc.sys.isNative) {
 			} else {
-				this.uniformLocation["resolution"] = this._program.getUniformLocationForName( "resolution" );
-				this.uniformLocation["time"] = this._program.getUniformLocationForName( "time" );
-				this.uniformLocation["mouse_touch"] = this._program.getUniformLocationForName( "mouse_touch" );
+				for(var i = 0; i < shaderDef.uniforms.length; i++) {
+					var uniform = shaderDef.uniforms[i];
+					this.uniformLocation[uniform.name] = this._program.getUniformLocationForName( uniform.name );
+				}
 			}
 
 			this.setProgram(this.node._sgNode, this._program);
@@ -149,17 +151,33 @@ cc.Class({
 		}
 	},
 	update: function(dt) {
-        if(this._program){
+        if(this._program && this.shaderDef){
             this.updateGLParameters();
             if(cc.sys.isNative){
                 var glProgram_state = cc.GLProgramState.getOrCreateWithGLProgram(this._program);
-                glProgram_state.setUniformVec2( "resolution", this.parameters.resolution );
-                glProgram_state.setUniformFloat( "time", this.parameters.time );    
-                glProgram_state.setUniformVec2( "mouse_touch" , this.parameters.mouse_touch );
+				for(var i = 0; i < this.shaderDef.uniforms.length; i++) {
+					var uniform = this.shaderDef.uniforms[i];
+					switch (uniform.type) {
+						case "float":
+							glProgram_state.setUniformFloat( uniform.name, this.parameters[uniform.name] );
+							break;
+						case "vec2":
+							glProgram_state.setUniformVec2( uniform.name, this.parameters[uniform.name] );
+							break;
+					}
+				}
             }else{
-                this._program.setUniformLocationWith2f( this.uniformLocation["resolution"], this.parameters.resolution[0], this.parameters.resolution[1] );
-                this._program.setUniformLocationWith1f( this.uniformLocation["time"], this.parameters.time );
-                this._program.setUniformLocationWith2f( this.uniformLocation["mouse_touch"], this.parameters.mouse_touch[0], this.parameters.mouse_touch[1] );
+				for(var i = 0; i < this.shaderDef.uniforms.length; i++) {
+					var uniform = this.shaderDef.uniforms[i];
+					switch (uniform.type) {
+						case "float":
+							this._program.setUniformLocationWith1f( this.uniformLocation[uniform.name], this.parameters[uniform.name] );
+							break;
+						case "vec2":
+							this._program.setUniformLocationWith2f( this.uniformLocation[uniform.name], this.parameters[uniform.name][0], this.parameters[uniform.name][1] );
+							break;
+					}
+				}
             }
         }
 	}
