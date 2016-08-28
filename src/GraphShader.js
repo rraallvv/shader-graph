@@ -24,8 +24,8 @@ GraphShader.prototype.buildShader = function(){
 	var shaderDef = {
 		processors: [],
 		defines: {},
-		attributes : {},
-		uniforms : {},
+		attributes : [],
+		uniforms : [],
 		vshader: '',
 		fshader : ''
 	};
@@ -35,12 +35,12 @@ GraphShader.prototype.buildShader = function(){
 
 		// Uniforms
 		graph.getUniforms().forEach(function(uniform){
-			shaderDef.uniforms[uniform.name] = uniform.defaultValue;
+			shaderDef.uniforms.push(uniform);
 		});
 
 		// Attributes
 		graph.getAttributes().forEach(function(attribute){
-			shaderDef.attributes[attribute.name] = attribute.key;
+			shaderDef.attributes.push(attribute);
 		});
 	});
 

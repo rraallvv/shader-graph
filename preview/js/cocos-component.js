@@ -112,9 +112,9 @@ cc.Class({
 			linked = this._program.link();
 		} else {
 			this._program.initWithVertexShaderByteArray(this.vert_glsl, this.frag_glsl);
-			for(var attribute in shaderDef.attributes) {
-				var key = shaderDef.attributes[attribute];
-				this._program.addAttribute(cc.macro["ATTRIBUTE_NAME_" + key], cc.macro["VERTEX_ATTRIB_" + key]);
+			for(var i = 0; i < shaderDef.attributes.length; i++) {
+				var attribute = shaderDef.attributes[i];
+				this._program.addAttribute(cc.macro["ATTRIBUTE_NAME_" + attribute.key], cc.macro["VERTEX_ATTRIB_" + attribute.key]);
 			}
 			linked = this._program.link();
 		}
