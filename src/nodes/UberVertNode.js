@@ -90,15 +90,15 @@ UberVertNode.prototype.getAttributes = function(){
 		}),
 		new Attribute({
 			name: 'a_texCoord',
-			key: 'TEXCOORD0',
+			key: 'TEX_COORD',
 			type: 'vec2',
-			ifdef: 'TEXCOORD0'
+			ifdef: 'TEX_COORD'
 		}),
 		new Attribute({
 			name: 'vertexUV1',
-			key: 'TEXCOORD1',
+			key: 'TEX_COORD1',
 			type: 'vec2',
-			ifdef: 'TEXCOORD1'
+			ifdef: 'TEX_COORD1'
 		}),
 		new Attribute({
 			name: 'vertexJointIDs',
@@ -147,10 +147,10 @@ UberVertNode.prototype.buildShader = function(){
 					'#ifdef COLOR',
 					'	color = a_color;',
 					'#endif',
-					'#ifdef TEXCOORD0',
+					'#ifdef TEX_COORD',
 					'	v_texCoord = a_texCoord * offsetRepeat.zw + offsetRepeat.xy;',
 					'#endif',
-					'#ifdef TEXCOORD1',
+					'#ifdef TEX_COORD1',
 					'	texCoord1 = vertexUV1;',
 					'#endif',
 

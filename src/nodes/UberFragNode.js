@@ -118,7 +118,7 @@ UberFragNode.prototype.buildShader = function(){
 				'{',
 					'vec4 final_color = vec4(1.0);',
 
-					'#if defined(DIFFUSE_MAP) && defined(TEXCOORD0)',
+					'#if defined(DIFFUSE_MAP) && defined(TEX_COORD)',
 						'final_color *= texture2D(diffuseMap, v_texCoord, lodBias);',
 					'#endif',
 
@@ -126,7 +126,7 @@ UberFragNode.prototype.buildShader = function(){
 						'final_color *= mix(vec4(1.0), color, vertexColorAmount);',
 					'#endif',
 
-					'#if defined(TRANSPARENCY_MAP) && defined(TEXCOORD0)',
+					'#if defined(TRANSPARENCY_MAP) && defined(TEX_COORD)',
 						'#ifdef TRANSPARENCY_BW',
 							'final_color.a = texture2D(transparencyMap, v_texCoord).r;',
 						'#else',
@@ -142,17 +142,17 @@ UberFragNode.prototype.buildShader = function(){
 					'#endif',
 
 					'#ifdef AO_MAP',
-						'#ifdef TEXCOORD1',
+						'#ifdef TEX_COORD1',
 							'final_color.rgb *= texture2D(aoMap, texCoord1).rgb;',
-						'#elif defined(TEXCOORD0)',
+						'#elif defined(TEX_COORD)',
 							'final_color.rgb *= texture2D(aoMap, v_texCoord).rgb;',
 						'#endif',
 					'#endif',
 
 					'#ifdef LIGHT_MAP',
-						'#ifdef TEXCOORD1',
+						'#ifdef TEX_COORD1',
 							'final_color.rgb *= texture2D(lightMap, texCoord1).rgb * 2.0;',
-						'#elif defined(TEXCOORD0)',
+						'#elif defined(TEX_COORD)',
 							'final_color.rgb *= texture2D(lightMap, v_texCoord).rgb * 2.0;',
 						'#endif',
 					'#else',
@@ -160,7 +160,7 @@ UberFragNode.prototype.buildShader = function(){
 						'#if defined(NORMAL)', // Do nasty doublework for IE compliance
 							'N = normalize(normal);',
 						'#endif',
-						'#if defined(TANGENT) && defined(NORMAL_MAP) && defined(TEXCOORD0)',
+						'#if defined(TANGENT) && defined(NORMAL_MAP) && defined(TEX_COORD)',
 							'mat3 tangentToWorld = mat3(tangent, binormal, normal);',
 							'vec3 tangentNormal = texture2D(normalMap, v_texCoord, lodBias).xyz * vec3(2.0) - vec3(1.0);',
 							'tangentNormal.xy *= normalMultiplier;',
@@ -208,7 +208,7 @@ UberFragNode.prototype.buildShader = function(){
 							'environment.rgb = mix(clearColor.rgb, environment.rgb, environment.a);',
 
 							'float reflectionAmount = reflectivity;',
-							'#if defined(REFLECTION_MAP) && defined(TEXCOORD0)',
+							'#if defined(REFLECTION_MAP) && defined(TEX_COORD)',
 								'reflectionAmount *= texture2D(reflectionMap, v_texCoord).r;',
 							'#endif',
 

@@ -26,9 +26,9 @@ UVNode.prototype.getAttributes = function(){
 	return [
 		new Attribute({
 			name: 'a_texCoord',
-			key: 'TEXCOORD0',
+			key: 'TEX_COORD',
 			type: 'vec2',
-			ifdef: 'TEXCOORD0'
+			ifdef: 'TEX_COORD'
 		})
 	];
 };
@@ -38,7 +38,7 @@ UVNode.prototype.getVaryings = function(){
 		new Varying({
 			type: 'vec2',
 			name: 'v_texCoord',
-			attributeKey: 'TEXCOORD0'
+			attributeKey: 'TEX_COORD'
 		})
 	];
 };

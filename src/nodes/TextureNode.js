@@ -19,7 +19,7 @@ TextureNode.prototype.getVaryings = function(){
 		new Varying({
 			type: 'vec2',
 			name: 'v_texCoord',
-			attributeKey: 'TEXCOORD0'
+			attributeKey: 'TEX_COORD'
 		})
 	];
 };

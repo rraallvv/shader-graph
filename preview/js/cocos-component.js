@@ -28,6 +28,12 @@ cc.Class({
 		});
 		*/
 
+		/* map the attribute indexes for texture coordinates to the default */
+		cc.macro.VERTEX_ATTRIB_TEX_COORD = cc.macro.VERTEX_ATTRIB_TEX_COORDS;
+		cc.macro.VERTEX_ATTRIB_TEX_COORD1 = cc.macro.VERTEX_ATTRIB_TEX_COORDS;
+		cc.macro.VERTEX_ATTRIB_TEX_COORD2 = cc.macro.VERTEX_ATTRIB_TEX_COORDS;
+		cc.macro.VERTEX_ATTRIB_TEX_COORD3 = cc.macro.VERTEX_ATTRIB_TEX_COORDS;
+
 		this.parameters = {
             startTime: Date.now(),
             time: 0.0,
@@ -106,10 +112,10 @@ cc.Class({
 			linked = this._program.link();
 		} else {
 			this._program.initWithVertexShaderByteArray(this.vert_glsl, this.frag_glsl);
-			this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_POSITION, cc.macro.VERTEX_ATTRIB_POSITION);
-			// this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_COLOR, cc.macro.VERTEX_ATTRIB_COLOR);
-			// this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_TEX_COORD, cc.macro.VERTEX_ATTRIB_TEX_COORDS);
-			this._program.addAttribute(cc.macro.ATTRIBUTE_NAME_TEX_COORD, cc.macro.VERTEX_ATTRIB_TEX_COORDS);
+			for(var attribute in shaderDef.attributes) {
+				var key = shaderDef.attributes[attribute];
+				this._program.addAttribute(cc.macro["ATTRIBUTE_NAME_" + key], cc.macro["VERTEX_ATTRIB_" + key]);
+			}
 			linked = this._program.link();
 		}
 
