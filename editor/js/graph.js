@@ -231,11 +231,14 @@ Editor.polymerElement({
 			setTimeout(function() { this._updateLinks(); }.bind(this), 100);
 		}
 	},
+	_isMainNode: function(type) {
+		return type === "fragColor" || type === "position";
+	},
 	nodeTypes: function(){
 		var types = Object.keys(ShaderGraph.Node.classes).sort().filter(function(type){
 			// Should not list the main node
-			return type !== 'fragColor' && type !== 'position';
-		});
+			return !this._isMainNode(type);
+		}, this);
 		return types.map(function (type) {
 			return { type: type };
 		});
@@ -266,11 +269,11 @@ Editor.polymerElement({
 			console.warn("Couldn't create node with options='" + options + "' and extra='" + extra + "'");
 			return;
 		}
-		if (data.type === 'fragColor' || data.type === 'position') {
+		if (this._isMainNode(data.type)) {
 			// Find the main node
 			var mainNode = this.state.nodes.find(function(node){
-				return node.type === 'fragColor' || node.type === 'position';
-			});
+				return this._isMainNode(node.type);
+			}, this);
 			// Only update its data
 			if (mainNode) {
 				data.id = 1;
@@ -304,7 +307,7 @@ Editor.polymerElement({
 		}
 
 		// Add nodes that are not main nodes
-		if (data.type !== "fragColor") {
+		if (!this._isMainNode(data.type)) {
 			var node = new ShaderGraph.Node.classes[data.type]({
 				id: data.id
 			});
@@ -359,7 +362,7 @@ Editor.polymerElement({
 		var nodeToRemove = state.nodes.find(function(node){
 			return node.id === id;
 		});
-		if(!nodeToRemove || nodeToRemove.type === 'fragColor'){
+		if(!nodeToRemove || this._isMainNode(nodeToRemove.type)){
 			return false;
 		}
 
