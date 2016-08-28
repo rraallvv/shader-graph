@@ -37,25 +37,21 @@ cc.Class({
 		this.parameters = {
             startTime: Date.now(),
             time: 0.0,
-            mouse:{
-                x: 0.0,
-                y: 0.0,
-            },
-            resolution:{
-                x: 0.0,
-                y: 0.0,
-            }
+            mouse_touch: [0.0, 0.0],
+            resolution: [0.0, 0.0]
 		};
 
+		this.uniformLocation = {};
+
 		this.node.on(cc.Node.EventType.MOUSE_MOVE, function (event) {
-            this.parameters.mouse.x = this.node.getContentSize().width / event.getLocationX();
-            this.parameters.mouse.y = this.node.getContentSize().height / event.getLocationY(); 
+            this.parameters.mouse_touch[0] = this.node.getContentSize().width / event.getLocationX();
+            this.parameters.mouse_touch[1] = this.node.getContentSize().height / event.getLocationY();
         }, this);
 
 
         this.node.on( cc.Node.EventType.TOUCH_MOVE, function (event) {
-            this.parameters.mouse.x = this.node.getContentSize().width / event.getLocationX();
-            this.parameters.mouse.y = this.node.getContentSize().height / event.getLocationY(); 
+            this.parameters.mouse_touch[0] = this.node.getContentSize().width / event.getLocationX();
+            this.parameters.mouse_touch[1] = this.node.getContentSize().height / event.getLocationY();
         }, this);
 
 		var self = cc.EffectPreview = this;
@@ -90,8 +86,8 @@ cc.Class({
 	},
 	updateGLParameters(){
         this.parameters.time = (Date.now() - this.parameters.startTime)/1000;
-        this.parameters.resolution.x = ( this.node.getContentSize().width );
-        this.parameters.resolution.y = ( this.node.getContentSize().height );
+        this.parameters.resolution[0] = ( this.node.getContentSize().width );
+        this.parameters.resolution[1] = ( this.node.getContentSize().height );
     },
 	updateShader: function updateShader(shaderDef) {
 		this.vert_glsl = shaderDef.vshader();
@@ -124,9 +120,9 @@ cc.Class({
 
 			if (cc.sys.isNative) {
 			} else {
-				this._resolution = this._program.getUniformLocationForName( "resolution" );
-				this._time = this._program.getUniformLocationForName( "time" );
-				this._mouse = this._program.getUniformLocationForName( "mouse_touch" );
+				this.uniformLocation["resolution"] = this._program.getUniformLocationForName( "resolution" );
+				this.uniformLocation["time"] = this._program.getUniformLocationForName( "time" );
+				this.uniformLocation["mouse_touch"] = this._program.getUniformLocationForName( "mouse_touch" );
 			}
 
 			this.setProgram(this.node._sgNode, this._program);
@@ -159,11 +155,11 @@ cc.Class({
                 var glProgram_state = cc.GLProgramState.getOrCreateWithGLProgram(this._program);
                 glProgram_state.setUniformVec2( "resolution", this.parameters.resolution );
                 glProgram_state.setUniformFloat( "time", this.parameters.time );    
-                glProgram_state.setUniformVec2( "mouse_touch" , this.parameters.mouse );
+                glProgram_state.setUniformVec2( "mouse_touch" , this.parameters.mouse_touch );
             }else{
-                this._program.setUniformLocationWith2f( this._resolution, this.parameters.resolution.x,this.parameters.resolution.y );
-                this._program.setUniformLocationWith1f( this._time, this.parameters.time );
-                this._program.setUniformLocationWith2f( this._mouse, this.parameters.mouse.x,this.parameters.mouse.x );
+                this._program.setUniformLocationWith2f( this.uniformLocation["resolution"], this.parameters.resolution[0], this.parameters.resolution[1] );
+                this._program.setUniformLocationWith1f( this.uniformLocation["time"], this.parameters.time );
+                this._program.setUniformLocationWith2f( this.uniformLocation["mouse_touch"], this.parameters.mouse_touch[0], this.parameters.mouse_touch[1] );
             }
         }
 	}
