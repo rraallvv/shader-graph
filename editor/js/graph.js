@@ -71,13 +71,13 @@ Editor.polymerElement({
 	},
 	loadGraph: function(graph) {
 		batchRender = true;
-		var nodes = graph.nodes;
+		var nodes = graph.nodes || [];
 		var ids = []
 		for (var i = 0; i < nodes.length; i++) {
 			var id = this._addNode(nodes[i]);
 			ids.push(id);
 		}
-		var links = graph.links;
+		var links = graph.links || [];
 		for (var i = 0; i < links.length; i++) {
 			var portA = this._splitPort(links[i][0]);
 			var portB = this._splitPort(links[i][1]);
