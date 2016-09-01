@@ -60,6 +60,7 @@ Editor.polymerElement({
 		}
 
 		this.shader = new ShaderGraph.GraphShader();
+		this.graph = this.shader.fragmentGraph;
 		this.setState(this.state);
 
 		console.log('Graph editor ready');
@@ -107,7 +108,7 @@ Editor.polymerElement({
 		var nodes = [];
 
 		this.state.nodes.forEach(function(data) {
-			var node = this.shader.fragmentGraph.getNodeById(data.id);
+			var node = this.graph.getNodeById(data.id);
 			if (node) {
 				var extra;
 
@@ -288,7 +289,7 @@ Editor.polymerElement({
 			var node = new ShaderGraph.Node.classes[data.type]({
 				id: data.id
 			});
-			this.shader.fragmentGraph.addNode(node);
+			this.graph.addNode(node);
 			switch(data.type){
 			case 'value':
 				var v = parseFloat(data.value);
@@ -347,9 +348,9 @@ Editor.polymerElement({
 		state.links.filter(function(link){
 			return link.nodeA == id || link.nodeB == id;
 		}).forEach(function(link){
-			var nA = this.shader.fragmentGraph.getNodeById(link.nodeA);
+			var nA = this.graph.getNodeById(link.nodeA);
 			if(!nA) throw new Error('couldnt find node ' + link.nodeA);
-			var nB = this.shader.fragmentGraph.getNodeById(link.nodeB);
+			var nB = this.graph.getNodeById(link.nodeB);
 			if(!nB) throw new Error('couldnt find node ' + link.nodeB);
 
 			nA.disconnect(link.portA, nB, link.portB);
@@ -360,9 +361,9 @@ Editor.polymerElement({
 			}
 		}, this);
 
-		var node = this.shader.fragmentGraph.getNodeById(id);
+		var node = this.graph.getNodeById(id);
 		if(!node) throw new Error('couldnt find node ' + id);
-		this.shader.fragmentGraph.removeNode(node);
+		this.graph.removeNode(node);
 
 		var idx = state.nodes.indexOf(nodeToRemove);
 		if(idx !== -1){
@@ -391,7 +392,7 @@ Editor.polymerElement({
 			}
 
 			// Update the value in the shader node 
-			var n = this.shader.fragmentGraph.getNodeById(id);
+			var n = this.graph.getNodeById(id);
 			if (n) {
 				n.value = node.value;
 			}
@@ -431,8 +432,8 @@ Editor.polymerElement({
 			nodeB = Number(nodeB);
 		}
 
-		var nA = this.shader.fragmentGraph.getNodeById(nodeA);
-		var nB = this.shader.fragmentGraph.getNodeById(nodeB);
+		var nA = this.graph.getNodeById(nodeA);
+		var nB = this.graph.getNodeById(nodeB);
 		if(!nA) throw new Error('couldnt find node ' + nodeA);
 		if(!nB) throw new Error('couldnt find node ' + nodeB);
 
@@ -517,13 +518,13 @@ Editor.polymerElement({
 		}
 
 		// Test it!
-		var nA = this.shader.fragmentGraph.getNodeById(nodeA);
-		var nB = this.shader.fragmentGraph.getNodeById(nodeB);
+		var nA = this.graph.getNodeById(nodeA);
+		var nB = this.graph.getNodeById(nodeB);
 		nB.disconnect(portB, nA, portA);
 
 		// Delete any other invalid links
 		/*
-		var invalidConnections = this.shader.fragmentGraph.links.filter(function(link){
+		var invalidConnections = this.graph.links.filter(function(link){
 			return !link.isValid();
 		}).forEach(function(link){
 			console.log('removing', link)
@@ -668,14 +669,14 @@ Editor.polymerElement({
 		var filterType = elp.type === "in" ? "out" : "in";
 		var nodeA = elp.node;
 		var portA = elp.port;
-		var nA = this.shader.fragmentGraph.getNodeById(nodeA);
+		var nA = this.graph.getNodeById(nodeA);
 
 		var ports = [];
 		Array.prototype.forEach.call(this.querySelectorAll("shader-port"), function(port) {
 			if (port.type === filterType) {
 				var nodeB = port.node;
 				var portB = port.port;
-				var nB = this.shader.fragmentGraph.getNodeById(nodeB);
+				var nB = this.graph.getNodeById(nodeB);
 				if (nA.canConnect(portA, nB, portB) || nB.canConnect(portB, nA, portA)) {
 					ports.push({
 						element: port,
