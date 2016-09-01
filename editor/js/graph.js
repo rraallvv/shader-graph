@@ -59,28 +59,14 @@ Editor.polymerElement({
 			return;
 		}
 
-		// Connect initial links
-		this.initialize();
+		this.shader = new ShaderGraph.GraphShader();
+		this.setState(this.state);
 
 		console.log('Graph editor ready');
 
 		if (this.onReady) {
 			this.onReady();
 		}
-	},
-	initialize: function(){
-		batchRender = true;
-
-		this.shader = new ShaderGraph.GraphShader();
-
-		// Add the main node
-		this._addNode({
-			type: ShaderGraph.FragColorNode.type,
-			pos: [600, 300]
-		});
-
-		batchRender = false;
-		this.setState(this.state);
 	},
 	loadGraph: function(graph) {
 		batchRender = true;
