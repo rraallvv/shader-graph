@@ -7,7 +7,7 @@ function Graph(options){
 
 	this.shader = options.shader || null;
 	this.nodes = [];
-	this.connections = [];
+	this.links = [];
 	this.mainNode = options.mainNode || null;
 	if(this.mainNode){
 		this.addNode(this.mainNode);
@@ -37,44 +37,44 @@ Graph.prototype.getNodeById = function(id){
 	});
 };
 
-Graph.prototype.addConnection = function(conn){
-	if(conn.graph) throw new Error('Connection was already added to a graph');
-	this.connections.push(conn);
-	conn.graph = this;
+Graph.prototype.addConnection = function(link){
+	if(link.graph) throw new Error('Connection was already added to a graph');
+	this.links.push(link);
+	link.graph = this;
 	this.sortNodes();
 };
 
-Graph.prototype.removeConnection = function(conn){
-	var index = this.connections.indexOf(conn);
+Graph.prototype.removeConnection = function(link){
+	var index = this.links.indexOf(link);
 	if(index !== -1){
-		this.connections.splice(index, 1);
+		this.links.splice(index, 1);
 	}
 };
 
 Graph.prototype.inputPortIsConnected = function(node, inputPort){
-	return this.connections.some(function (conn){
-		return conn.toNode === node && conn.toPortKey === inputPort;
+	return this.links.some(function (link){
+		return link.toNode === node && link.toPortKey === inputPort;
 	});
 };
 
 Graph.prototype.outputPortIsConnected = function(node, outputPort){
-	return this.connections.some(function (conn){
-		return conn.fromNode === node && conn.fromPortKey === outputPort;
+	return this.links.some(function (link){
+		return link.fromNode === node && link.fromPortKey === outputPort;
 	});
 };
 
 Graph.prototype.getNodeConnectedToInputPort = function(node, inputPort){
-	var connection = this.connections.filter(function (conn){
-		return conn.toNode === node && conn.toPortKey === inputPort;
+	var link = this.links.filter(function (link){
+		return link.toNode === node && link.toPortKey === inputPort;
 	})[0];
-	return connection && connection.fromNode;
+	return link && link.fromNode;
 };
 
 Graph.prototype.getPortKeyConnectedToInputPort = function(node, inputPort){
-	var connection = this.connections.filter(function (conn){
-		return conn.toNode === node && conn.toPortKey === inputPort;
+	var link = this.links.filter(function (link){
+		return link.toNode === node && link.toPortKey === inputPort;
 	})[0];
-	return connection && connection.fromPortKey;
+	return link && link.fromPortKey;
 };
 
 Graph.prototype.getUniforms = function(){
@@ -198,10 +198,10 @@ Graph.prototype.renderVaryingDeclarations = function(){
 
 // Topology sort the nodes
 Graph.prototype.sortNodes = function(){
-	var edges = this.connections.map(function (connection) {
+	var edges = this.links.map(function (link) {
 		return [
-			connection.fromNode.id,
-			connection.toNode.id
+			link.fromNode.id,
+			link.toNode.id
 		];
 	});
 	var nodeIds = toposort(edges);

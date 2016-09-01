@@ -140,7 +140,7 @@ Node.prototype.connect = function(key, targetNode, targetPortKey){
 
 // todo
 Node.prototype.disconnect = function(key, targetNode, targetPortKey){
-	var conn = this.graph.connections.find(function(c){
+	var link = this.graph.links.find(function(c){
 		return (
 			c.fromNode === this &&
 			c.fromPortKey === key &&
@@ -153,10 +153,10 @@ Node.prototype.disconnect = function(key, targetNode, targetPortKey){
 			c.toPortKey === key
 		);
 	}, this);
-	if(conn) {
-		this.graph.removeConnection(conn);
+	if(link) {
+		this.graph.removeConnection(link);
 	} else {
-		throw new Error('Couldn\'t find connection');
+		throw new Error('Couldn\'t find link');
 	}
 };
 
