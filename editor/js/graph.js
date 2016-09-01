@@ -71,16 +71,7 @@ Editor.polymerElement({
 	initialize: function(){
 		batchRender = true;
 
-		// Find the main node
-		var fragColorNodeData = this.state.nodes.find(function(node){
-			return node.type === 'fragColor';
-		});
-
-		this.shader = new ShaderGraph.GraphShader({
-			fragMainNode: new ShaderGraph.FragColorNode({
-				id: fragColorNodeData && fragColorNodeData.id
-			})
-		});
+		this.shader = new ShaderGraph.GraphShader();
 
 		// Add the main node
 		this._addNode({
