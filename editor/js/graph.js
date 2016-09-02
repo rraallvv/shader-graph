@@ -232,11 +232,17 @@ Editor.polymerElement({
 
 		return this.shader
 	},
-	generateId: function(){
-		if(this.idCounter === undefined){
-			this.idCounter = 1;
+	generateNodeId: function(){
+		if(this.nodeIdCounter === undefined){
+			this.nodeIdCounter = 1;
 		}
-		return this.idCounter++;
+		return this.nodeIdCounter++;
+	},
+	generateLinkId: function(){
+		if(this.linkIdCounter === undefined){
+			this.linkIdCounter = 1;
+		}
+		return this.linkIdCounter++;
 	},
 	_addNode: function(options, extra){
 		var data = extra || {};
@@ -263,7 +269,7 @@ Editor.polymerElement({
 			}
 		}
 		if (typeof data.id === "undefined") {
-			data.id = this.generateId();
+			data.id = this.generateNodeId();
 		} else if (typeof data.id !== "number") {
 			data.id = parseInt(data.id);
 		}
@@ -492,7 +498,7 @@ Editor.polymerElement({
 			this.disconnect(info.nodeA, info.portA, info.nodeB, info.portB);
 		}
 
-		link.id = this.generateId();
+		link.id = this.generateLinkId();
 
 		state.links.push(link);
 
