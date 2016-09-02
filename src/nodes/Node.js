@@ -4,16 +4,9 @@ module.exports = Node;
 
 function Node(options){
 	options = options || {};
-	if(options.id){
-		Node._idCounter = Math.max(options.id + 1, Node._idCounter);
-		this.id = options.id;
-	} else {
-		this.id = Node._idCounter++;
-	}
 	this.name = options.name || 'Unnamed node';
+	this.id = options.id;
 }
-
-Node._idCounter = 1;
 
 Node.classes = {};
 

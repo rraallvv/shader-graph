@@ -8,6 +8,7 @@ function Graph(options){
 	this.shader = options.shader || null;
 	this.nodes = [];
 	this.links = [];
+	this._idCounter = 1;
 	this.mainNode = options.mainNode || null;
 	if(this.mainNode){
 		this.addNode(this.mainNode);
@@ -17,6 +18,13 @@ function Graph(options){
 Graph.prototype.addNode = function(node){
 	if(!node) throw new Error('Node not given');
 	if(node.graph) throw new Error('Node was already added to a graph');
+
+	if(node.id){
+		this._idCounter = Math.max(node.id + 1, this._idCounter);
+	} else {
+		node.id = this._idCounter++;
+	}
+
 	this.nodes.push(node);
 	node.graph = this;
 };
