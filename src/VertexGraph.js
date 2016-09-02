@@ -6,6 +6,7 @@ var Attribute = require('./Attribute');
 module.exports = VertexGraph;
 
 function VertexGraph(options){
+	options = options || {};
 	options.mainNode = options.mainNode || new PositionNode();
 	Graph.call(this, options);
 }
