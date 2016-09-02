@@ -60,7 +60,10 @@ Editor.polymerElement({
 		}
 
 		this.shader = new ShaderGraph.GraphShader();
-		this.graph = this.shader.fragmentGraph;
+
+		//this.graph = this.shader.fragmentGraph;
+		this.graph = this.shader.vertexGraph;
+
 		this.setState(this.state);
 
 		console.log('Graph editor ready');
