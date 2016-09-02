@@ -61,8 +61,8 @@ Editor.polymerElement({
 
 		this.shader = new ShaderGraph.GraphShader();
 
-		//this.graph = this.shader.fragmentGraph;
-		this.graph = this.shader.vertexGraph;
+		this.graph = this.shader.fragmentGraph;
+		//this.graph = this.shader.vertexGraph;
 
 		this.setState(this.state);
 
@@ -836,6 +836,17 @@ Editor.polymerElement({
 			this.topz = 10;
 		}
 		el.style.zIndex = ++this.topz;
+	},
+	_onGraphSelected: function(e) {
+		switch (e.target.selected) {
+			case 0:
+				this.graph = this.shader.vertexGraph;
+				break;
+			case 1:
+				this.graph = this.shader.fragmentGraph;
+				break;
+		}
+		this.setState(this.state);
 	}
 });
 
