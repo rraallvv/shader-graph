@@ -25,14 +25,12 @@
 				<template is="dom-if" if="{{item}}">
 					<shader-node
 						id$="{{item.id}}"
-						key="{{item.key}}"
 						type="{{item.type}}"
 						class$="{{item.className}}"
 						inputs={{item.inputs}}
 						outputs={{item.outputs}}
 						extra={{item.extra}}
 						pos={{item.pos}}
-						data-node-id$="{{item.dataNodeId}}"
 						update-data={{item.updateData}}
 						click-handler={{item.clickHandler}}
 						port-click-handler={{item.portClickHandler}}
