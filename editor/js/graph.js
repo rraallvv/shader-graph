@@ -179,31 +179,45 @@ Editor.polymerElement({
 		var links = [];
 
 		this.state.links.forEach(function(link) {
-			var ela = this.querySelector('shader-port[node="' + link.nodeA + '"][port="' + link.portA + '"]');
-			var elb = this.querySelector('shader-port[node="' + link.nodeB + '"][port="' + link.portB + '"]');
-			if (ela && elb) {
-				var nodeA = nodes[link.nodeA];
-				var nodeB = nodes[link.nodeB];
-				links[link.id] = {
-					id: link.id,
-					nodeA: link.nodeA,
-					portA: link.portA,
-					posA: [
-						nodeA.pos[0] + ela.offsetLeft + ela.offsetWidth - 2,
-						nodeA.pos[1] + ela.offsetTop + 0.5 * ela.offsetHeight + 2
-					],
-					nodeB: link.nodeB,
-					portB: link.portB,
-					posB: [
-						nodeB.pos[0] + elb.offsetLeft + 4,
-						nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
-					],
-					clickHandler: this.wireClick.bind(this),
-					dataType: ela.dataType
-				};
-			} else {
-				missing = true;
-			}
+			this.graph.links.some(function(graphLink) {
+				var nodeA = graphLink.fromNode;
+				var portA = graphLink.fromPortKey;
+				var nodeB = graphLink.toNode;
+				var portB = graphLink.toPortKey;
+				if (link.nodeA === nodeA.id &&
+						link.portA === portA &&
+						link.nodeB === nodeB.id &&
+						link.portB === portB) {
+
+					var ela = this.querySelector('shader-port[node="' + link.nodeA + '"][port="' + link.portA + '"]');
+					var elb = this.querySelector('shader-port[node="' + link.nodeB + '"][port="' + link.portB + '"]');
+					if (ela && elb) {
+						var nodeA = nodes[link.nodeA];
+						var nodeB = nodes[link.nodeB];
+						links[link.id] = {
+							id: link.id,
+							nodeA: link.nodeA,
+							portA: link.portA,
+							posA: [
+								nodeA.pos[0] + ela.offsetLeft + ela.offsetWidth - 2,
+								nodeA.pos[1] + ela.offsetTop + 0.5 * ela.offsetHeight + 2
+							],
+							nodeB: link.nodeB,
+							portB: link.portB,
+							posB: [
+								nodeB.pos[0] + elb.offsetLeft + 4,
+								nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
+							],
+							clickHandler: this.wireClick.bind(this),
+							dataType: ela.dataType
+						};
+					} else {
+						missing = true;
+					}
+
+					return true;
+				}
+			}, this);
 		}, this);
 
 		this.links = links;
