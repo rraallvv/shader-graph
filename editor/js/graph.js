@@ -155,11 +155,9 @@ Editor.polymerElement({
 				});
 
 				nodes[data.id] = {
-					id: data.id,
+					id: node.id,
 					pos: data.pos,
-					dataNodeId: data.id,
-					key: data.id,
-					type: data.type,
+					type: node.constructor.type,
 					inputs: inputs,
 					outputs: outputs,
 					extra: extra,
