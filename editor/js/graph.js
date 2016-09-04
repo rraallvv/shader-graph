@@ -176,13 +176,13 @@ Editor.polymerElement({
 
 		this.state.links.forEach(function(link) {
 			this.graph.links.some(function(graphLink) {
-				var nodeA = graphLink.fromNode;
+				var nodeA = graphLink.fromNode.id;
 				var portA = graphLink.fromPortKey;
-				var nodeB = graphLink.toNode;
+				var nodeB = graphLink.toNode.id;
 				var portB = graphLink.toPortKey;
-				if (link.nodeA === nodeA.id &&
+				if (link.nodeA === nodeA &&
 						link.portA === portA &&
-						link.nodeB === nodeB.id &&
+						link.nodeB === nodeB &&
 						link.portB === portB) {
 
 					var ela = this.querySelector('shader-port[node="' + link.nodeA + '"][port="' + link.portA + '"]');
