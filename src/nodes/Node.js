@@ -6,6 +6,7 @@ function Node(options){
 	options = options || {};
 	this.name = options.name || 'Unnamed node';
 	this.id = options.id;
+	this.position = options.position || [100, 100];
 }
 
 Node.classes = {};

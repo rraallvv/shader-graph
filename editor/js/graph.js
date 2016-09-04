@@ -156,7 +156,7 @@ Editor.polymerElement({
 
 				nodes[data.id] = {
 					id: node.id,
-					pos: data.pos,
+					pos: node.position,
 					type: node.constructor.type,
 					inputs: inputs,
 					outputs: outputs,
@@ -285,9 +285,6 @@ Editor.polymerElement({
 		} else if (typeof data.id !== "number") {
 			data.id = parseInt(data.id);
 		}
-		if (typeof data.pos === "undefined") {
-			data.pos = [0, 0];
-		}
 		if (typeof data.value === "undefined") {
 			switch(data.type){
 			case 'value':
@@ -308,7 +305,8 @@ Editor.polymerElement({
 		// Add nodes that are not main nodes
 		if (!this._isMainNode(data.type)) {
 			var node = new ShaderGraph.Node.classes[data.type]({
-				id: data.id
+				id: data.id,
+				position: data.pos
 			});
 			this.graph.addNode(node);
 			switch(data.type){
@@ -327,6 +325,9 @@ Editor.polymerElement({
 			}
 
 			//data.node = node;
+		} else {
+			var node = this.graph.mainNode;
+			node.position = data.pos;
 		}
 
 		var state = this.state;
