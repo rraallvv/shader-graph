@@ -8,7 +8,7 @@ function Graph(options){
 	this.shader = options.shader || null;
 	this.nodes = [];
 	this.links = [];
-	this._idCounter = 1;
+	this.nodeIdCounter = 1;
 	this.linkIdCounter = 1;
 	this.mainNode = options.mainNode || null;
 	if(this.mainNode){
@@ -21,13 +21,15 @@ Graph.prototype.addNode = function(node){
 	if(node.graph) throw new Error('Node was already added to a graph');
 
 	if(node.id){
-		this._idCounter = Math.max(node.id + 1, this._idCounter);
+		this.nodeIdCounter = Math.max(node.id + 1, this.nodeIdCounter);
 	} else {
-		node.id = this._idCounter++;
+		node.id = this.nodeIdCounter++;
 	}
 
 	this.nodes.push(node);
 	node.graph = this;
+
+	return node.id;
 };
 
 Graph.prototype.removeNode = function(node){

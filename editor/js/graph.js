@@ -237,12 +237,6 @@ Editor.polymerElement({
 
 		return this.shader
 	},
-	generateNodeId: function(){
-		if(this.nodeIdCounter === undefined){
-			this.nodeIdCounter = 1;
-		}
-		return this.nodeIdCounter++;
-	},
 	_addNode: function(options, extra){
 		var data = extra || {};
 		if (typeof options === "string") {
@@ -267,9 +261,7 @@ Editor.polymerElement({
 				return data.id;
 			}
 		}
-		if (typeof data.id === "undefined") {
-			data.id = this.generateNodeId();
-		} else if (typeof data.id !== "number") {
+		if (typeof data.id !== "undefined") {
 			data.id = parseInt(data.id);
 		}
 		if (typeof data.value === "undefined") {
@@ -290,8 +282,9 @@ Editor.polymerElement({
 		}
 
 		// Add nodes that are not main nodes
+		var node;
 		if (!this._isMainNode(data.type)) {
-			var node = new ShaderGraph.Node.classes[data.type]({
+			node = new ShaderGraph.Node.classes[data.type]({
 				id: data.id,
 				position: data.pos
 			});
@@ -313,9 +306,10 @@ Editor.polymerElement({
 
 			//data.node = node;
 		} else {
-			var node = this.graph.mainNode;
+			node = this.graph.mainNode;
 			node.position = data.pos;
 		}
+		data.id = node.id;
 
 		var state = this.state;
 		state.nodes.push(data);
