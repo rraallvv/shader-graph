@@ -110,62 +110,60 @@ Editor.polymerElement({
 	_updateNodes: function() {
 		var nodes = [];
 
-		this.state.nodes.forEach(function(data) {
-			var node = this.graph.getNodeById(data.id);
-			if (node) {
-				var extra;
+		this.graph.nodes.forEach(function(node) {
+			var extra;
 
-				switch (node.constructor.type) {
+			switch (node.constructor.type) {
 				case 'value':
 				case 'vec2':
 				case 'vec3':
 				case 'vec4':
-					if (data.value.length > 1) {
+					if (node.value.length > 1) {
 						extra = [];
-						for (var i = 0; i < data.value.length; i++) {
+						for (var i = 0; i < node.value.length; i++) {
 							extra.push(
 								{
-									value: data.value[i],
+									value: node.value[i],
 								}
 							);
 						}
 					} else {
 						extra = [
 							{
-								value: data.value,
+								value: node.value,
 							}
 						];
 					}
 					break;
-				}
-
-				var inputs = node.getInputPorts().map(function(key){
-					return {
-						key: key,
-						connected: node.inputPortIsConnected(key),
-						dataType: node.getInputVariableTypes(key)
-					}
-				});
-				var outputs = node.getOutputPorts().map(function(key){
-					return {
-						key: key,
-						connected: node.outputPortIsConnected(key),
-						dataType: node.getOutputTypes(key)
-					}
-				});
-
-				nodes[node.id] = {
-					id: node.id,
-					pos: node.position,
-					type: node.constructor.type,
-					inputs: inputs,
-					outputs: outputs,
-					extra: extra,
-					updateData: this.updateData.bind(this),
-					clickHandler: this.nodeClick.bind(this),
-					portClickHandler: this.portClick.bind(this)
-				};
 			}
+
+			var inputs = node.getInputPorts().map(function(key){
+				return {
+					key: key,
+					connected: node.inputPortIsConnected(key),
+					dataType: node.getInputVariableTypes(key)
+				}
+			});
+
+			var outputs = node.getOutputPorts().map(function(key){
+				return {
+					key: key,
+					connected: node.outputPortIsConnected(key),
+					dataType: node.getOutputTypes(key)
+				}
+			});
+
+			nodes[node.id] = {
+				id: node.id,
+				pos: node.position,
+				type: node.constructor.type,
+				inputs: inputs,
+				outputs: outputs,
+				extra: extra,
+				updateData: this.updateData.bind(this),
+				clickHandler: this.nodeClick.bind(this),
+				portClickHandler: this.portClick.bind(this)
+			};
 		}, this);
 
 		this.nodes = nodes;
@@ -286,19 +284,19 @@ Editor.polymerElement({
 			data.id = parseInt(data.id);
 		}
 		if (typeof data.value === "undefined") {
-			switch(data.type){
-			case 'value':
-				data.value = 0;
-				break;
-			case 'vec2':
-				data.value = [0,0];
-				break;
-			case 'vec3':
-				data.value = [0,0,0];
-				break;
-			case 'vec4':
-				data.value = [0,0,0,1];
-				break;
+			switch (data.type){
+				case 'value':
+					data.value = 0;
+					break;
+				case 'vec2':
+					data.value = [0,0];
+					break;
+				case 'vec3':
+					data.value = [0,0,0];
+					break;
+				case 'vec4':
+					data.value = [0,0,0,1];
+					break;
 			}
 		}
 
@@ -309,19 +307,19 @@ Editor.polymerElement({
 				position: data.pos
 			});
 			this.graph.addNode(node);
-			switch(data.type){
-			case 'value':
-				var v = parseFloat(data.value);
-				node.value = isNaN(v) ? 0 : v;
-				break;
-			case 'vec2':
-			case 'vec3':
-			case 'vec4':
-				node.value = data.value.map(function(comp){
-					var v = parseFloat(comp);
-					return isNaN(v) ? 0 : v;
-				});
-				break;
+			switch (data.type){
+				case 'value':
+					var v = parseFloat(data.value);
+					node.value = isNaN(v) ? 0 : v;
+					break;
+				case 'vec2':
+				case 'vec3':
+				case 'vec4':
+					node.value = data.value.map(function(comp){
+						var v = parseFloat(comp);
+						return isNaN(v) ? 0 : v;
+					});
+					break;
 			}
 
 			//data.node = node;
