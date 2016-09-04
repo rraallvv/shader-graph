@@ -174,46 +174,41 @@ Editor.polymerElement({
 
 		var links = [];
 
-		this.state.links.forEach(function(link) {
-			this.graph.links.some(function(graphLink) {
-				var nodeA = graphLink.fromNode.id;
-				var portA = graphLink.fromPortKey;
-				var nodeB = graphLink.toNode.id;
-				var portB = graphLink.toPortKey;
-				if (link.nodeA === nodeA &&
-						link.portA === portA &&
-						link.nodeB === nodeB &&
-						link.portB === portB) {
+		this.graph.links.forEach(function(graphLink) {
+			var link = {
+				id: graphLink.id,
+				nodeA: graphLink.fromNode.id,
+				portA: graphLink.fromPortKey,
+				nodeB: graphLink.toNode.id,
+				portB: graphLink.toPortKey
+			}
 
-					var ela = this.querySelector('shader-port[node="' + link.nodeA + '"][port="' + link.portA + '"]');
-					var elb = this.querySelector('shader-port[node="' + link.nodeB + '"][port="' + link.portB + '"]');
-					if (ela && elb) {
-						var nodeA = nodes[link.nodeA];
-						var nodeB = nodes[link.nodeB];
-						links[link.id] = {
-							id: link.id,
-							nodeA: link.nodeA,
-							portA: link.portA,
-							posA: [
-								nodeA.pos[0] + ela.offsetLeft + ela.offsetWidth - 2,
-								nodeA.pos[1] + ela.offsetTop + 0.5 * ela.offsetHeight + 2
-							],
-							nodeB: link.nodeB,
-							portB: link.portB,
-							posB: [
-								nodeB.pos[0] + elb.offsetLeft + 4,
-								nodeB.pos[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
-							],
-							clickHandler: this.wireClick.bind(this),
-							dataType: ela.dataType
-						};
-					} else {
-						missing = true;
-					}
+			var ela = this.querySelector('shader-port[node="' + link.nodeA + '"][port="' + link.portA + '"]');
+			var elb = this.querySelector('shader-port[node="' + link.nodeB + '"][port="' + link.portB + '"]');
+			if (ela && elb) {
+				var nodeA = graphLink.fromNode;
+				var nodeB = graphLink.toNode;
+				links[link.id] = {
+					id: link.id,
+					nodeA: link.nodeA,
+					portA: link.portA,
+					posA: [
+						nodeA.position[0] + ela.offsetLeft + ela.offsetWidth - 2,
+						nodeA.position[1] + ela.offsetTop + 0.5 * ela.offsetHeight + 2
+					],
+					nodeB: link.nodeB,
+					portB: link.portB,
+					posB: [
+						nodeB.position[0] + elb.offsetLeft + 4,
+						nodeB.position[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
+					],
+					clickHandler: this.wireClick.bind(this),
+					dataType: ela.dataType
+				};
+			} else {
+				missing = true;
+			}
 
-					return true;
-				}
-			}, this);
 		}, this);
 
 		this.links = links;
@@ -247,12 +242,6 @@ Editor.polymerElement({
 			this.nodeIdCounter = 1;
 		}
 		return this.nodeIdCounter++;
-	},
-	generateLinkId: function(){
-		if(this.linkIdCounter === undefined){
-			this.linkIdCounter = 1;
-		}
-		return this.linkIdCounter++;
 	},
 	_addNode: function(options, extra){
 		var data = extra || {};
@@ -483,8 +472,8 @@ Editor.polymerElement({
 				return false;
 			} else {
 				// make the connetion in opposite direction
-				nA.connect(portA, nB, portB);
 				link = {
+					id: nA.connect(portA, nB, portB),
 					nodeA: nodeB,
 					nodeB: nodeA,
 					portA: portB,
@@ -493,8 +482,8 @@ Editor.polymerElement({
 			}
 		} else {
 			// make the connetion as is
-			nB.connect(portB, nA, portA);
 			link = {
+				id: nB.connect(portB, nA, portA),
 				nodeA: nodeA,
 				nodeB: nodeB,
 				portA: portA,
@@ -508,8 +497,6 @@ Editor.polymerElement({
 			var info = existing[i];
 			this.disconnect(info.nodeA, info.portA, info.nodeB, info.portB);
 		}
-
-		link.id = this.generateLinkId();
 
 		state.links.push(link);
 

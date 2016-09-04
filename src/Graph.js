@@ -9,6 +9,7 @@ function Graph(options){
 	this.nodes = [];
 	this.links = [];
 	this._idCounter = 1;
+	this.linkIdCounter = 1;
 	this.mainNode = options.mainNode || null;
 	if(this.mainNode){
 		this.addNode(this.mainNode);
@@ -49,7 +50,16 @@ Graph.prototype.addConnection = function(link){
 	if(link.graph) throw new Error('Connection was already added to a graph');
 	this.links.push(link);
 	link.graph = this;
+
+	if(link.id){
+		this.linkIdCounter = Math.max(link.id + 1, this.linkIdCounter);
+	} else {
+		link.id = this.linkIdCounter++;
+	}
+
 	this.sortNodes();
+
+	return link.id;
 };
 
 Graph.prototype.removeConnection = function(link){

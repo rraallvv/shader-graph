@@ -124,7 +124,7 @@ Node.prototype.connect = function(key, targetNode, targetPortKey){
 		throw new Error(errorMessage);
 	}
 
-	this.graph.addConnection(new Connection({
+	return this.graph.addConnection(new Connection({
 		fromNode: targetNode,
 		fromPortKey: targetPortKey,
 		toNode: this,
