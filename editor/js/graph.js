@@ -115,7 +115,7 @@ Editor.polymerElement({
 			if (node) {
 				var extra;
 
-				switch (data.type) {
+				switch (node.constructor.type) {
 				case 'value':
 				case 'vec2':
 				case 'vec3':
@@ -154,7 +154,7 @@ Editor.polymerElement({
 					}
 				});
 
-				nodes[data.id] = {
+				nodes[node.id] = {
 					id: node.id,
 					pos: node.position,
 					type: node.constructor.type,
