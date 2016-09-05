@@ -58,6 +58,7 @@ module.exports = {
 	SplitComponentsNode: require('./src/nodes/SplitComponentsNode'),
 	MouseTouchNode: require('./src/nodes/MouseTouchNode'),
 	ResolutionNode: require('./src/nodes/ResolutionNode'),
+	GetPositionNode: require('./src/nodes/GetPositionNode'),
 
 	Beautify: require('./js/beautify').js_beautify,
 
