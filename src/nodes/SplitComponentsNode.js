@@ -24,12 +24,9 @@ SplitComponentsNode.prototype.getInputPorts = function(key){
 };
 
 SplitComponentsNode.prototype.getOutputPorts = function(key){
-	return [
-		'a',
-		'b',
-		'c',
-		'd'
-	];
+	var sum = this.getComponentSum();
+	var ports = ['a', 'b', 'c', 'd'];
+	return ports.slice(0, sum);
 };
 
 // Output type is always one channel: float
@@ -39,6 +36,20 @@ SplitComponentsNode.prototype.getOutputTypes = function(key){
 
 SplitComponentsNode.prototype.getInputTypes = function(key){
 	return key === 'in' ? SplitComponentsNode.supportedTypes : [];
+};
+
+SplitComponentsNode.prototype.getComponentSum = function(){
+	var weights = {
+		'float': 1,
+		'vec2': 2,
+		'vec3': 3,
+		'vec4': 4
+	};
+	if(this.inputPortIsConnected('in')){
+		var type = this.getInputVariableTypes('in')[0];
+		return weights[type];
+	}
+	return 4;
 };
 
 SplitComponentsNode.prototype.render = function(){
