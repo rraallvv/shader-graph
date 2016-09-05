@@ -11,9 +11,6 @@ Editor.polymerElement({
 	},
 	ready: function(){
 		this._t = {sx: 1, sy: 1, tx: 0, ty: 0};
-		this.state = {
-			links: []
-		};
 		this.$.template.addEventListener("dom-change", this.domChange.bind(this));
 	},
 	addNode: function(e) {
@@ -63,7 +60,7 @@ Editor.polymerElement({
 		this.graph = this.shader.fragmentGraph;
 		//this.graph = this.shader.vertexGraph;
 
-		this.setState(this.state);
+		this.updateGraph();
 
 		console.log('Graph editor ready');
 
@@ -86,7 +83,7 @@ Editor.polymerElement({
 			this.connect(ids[portA[0]], portA[1], ids[portB[0]], portB[1]);
 		}
 		batchRender = false;
-		this.setState(this.state);
+		this.updateGraph();
 	},
 	clearGraph: function() {
 		batchRender = true;
@@ -96,13 +93,10 @@ Editor.polymerElement({
 			this.removeNode(node.id);
 		}
 		batchRender = false;
-		this.setState(this.state);
+		this.updateGraph();
 	},
-	setState: function(state) {
-		this.state = state;
-
+	updateGraph: function() {
 		this.updateShader();
-
 		this._updateNodes();
 		this._updateLinks();
 	},
@@ -295,7 +289,7 @@ Editor.polymerElement({
 		}
 
 		if (!batchRender) {
-			this.setState(this.state);
+			this.updateGraph();
 		}
 
 		// If there is a temporary link attach it to the new node
@@ -319,8 +313,6 @@ Editor.polymerElement({
 	removeNode: function(id){
 		id = parseInt(id);
 
-		var state = this.state;
-
 		var nodeToRemove = this.graph.nodes.find(function(node){
 			return node.id === id;
 		});
@@ -329,20 +321,15 @@ Editor.polymerElement({
 		}
 
 		// Remove the links connected
-		state.links.filter(function(link){
-			return link.nodeA == id || link.nodeB == id;
+		this.graph.links.filter(function(link){
+			return link.fromNode.id == id || link.toNode.id == id;
 		}).forEach(function(link){
-			var nA = this.graph.getNodeById(link.nodeA);
-			if(!nA) throw new Error('couldnt find node ' + link.nodeA);
-			var nB = this.graph.getNodeById(link.nodeB);
-			if(!nB) throw new Error('couldnt find node ' + link.nodeB);
+			var nA = link.fromNode;
+			if(!nA) throw new Error('couldnt find node ' + link.fromNode.id);
+			var nB = link.toNode;
+			if(!nB) throw new Error('couldnt find node ' + link.toNode.id);
 
-			nA.disconnect(link.portA, nB, link.portB);
-
-			var idx = state.links.indexOf(link);
-			if(idx !== -1){
-				state.links.splice(idx, 1);
-			}
+			nA.disconnect(link.fromPortKey, nB, link.toPortKey);
 		}, this);
 
 		var node = this.graph.getNodeById(id);
@@ -350,7 +337,7 @@ Editor.polymerElement({
 		this.graph.removeNode(node);
 
 		if (!batchRender) {
-			this.setState(state);
+			this.updateGraph();
 		}
 
 		return true;
@@ -459,10 +446,8 @@ Editor.polymerElement({
 			this.disconnect(info.nodeA, info.portA, info.nodeB, info.portB);
 		}
 
-		this.state.links.push(link);
-
 		if (!batchRender) {
-			this.setState(this.state);
+			this.updateGraph();
 		}
 
 		return true;
@@ -470,20 +455,6 @@ Editor.polymerElement({
 	disconnect: function(nodeA, portA, nodeB, portB){
 		nodeA = Number(nodeA);
 		nodeB = Number(nodeB);
-
-		var state = this.state;
-		var connToRemove = state.links.find(function(link){
-			return (
-				link.nodeA === nodeA &&
-				link.nodeB === nodeB &&
-				link.portA === portA &&
-				link.portB === portB
-			);
-		});
-		var idx = state.links.indexOf(connToRemove);
-		if(idx !== -1){
-			state.links.splice(idx, 1);
-		}
 
 		// Test it!
 		var nA = this.graph.getNodeById(nodeA);
@@ -496,23 +467,19 @@ Editor.polymerElement({
 			return !link.isValid();
 		}).forEach(function(link){
 			console.log('removing', link)
-			var connToRemove = state.links.find(function(connData){
+			var connToRemove = this.graph.links.find(function(connData){
 				return (
-					connData.nodeA === link.fromNode &&
-					connData.nodeB === link.toNode &&
-					connData.portA === link.fromPortKey &&
-					connData.portB === link.toPortKey
+					connData.fromNode === link.fromNode &&
+					connData.toNode === link.toNode &&
+					connData.fromPortKey === link.fromPortKey &&
+					connData.toPortKey === link.toPortKey
 				);
 			});
-			var idx = state.links.indexOf(connToRemove);
-			if(idx !== -1){
-				state.links.splice(idx, 1);
-			}
 		});
 		*/
 
 		if (!batchRender) {
-			this.setState(state);
+			this.updateGraph();
 		}
 	},
 	updateSelectRect: function( left, top, width, height ) {
@@ -805,7 +772,7 @@ Editor.polymerElement({
 				this.graph = this.shader.fragmentGraph;
 				break;
 		}
-		this.setState(this.state);
+		this.updateGraph();
 	}
 });
 
