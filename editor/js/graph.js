@@ -12,8 +12,7 @@ Editor.polymerElement({
 	ready: function(){
 		this._t = {sx: 1, sy: 1, tx: 0, ty: 0};
 		this.state = {
-			links: [],
-			nodes: []
+			links: []
 		};
 		this.$.template.addEventListener("dom-change", this.domChange.bind(this));
 	},
@@ -91,7 +90,7 @@ Editor.polymerElement({
 	},
 	clearGraph: function() {
 		batchRender = true;
-		var nodes = this.state.nodes.slice(0);
+		var nodes = this.graph.nodes.slice(0);
 		for (var i = 0; i < nodes.length; i++) {
 			var node = nodes[i];
 			this.removeNode(node.id);
@@ -243,14 +242,15 @@ Editor.polymerElement({
 		}
 		if (this._isMainNode(data.type)) {
 			// Find the main node
-			var mainNode = this.state.nodes.find(function(node){
-				return this._isMainNode(node.type);
+			var mainNode = this.graph.nodes.find(function(node){
+				return this._isMainNode(node.constructor.type);
 			}, this);
 			// Only update its data
 			if (mainNode) {
-				data.id = 1;
-				this.updateData(1, data);
-				return data.id;
+				this.updateData(mainNode.id, {
+					position: data.pos
+				});
+				return mainNode.id;
 			}
 		}
 		if (typeof data.id !== "undefined") {
@@ -274,46 +274,35 @@ Editor.polymerElement({
 		}
 
 		// Add nodes that are not main nodes
-		var node;
-		if (!this._isMainNode(data.type)) {
-			node = new ShaderGraph.Node.classes[data.type]({
-				id: data.id,
-				position: data.pos
-			});
-			this.graph.addNode(node);
-			switch (data.type){
-				case 'value':
-					var v = parseFloat(data.value);
-					node.value = isNaN(v) ? 0 : v;
-					break;
-				case 'vec2':
-				case 'vec3':
-				case 'vec4':
-					node.value = data.value.map(function(comp){
-						var v = parseFloat(comp);
-						return isNaN(v) ? 0 : v;
-					});
-					break;
-			}
-
-			//data.node = node;
-		} else {
-			node = this.graph.mainNode;
-			node.position = data.pos;
+		var node = new ShaderGraph.Node.classes[data.type]({
+			id: data.id,
+			position: data.pos
+		});
+		this.graph.addNode(node);
+		switch (data.type){
+			case 'value':
+				var v = parseFloat(data.value);
+				node.value = isNaN(v) ? 0 : v;
+				break;
+			case 'vec2':
+			case 'vec3':
+			case 'vec4':
+				node.value = data.value.map(function(comp){
+					var v = parseFloat(comp);
+					return isNaN(v) ? 0 : v;
+				});
+				break;
 		}
-		data.id = node.id;
 
-		var state = this.state;
-		state.nodes.push(data);
 		if (!batchRender) {
-			this.setState(state);
+			this.setState(this.state);
 		}
 
 		// If there is a temporary link attach it to the new node
 		if (this._tempWire) {
 			var nodeA = this._tempWire.nodeA;
 			var portA = this._tempWire.portA;
-			var nodeB = data.id;
+			var nodeB = node.id;
 			if (this._tempWire.elementA.type === "out") {
 				var portB = ShaderGraph.Node.classes[data.type].prototype.getInputPorts()[0];
 				this.connect(nodeB, portB, nodeA, portA);
@@ -325,17 +314,17 @@ Editor.polymerElement({
 			this.clearTempWire();
 		}
 
-		return data.id;
+		return node.id;
 	},
 	removeNode: function(id){
 		id = parseInt(id);
 
 		var state = this.state;
 
-		var nodeToRemove = state.nodes.find(function(node){
+		var nodeToRemove = this.graph.nodes.find(function(node){
 			return node.id === id;
 		});
-		if(!nodeToRemove || this._isMainNode(nodeToRemove.type)){
+		if(!nodeToRemove || this._isMainNode(nodeToRemove.constructor.type)){
 			return false;
 		}
 
@@ -360,11 +349,6 @@ Editor.polymerElement({
 		if(!node) throw new Error('couldnt find node ' + id);
 		this.graph.removeNode(node);
 
-		var idx = state.nodes.indexOf(nodeToRemove);
-		if(idx !== -1){
-			 state.nodes.splice(idx, 1);
-		}
-
 		if (!batchRender) {
 			this.setState(state);
 		}
@@ -378,20 +362,13 @@ Editor.polymerElement({
 		if (data.value && data.value.length === 1) {
 			data.value = data.value[0];
 		}
-		var node = this.state.nodes.find(function(node){
+		var node = this.graph.nodes.find(function(node){
 			return node.id === id;
 		});
 		if(node){
 			for(var key in data){
 				node[key] = data[key];
 			}
-
-			// Update the value in the shader node 
-			var n = this.graph.getNodeById(id);
-			if (n) {
-				n.value = node.value;
-			}
-
 			this.updateShader();
 		}
 	},
@@ -448,8 +425,6 @@ Editor.polymerElement({
 			}
 		}
 
-		var state = this.state;
-
 		var link;
 
 		if(!nB.canConnect(portB, nA, portA)){
@@ -484,10 +459,10 @@ Editor.polymerElement({
 			this.disconnect(info.nodeA, info.portA, info.nodeB, info.portB);
 		}
 
-		state.links.push(link);
+		this.state.links.push(link);
 
 		if (!batchRender) {
-			this.setState(state);
+			this.setState(this.state);
 		}
 
 		return true;
