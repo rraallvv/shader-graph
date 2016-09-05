@@ -174,30 +174,22 @@ Editor.polymerElement({
 
 		var links = [];
 
-		this.graph.links.forEach(function(graphLink) {
-			var link = {
-				id: graphLink.id,
-				nodeA: graphLink.fromNode.id,
-				portA: graphLink.fromPortKey,
-				nodeB: graphLink.toNode.id,
-				portB: graphLink.toPortKey
-			}
-
-			var ela = this.querySelector('shader-port[node="' + link.nodeA + '"][port="' + link.portA + '"]');
-			var elb = this.querySelector('shader-port[node="' + link.nodeB + '"][port="' + link.portB + '"]');
+		this.graph.links.forEach(function(link) {
+			var ela = this.querySelector('shader-port[node="' + link.fromNode.id + '"][port="' + link.fromPortKey + '"]');
+			var elb = this.querySelector('shader-port[node="' + link.toNode.id + '"][port="' + link.toPortKey + '"]');
 			if (ela && elb) {
-				var nodeA = graphLink.fromNode;
-				var nodeB = graphLink.toNode;
+				var nodeA = link.fromNode;
+				var nodeB = link.toNode;
 				links[link.id] = {
 					id: link.id,
-					nodeA: link.nodeA,
-					portA: link.portA,
+					nodeA: link.fromNode.id,
+					portA: link.fromPortKey,
 					posA: [
 						nodeA.position[0] + ela.offsetLeft + ela.offsetWidth - 2,
 						nodeA.position[1] + ela.offsetTop + 0.5 * ela.offsetHeight + 2
 					],
-					nodeB: link.nodeB,
-					portB: link.portB,
+					nodeB: link.toNode.id,
+					portB: link.toPortKey,
 					posB: [
 						nodeB.position[0] + elb.offsetLeft + 4,
 						nodeB.position[1] + elb.offsetTop + 0.5 * elb.offsetHeight + 2
